@@ -4,8 +4,8 @@ Internal prototype for **Smart India Hackathon 2026 – Problem Statement SIH260
 academia–industry collaboration for **skill mapping, internships and placement**.
 
 The prototype focuses on the core student + recruiter workflow, with **skill-gap analysis and
-explainable opportunity matching** as the primary demo features. It is a single modular-monolith
-Spring Boot backend — no AI, no external services.
+explainable opportunity matching** as the primary demo features. It is a full-stack application —
+a modular-monolith Spring Boot backend and a Next.js frontend — with no external AI or services.
 
 ```
 STUDENT → Student Profile → Skill Assessment → Skill Profile → Skill Gap Analysis
@@ -15,12 +15,22 @@ STUDENT → Student Profile → Skill Assessment → Skill Profile → Skill Gap
 
 ## Tech stack
 
+### Backend
 - Java 21+ (project compiles on Java 25)
 - Spring Boot 4.1.x (Web MVC, Data JPA, Security, Validation, Mail)
 - PostgreSQL (via JDBC), JPA/Hibernate
 - Maven, Lombok, ModelMapper, jjwt
 - Springdoc OpenAPI (Swagger UI at `/swagger-ui.html`)
 - Tests: JUnit 5 + Mockito (unit tests run against in-memory H2)
+
+### Frontend
+- **Next.js 15** (App Router) + **TypeScript**
+- **Zustand** for auth state management (persisted in `sessionStorage`)
+- **Axios** with request interceptors for JWT injection and 401/403 auto-logout
+- **Framer Motion** for page/component animations
+- **Lucide React** for icons
+- **Radix UI** primitives (Button, Input, Skeleton, Badge)
+- Vanilla CSS (globals) with Tailwind CSS utility classes
 
 ## Architecture
 
@@ -140,7 +150,49 @@ All responses use the existing `ApiResponse { success, message, data }` envelope
 - **1 assessment template** (10 questions across Java, Spring Boot, SQL, Git, Docker, Communication)
 - **3 applications** so the recruiter candidates screen is populated immediately
 
+## Frontend architecture
+
+The frontend lives in `frontend/` and is a **Next.js 15 App Router** application:
+
+```
+frontend/src/
+├── app/
+│   ├── login/               # /login
+│   ├── register/            # /register
+│   ├── student/
+│   │   ├── profile/         # /student/profile — read-only + edit mode with avatar
+│   │   ├── skills/          # /student/skills — catalogue + my skills + add/edit
+│   │   ├── opportunities/   # /student/opportunities + /student/opportunities/:id
+│   │   ├── recommended/     # /student/recommended — match score cards
+│   │   └── applications/    # /student/applications — apply, withdraw, status
+│   └── recruiter/
+│       ├── dashboard/       # /recruiter/dashboard — opportunities overview
+│       └── opportunities/
+│           ├── new/         # /recruiter/opportunities/new — create
+│           ├── [id]/edit/   # /recruiter/opportunities/:id/edit
+│           └── [id]/candidates/ # /recruiter/opportunities/:id/candidates — ranked list
+├── components/
+│   ├── Navbar.tsx           # Role-aware top navigation bar
+│   ├── RouteGuard.tsx       # Role-based route protection
+│   ├── OpportunityForm.tsx  # Shared create/edit form for recruiters
+│   └── ui/                  # Button, Input, Skeleton, Badge primitives
+├── context/
+│   └── AuthContext.tsx      # Zustand store — user, accessToken, setAuth, logout
+└── lib/
+    ├── api.ts               # Axios instances (api → /api, authApi → /auth)
+    └── utils.ts             # Shared helpers
+```
+
+### Key frontend behaviours
+- **Auth**: `accessToken` stored in `sessionStorage` via Zustand + `persist`. Axios request interceptor attaches `Authorization: Bearer` header on every `/api` call. On `401` response, the interceptor calls `logout()` and redirects to `/login`.
+- **Route protection**: `RouteGuard` wraps each layout — unauthenticated users are sent to `/login`; wrong-role users are redirected to their home.
+- **Profile**: Defaults to a read-only view (circular avatar, academic details, bio). "Edit Profile" button toggles an inline edit form that can also change the display name via `PATCH /api/users/me`.
+- **Toast notifications**: Success/error messages auto-dismiss after 10 seconds and have an `×` close button with Framer Motion `AnimatePresence` transitions.
+- **Match display**: Recommended and detail pages show match score with green (≥60%) / amber (<60%) badges, plus matched/missing skill chips.
+
 ## Running locally
+
+### 1. Backend
 
 1. PostgreSQL running locally with a database (default URL: `jdbc:postgresql://localhost:5432/AI-Vulnerability-Prioritizer` — adjust in `backend/src/main/resources/application.yaml` if needed).
 2. Set environment variables:
@@ -160,6 +212,24 @@ All responses use the existing `ApiResponse { success, message, data }` envelope
 4. Open Swagger UI: http://localhost:8080/swagger-ui.html
 
 > `ddl-auto` is `create-drop` for the prototype, so the schema + seed data are recreated on every restart.
+
+### 2. Frontend
+
+Requires Node.js 18+. The frontend expects the backend at `http://localhost:8080`.
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Open http://localhost:3000. Log in with one of the seeded demo accounts (password `Demo@123`):
+
+| Email | Role |
+|---|---|
+| `student@demo.com` | STUDENT (Aarav Mehta) |
+| `student2@demo.com` | STUDENT (Ananya Patel) |
+| `recruiter@demo.com` | RECRUITER (Riya Sharma) |
 
 ## Testing
 
