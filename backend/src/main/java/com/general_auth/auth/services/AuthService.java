@@ -75,7 +75,7 @@ public class AuthService {
                 .user(user)
                 .build();
         refreshTokenRepository.save(token);
-        return new LoginResponse(user.getId(),user.getEmail(), user.getRole(),refreshToken,accessToken);
+        return new LoginResponse(user.getId(),user.getName(),user.getEmail(), user.getRole(),refreshToken,accessToken);
     }
 
     public void logout(HttpServletRequest request, HttpServletResponse response) {
@@ -109,7 +109,7 @@ public class AuthService {
         Long userId= jwtAuthService.extractUserId(token);
         User user =userRepository.findById(userId).orElseThrow(()->new UsernameNotFoundException("Username with this Id not found"));
         String accessToken= jwtAuthService.generateAccessToken(user);
-        return new LoginResponse(user.getId(),user.getEmail(),user.getRole(),token,accessToken);
+        return new LoginResponse(user.getId(),user.getName(),user.getEmail(),user.getRole(),token,accessToken);
 
     }
 
