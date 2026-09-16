@@ -51,6 +51,18 @@ via npm on port 3000, and they talk only over HTTP (JSON + JWT).
 - Maven, Lombok, ModelMapper 3.2.4, jjwt 0.13.0
 - Tests: JUnit 5 + Mockito (the Spring context test runs against in-memory H2)
 
+### Deploying the backend to Render with Docker
+
+The backend has a multi-stage Dockerfile at `backend/Dockerfile`. In Render, create a **Web
+Service**, select **Docker** as the runtime and set **Root Directory** to `backend`. Render builds
+the image from that directory and provides a `PORT` environment variable; the image starts Spring
+Boot on that port automatically.
+
+Set the existing required environment variables (`DB_USERNAME`, `DB_PASSWORD`, `JWT_SECRET`,
+`MAIL_USERNAME`, `MAIL_PASSWORD`, and `BASE_URL`) in the Render service. For a persistent
+deployment, also override the prototype's `create-drop` schema behaviour (for example, with
+`SPRING_JPA_HIBERNATE_DDL_AUTO=update`) or add Flyway migrations before deploying.
+
 ### Frontend
 - **Next.js 16** (App Router) + **React 19** + **TypeScript 5** — requires **Node.js 20.9+**
 - **Zustand 5** for auth state (persisted in `sessionStorage`)
