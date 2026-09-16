@@ -17,6 +17,29 @@ STUDENT → Student Profile → Skill Assessment (API/Swagger) → Skill Profile
 > backend but have **no dedicated frontend pages yet** — exercise them via Swagger UI
 > (`/swagger-ui.html`). Every other step in the flow has UI.
 
+## Project structure
+
+Both apps live in this single repository (monorepo) but are built and run independently:
+
+```
+.                        # repo root
+├── backend/             # Spring Boot 4 REST API   (Java 25, Maven)
+│   ├── src/main/java/com/general_auth/…    # modular-monolith packages (see Architecture)
+│   ├── src/main/resources/application.yaml # DB/JWT/mail config
+│   ├── src/test/java/…                     # JUnit 5 + Mockito tests (run on H2)
+│   └── pom.xml
+├── frontend/            # Next.js 16 web app      (React 19, TypeScript, Tailwind v4)
+│   ├── src/app/…        # routes (detailed tree under Architecture → Frontend)
+│   ├── src/components/… # Navbar, RouteGuard, forms, ui primitives
+│   ├── src/context/…    # Zustand auth store
+│   ├── src/lib/…        # axios instances + helpers
+│   └── package.json
+└── README.md
+```
+
+There is no shared build step or shared code — the backend runs via Maven on port 8080, the frontend
+via npm on port 3000, and they talk only over HTTP (JSON + JWT).
+
 ## Tech stack
 
 ### Backend
@@ -39,7 +62,9 @@ STUDENT → Student Profile → Skill Assessment (API/Swagger) → Skill Profile
 
 ## Architecture
 
-Modular monolith under `com.general_auth`:
+### Backend — `backend/src/main/java/com/general_auth`
+
+The backend is a modular monolith under the `com.general_auth` package:
 
 ```
 com.general_auth
@@ -57,6 +82,53 @@ com.general_auth
 
 Controllers are thin; business logic lives in services; persistence in repositories.
 CORS is pre-configured for `http://localhost:3000` and `http://127.0.0.1:3000` (credentials allowed).
+
+### Frontend — `frontend/src`
+
+A **Next.js 16 App Router** application:
+
+```
+frontend/src/
+├── app/
+│   ├── page.tsx             # landing page (public)
+│   ├── login/               # /login
+│   ├── register/            # /register (STUDENT/RECRUITER toggle, then → /login)
+│   ├── student/
+│   │   ├── profile/         # /student/profile — read-only + edit mode with avatar
+│   │   ├── skills/          # /student/skills — catalogue + my skills + add/edit (star rating)
+│   │   ├── opportunities/   # /student/opportunities + /student/opportunities/:id (match sidebar + apply modal)
+│   │   ├── recommended/     # /student/recommended — match score cards (linked from Opportunities page)
+│   │   └── applications/    # /student/applications — status table + withdraw
+│   └── recruiter/
+│       ├── dashboard/       # /recruiter/dashboard — opportunities overview + stats
+│       └── opportunities/
+│           ├── new/         # /recruiter/opportunities/new — create
+│           ├── [id]/edit/   # /recruiter/opportunities/:id/edit
+│           └── [id]/candidates/ # /recruiter/opportunities/:id/candidates — ranked list
+├── components/
+│   ├── Navbar.tsx           # Role-aware top navigation ("Berozgar Saathi")
+│   ├── RouteGuard.tsx       # Role-based route protection
+│   ├── OpportunityForm.tsx  # Shared create/edit form for recruiters
+│   └── ui/                  # Button, Input, Skeleton, Badge primitives
+├── context/
+│   └── AuthContext.tsx      # Zustand store — user, accessToken, setAuth, logout
+└── lib/
+    ├── api.ts               # Axios instances (api → /api, authApi → /auth) + typed ApiResponse
+    └── utils.ts             # cn() and shared helpers
+```
+
+### Key frontend behaviours
+- **Auth**: `accessToken` stored in `sessionStorage` via Zustand + `persist` (key `auth-storage`).
+  The Axios request interceptor attaches `Authorization: Bearer` on every `/api` call. On a `401`
+  response the interceptor calls `logout()` and redirects to `/login`.
+- **Route protection**: `RouteGuard` wraps the root layout — unauthenticated users go to `/login`;
+  wrong-role users are bounced to their role's home. `publicPaths`: `/`, `/login`, `/register`.
+- **Profile**: read-only by default (initials avatar, academic details, bio). "Edit Profile" toggles
+  an inline form that also updates the display name via `PATCH /users/me` — see *Known quirks*.
+- **Inline banners**: success/error messages are dismissible (× button) and auto-dismiss after
+  10 s on the profile page, with Framer Motion `AnimatePresence` transitions.
+- **Match display**: recommended, detail and applications pages show match scores with
+  green (≥60%) / amber (<60%) colouring plus matched ✓ / missing ✕ skill chips.
 
 ## Domain entities
 
@@ -201,53 +273,6 @@ Submit body: `{ "answers": [ { "questionId": 1, "answer": "Spring Boot" }, ... ]
 
 - **3 applications** (Aarav → Backend Developer Intern + AI Chatbot project; Ananya → Data Analyst Intern)
   so the recruiter candidates screen is populated immediately.
-
-## Frontend architecture
-
-The frontend lives in `frontend/` and is a **Next.js 16 App Router** application:
-
-```
-frontend/src/
-├── app/
-│   ├── page.tsx             # landing page (public)
-│   ├── login/               # /login
-│   ├── register/            # /register (STUDENT/RECRUITER toggle, then → /login)
-│   ├── student/
-│   │   ├── profile/         # /student/profile — read-only + edit mode with avatar
-│   │   ├── skills/          # /student/skills — catalogue + my skills + add/edit (star rating)
-│   │   ├── opportunities/   # /student/opportunities + /student/opportunities/:id (match sidebar + apply modal)
-│   │   ├── recommended/     # /student/recommended — match score cards (linked from Opportunities page)
-│   │   └── applications/    # /student/applications — status table + withdraw
-│   └── recruiter/
-│       ├── dashboard/       # /recruiter/dashboard — opportunities overview + stats
-│       └── opportunities/
-│           ├── new/         # /recruiter/opportunities/new — create
-│           ├── [id]/edit/   # /recruiter/opportunities/:id/edit
-│           └── [id]/candidates/ # /recruiter/opportunities/:id/candidates — ranked list
-├── components/
-│   ├── Navbar.tsx           # Role-aware top navigation ("Berozgar Saathi")
-│   ├── RouteGuard.tsx       # Role-based route protection
-│   ├── OpportunityForm.tsx  # Shared create/edit form for recruiters
-│   └── ui/                  # Button, Input, Skeleton, Badge primitives
-├── context/
-│   └── AuthContext.tsx      # Zustand store — user, accessToken, setAuth, logout
-└── lib/
-    ├── api.ts               # Axios instances (api → /api, authApi → /auth) + typed ApiResponse
-    └── utils.ts             # cn() and shared helpers
-```
-
-### Key frontend behaviours
-- **Auth**: `accessToken` stored in `sessionStorage` via Zustand + `persist` (key `auth-storage`).
-  The Axios request interceptor attaches `Authorization: Bearer` on every `/api` call. On a `401`
-  response the interceptor calls `logout()` and redirects to `/login`.
-- **Route protection**: `RouteGuard` wraps the root layout — unauthenticated users go to `/login`;
-  wrong-role users are bounced to their role's home. `publicPaths`: `/`, `/login`, `/register`.
-- **Profile**: read-only by default (initials avatar, academic details, bio). "Edit Profile" toggles
-  an inline form that also updates the display name via `PATCH /users/me` — see *Known quirks*.
-- **Inline banners**: success/error messages are dismissible (× button) and auto-dismiss after
-  10 s on the profile page, with Framer Motion `AnimatePresence` transitions.
-- **Match display**: recommended, detail and applications pages show match scores with
-  green (≥60%) / amber (<60%) colouring plus matched ✓ / missing ✕ skill chips.
 
 ## Running locally
 
