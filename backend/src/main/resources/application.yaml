@@ -5,7 +5,7 @@ spring:
 
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/AI-Vulnerability-Prioritizer
+    url: jdbc:postgresql://ep-cool-butterfly-b3p96fxo-pooler.c-4.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
   jpa:
