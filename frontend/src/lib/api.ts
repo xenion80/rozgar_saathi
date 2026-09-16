@@ -1,4 +1,7 @@
-import axios, { type AxiosRequestConfig } from "axios";
+import axios, {
+  type AxiosRequestConfig,
+  type AxiosInstance,
+} from "axios";
 import { useAuthStore } from "@/context/AuthContext";
 
 declare const process: {
@@ -8,23 +11,58 @@ declare const process: {
 };
 
 const BACKEND_URL =
-  process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:8080";
+    process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:8080";
 
 const API_BASE_URL = `${BACKEND_URL}/api`;
 const AUTH_BASE_URL = `${BACKEND_URL}/auth`;
 
-export const api = axios.create({
+export type ApiResponse<T = unknown> = {
+  success: boolean;
+  message: string;
+  data: T;
+};
+
+type ApiClient = {
+  get<T = any>(
+      url: string,
+      config?: AxiosRequestConfig
+  ): Promise<T>;
+
+  post<T = any>(
+      url: string,
+      data?: any,
+      config?: AxiosRequestConfig
+  ): Promise<T>;
+
+  put<T = any>(
+      url: string,
+      data?: any,
+      config?: AxiosRequestConfig
+  ): Promise<T>;
+
+  patch<T = any>(
+      url: string,
+      data?: any,
+      config?: AxiosRequestConfig
+  ): Promise<T>;
+
+  delete<T = any>(
+      url: string,
+      config?: AxiosRequestConfig
+  ): Promise<T>;
+};
+
+const axiosApi = axios.create({
   baseURL: API_BASE_URL,
   withCredentials: true,
 });
 
-export const authApi = axios.create({
+const axiosAuth = axios.create({
   baseURL: AUTH_BASE_URL,
   withCredentials: true,
 });
 
-// Add access token to authenticated requests
-api.interceptors.request.use((config) => {
+axiosApi.interceptors.request.use((config) => {
   const token = useAuthStore.getState().accessToken;
 
   if (token) {
@@ -34,27 +72,21 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Handle API responses
-api.interceptors.response.use(
-  (response) => response.data,
-  (error) => {
-    if (error.response?.status === 401) {
-      useAuthStore.getState().logout();
+axiosApi.interceptors.response.use(
+    (response) => response.data,
+    (error) => {
+      if (error.response?.status === 401) {
+        useAuthStore.getState().logout();
+      }
+
+      return Promise.reject(error);
     }
-
-    return Promise.reject(error);
-  }
 );
 
-// Handle auth responses
-authApi.interceptors.response.use(
-  (response) => response.data,
-  (error) => Promise.reject(error)
+axiosAuth.interceptors.response.use(
+    (response) => response.data,
+    (error) => Promise.reject(error)
 );
 
-export type ApiResponse<T = unknown> = {
-  success: boolean;
-  message: string;
-  data: T;
-};
-
+export const api = axiosApi as unknown as ApiClient;
+export const authApi = axiosAuth as unknown as ApiClient;
