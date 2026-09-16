@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 public class EmailService {
     private final JavaMailSender mailSender;
 
-    @Value("${app.base-url")
+    @Value("${app.base-url}")
     private String baseUrl;
 
     @Value("${spring.mail.username}")
