@@ -29,7 +29,8 @@ public class EmailService {
             mailSender.send(mailMessage);
 
         } catch (MailException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            throw e;
         }
     }
 
