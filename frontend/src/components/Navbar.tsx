@@ -15,6 +15,8 @@ export default function Navbar() {
   const { user, logout } = useAuthStore();
   const pathname = usePathname();
 
+  if (pathname === "/") return null;
+
   const getDashboardLink = () => {
     if (user?.role === "STUDENT") return "/student/profile";
     if (user?.role === "RECRUITER") return "/recruiter/dashboard";

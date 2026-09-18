@@ -124,3 +124,17 @@ html.dark select:focus {
 * {
   box-sizing: border-box;
 }
+
+.landing-grid {
+  background-image: linear-gradient(rgba(17, 17, 15, .075) 1px, transparent 1px), linear-gradient(90deg, rgba(17, 17, 15, .075) 1px, transparent 1px);
+  background-size: 100% 104px, 106px 100%;
+}
+
+.landing-grid a,
+#why a,
+#how a,
+#roles a { transition: color .2s ease, background-color .2s ease, transform .2s ease; }
+
+@media (max-width: 640px) {
+  .landing-grid { background-size: 100% 82px, 72px 100%; }
+}
