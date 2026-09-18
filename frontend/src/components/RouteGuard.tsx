@@ -28,16 +28,21 @@ export function RouteGuard({ children }: { children: React.ReactNode }) {
     if (user) {
       if (isPublic && pathname !== "/") {
         // Redirect authenticated users away from login/register
-        router.push(user.role === "STUDENT" ? "/student/profile" : "/recruiter/dashboard");
+        if (user.role === "STUDENT") router.push("/student/profile");
+        else if (user.role === "RECRUITER") router.push("/recruiter/dashboard");
+        else if (user.role === "ADMIN") router.push("/admin/dashboard");
         return;
       }
       
       // Role protection
       if (pathname.startsWith("/student") && user.role !== "STUDENT") {
-        router.push("/recruiter/dashboard");
+        router.push(user.role === "ADMIN" ? "/admin/dashboard" : "/recruiter/dashboard");
       }
       if (pathname.startsWith("/recruiter") && user.role !== "RECRUITER") {
-        router.push("/student/profile");
+        router.push(user.role === "ADMIN" ? "/admin/dashboard" : "/student/profile");
+      }
+      if (pathname.startsWith("/admin") && user.role !== "ADMIN") {
+        router.push(user.role === "STUDENT" ? "/student/profile" : "/recruiter/dashboard");
       }
     }
   }, [user, pathname, router, mounted]);

@@ -14,7 +14,9 @@ type BadgeVariant =
   | "internship"
   | "job"
   | "project"
-  | "default";
+  | "default"
+  | "outline"
+  | "secondary";
 
 const variantStyles: Record<BadgeVariant, string> = {
   open:        "bg-green-50  text-green-700  ring-green-600/20",
@@ -30,6 +32,8 @@ const variantStyles: Record<BadgeVariant, string> = {
   job:         "bg-indigo-50 text-indigo-700 ring-indigo-600/20",
   project:     "bg-amber-50  text-amber-700  ring-amber-600/20",
   default:     "bg-slate-100 text-slate-700  ring-slate-500/20",
+  outline:     "bg-transparent text-slate-700 ring-slate-200 border border-slate-200",
+  secondary:   "bg-slate-100 text-slate-900 ring-slate-200",
 };
 
 interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {

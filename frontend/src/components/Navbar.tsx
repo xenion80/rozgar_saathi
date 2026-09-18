@@ -14,7 +14,7 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/80 backdrop-blur-md">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        <Link href={user?.role === "STUDENT" ? "/student/profile" : user?.role === "RECRUITER" ? "/recruiter/dashboard" : "/"} className="flex items-center gap-2">
+        <Link href={user?.role === "STUDENT" ? "/student/profile" : user?.role === "RECRUITER" ? "/recruiter/dashboard" : user?.role === "ADMIN" ? "/admin/dashboard" : "/"} className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-white">
             <GraduationCap size={20} />
           </div>
@@ -49,6 +49,16 @@ export default function Navbar() {
                   </Link>
                   <Link href="/recruiter/opportunities/new" className={cn("transition-colors hover:text-blue-600", pathname === "/recruiter/opportunities/new" && "text-blue-600 font-semibold")}>
                     Post Opportunity
+                  </Link>
+                </>
+              )}
+              {user.role === "ADMIN" && (
+                <>
+                  <Link href="/admin/dashboard" className={cn("transition-colors hover:text-blue-600", pathname === "/admin/dashboard" && "text-blue-600 font-semibold")}>
+                    Dashboard
+                  </Link>
+                  <Link href="/admin/users" className={cn("transition-colors hover:text-blue-600", pathname === "/admin/users" && "text-blue-600 font-semibold")}>
+                    Users
                   </Link>
                 </>
               )}

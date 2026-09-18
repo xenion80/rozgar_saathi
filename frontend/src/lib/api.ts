@@ -22,6 +22,13 @@ export type ApiResponse<T = unknown> = {
   data: T;
 };
 
+export type ApiErrorResponse = {
+  timeStamp: string;
+  error: string;
+  status: number;
+  path: string;
+};
+
 type ApiClient = {
   get<T = any>(
       url: string,
@@ -62,6 +69,11 @@ const axiosAuth = axios.create({
   withCredentials: true,
 });
 
+const axiosRoot = axios.create({
+  baseURL: BACKEND_URL,
+  withCredentials: true,
+});
+
 axiosApi.interceptors.request.use((config) => {
   const token = useAuthStore.getState().accessToken;
 
@@ -88,5 +100,27 @@ axiosAuth.interceptors.response.use(
     (error) => Promise.reject(error)
 );
 
+axiosRoot.interceptors.request.use((config) => {
+  const token = useAuthStore.getState().accessToken;
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
+});
+
+axiosRoot.interceptors.response.use(
+    (response) => response.data,
+    (error) => {
+      if (error.response?.status === 401) {
+        useAuthStore.getState().logout();
+      }
+
+      return Promise.reject(error);
+    }
+);
+
 export const api = axiosApi as unknown as ApiClient;
 export const authApi = axiosAuth as unknown as ApiClient;
+export const rootApi = axiosRoot as unknown as ApiClient;
