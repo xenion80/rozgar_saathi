@@ -13,6 +13,14 @@
   --text-secondary: #64748B;
 }
 
+html.dark {
+  --background: #0b1220;
+  --foreground: #e6edf7;
+  --card: #121c2d;
+  --border: #26354b;
+  --text-secondary: #9aa9bf;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -26,6 +34,36 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+body {
+  background-image: radial-gradient(circle at 15% -10%, rgb(37 99 235 / 0.09), transparent 28rem);
+  transition: background-color 180ms ease, color 180ms ease;
+}
+
+::selection { background: rgb(37 99 235 / 0.28); }
+
+html.dark .bg-white,
+html.dark [class*="bg-white/"] { background-color: #121c2d !important; }
+html.dark .bg-slate-50 { background-color: #0f1726 !important; }
+html.dark .bg-slate-100 { background-color: #1a2638 !important; }
+html.dark .bg-slate-200 { background-color: #26354b !important; }
+html.dark .border-slate-100,
+html.dark .border-slate-200,
+html.dark .border-slate-300 { border-color: #26354b !important; }
+html.dark .text-slate-900,
+html.dark .text-slate-800,
+html.dark .text-slate-700 { color: #e6edf7 !important; }
+html.dark .text-slate-600,
+html.dark .text-slate-500 { color: #9aa9bf !important; }
+html.dark .shadow-xl,
+html.dark .shadow-lg { box-shadow: 0 18px 45px rgb(0 0 0 / 0.24) !important; }
+html.dark .hover\:bg-slate-100:hover,
+html.dark .hover\:bg-slate-200:hover { background-color: #26354b !important; }
+html.dark .hover\:bg-blue-50:hover,
+html.dark .bg-blue-50 { background-color: rgb(30 64 175 / 0.22) !important; }
+html.dark input,
+html.dark textarea,
+html.dark select { background-color: #0f1726 !important; color: #e6edf7 !important; border-color: #334155 !important; }
 
 * {
   box-sizing: border-box;

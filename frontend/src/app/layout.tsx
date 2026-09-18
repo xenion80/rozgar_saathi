@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import { RouteGuard } from "@/components/RouteGuard";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -22,15 +23,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${inter.variable} antialiased min-h-screen flex flex-col bg-slate-50`}
-      >
-        <RouteGuard>
-          <Navbar />
-          <main className="flex-1 w-full max-w-7xl mx-auto p-4 md:p-8">
-            {children}
-          </main>
-        </RouteGuard>
+      <body className={`${inter.variable} antialiased min-h-screen flex flex-col`}>
+        <ThemeProvider>
+          <RouteGuard>
+            <Navbar />
+            <main className="flex-1 w-full max-w-7xl mx-auto p-4 md:p-8">
+              {children}
+            </main>
+          </RouteGuard>
+        </ThemeProvider>
       </body>
     </html>
   );
