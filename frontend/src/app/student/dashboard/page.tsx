@@ -73,23 +73,27 @@ export default function StudentDashboard() {
           </CardContent>
         </Card>
         
-        <Card className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
-          <CardContent className="p-5">
-            <div className="flex items-center gap-2 text-sm font-medium text-slate-500 dark:text-slate-400 mb-2">
-              <Star size={16} className="text-amber-500" /> Saved jobs
-            </div>
-            <p className="text-3xl font-bold text-slate-900 dark:text-white">{stats.savedJobs}</p>
-          </CardContent>
-        </Card>
+        <Link href="/student/saved-jobs" className="block h-full">
+          <Card className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-amber-500 dark:hover:border-amber-500 hover:shadow-md transition-all cursor-pointer h-full">
+            <CardContent className="p-5">
+              <div className="flex items-center gap-2 text-sm font-medium text-slate-500 dark:text-slate-400 mb-2">
+                <Star size={16} className="text-amber-500" /> Saved jobs
+              </div>
+              <p className="text-3xl font-bold text-slate-900 dark:text-white">{stats.savedJobs}</p>
+            </CardContent>
+          </Card>
+        </Link>
 
-        <Card className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
-          <CardContent className="p-5">
-            <div className="flex items-center gap-2 text-sm font-medium text-slate-500 dark:text-slate-400 mb-2">
-              <Send size={16} className="text-emerald-500" /> Applications sent
-            </div>
-            <p className="text-3xl font-bold text-slate-900 dark:text-white">{stats.applications}</p>
-          </CardContent>
-        </Card>
+        <Link href="/student/applications" className="block h-full">
+          <Card className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-emerald-500 dark:hover:border-emerald-500 hover:shadow-md transition-all cursor-pointer h-full">
+            <CardContent className="p-5">
+              <div className="flex items-center gap-2 text-sm font-medium text-slate-500 dark:text-slate-400 mb-2">
+                <Send size={16} className="text-emerald-500" /> Applications sent
+              </div>
+              <p className="text-3xl font-bold text-slate-900 dark:text-white">{stats.applications}</p>
+            </CardContent>
+          </Card>
+        </Link>
 
         <Card className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
           <CardContent className="p-5">

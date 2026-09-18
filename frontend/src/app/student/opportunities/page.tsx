@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
-import { Briefcase, BrainCircuit, MapPin, Clock, ArrowRight, Building2, Search } from "lucide-react";
+import { Briefcase, BrainCircuit, MapPin, Clock, ArrowRight, Building2, Search, Bookmark } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { CardSkeletonList } from "@/components/ui/skeleton";
 import Link from "next/link";
@@ -12,6 +12,15 @@ import { motion, Variants } from "framer-motion";
 export default function OpportunitiesPage() {
   const [opportunities, setOpportunities] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [savedOpps, setSavedOpps] = useState<string[]>([]);
+
+  const toggleSave = (e: React.MouseEvent, id: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setSavedOpps(prev => 
+      prev.includes(id) ? prev.filter(oppId => oppId !== id) : [...prev, id]
+    );
+  };
 
   useEffect(() => {
     const fetchOpps = async () => {
@@ -91,7 +100,17 @@ export default function OpportunitiesPage() {
                           <Building2 size={16} /> {opp.companyName}
                         </div>
                       </div>
-                      <Badge variant={(opp.type?.toLowerCase()) as any} className="shrink-0">{opp.type}</Badge>
+                      <div className="flex items-center gap-2 shrink-0">
+                        <Badge variant={(opp.type?.toLowerCase()) as any}>{opp.type}</Badge>
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="h-8 w-8 rounded-full z-20 hover:bg-slate-100 dark:hover:bg-slate-800"
+                          onClick={(e) => toggleSave(e, opp.id)}
+                        >
+                          <Bookmark size={18} className={savedOpps.includes(opp.id) ? "fill-indigo-500 text-indigo-500" : "text-slate-400"} />
+                        </Button>
+                      </div>
                     </div>
 
                     <p className="mt-4 text-sm text-slate-500 dark:text-slate-400 line-clamp-3 leading-relaxed">

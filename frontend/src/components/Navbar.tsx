@@ -60,7 +60,7 @@ export default function Navbar() {
                 <>
                   <NavLink href="/student/dashboard" isActive={pathname === "/student/dashboard"}>Overview</NavLink>
                   <NavLink href="/student/opportunities" isActive={pathname.startsWith("/student/opportunities")}>Find Jobs</NavLink>
-                  <NavLink href="/student/saved-jobs" isActive={pathname === "/student/saved-jobs"}>Saved</NavLink>
+                  <NavLink href="/student/skill-gaps" isActive={pathname.startsWith("/student/skill-gaps")}>Skill Gap</NavLink>
                   <NavLink href="/student/applications" isActive={pathname === "/student/applications"}>Applications</NavLink>
                   <NavLink href="/student/profile" isActive={pathname === "/student/profile"}>Profile</NavLink>
                 </>
