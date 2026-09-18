@@ -54,10 +54,10 @@ export default function SkillGapsPage() {
   if (data && !data.hasTargetRole) {
     return (
       <div className="max-w-2xl mx-auto mt-8">
-        <Card className="border-blue-200">
-          <CardHeader className="bg-blue-50/50 pb-8">
+        <Card className="border-emerald-200">
+          <CardHeader className="bg-emerald-50/50 pb-8">
             <div className="flex justify-center mb-6 mt-4">
-              <div className="h-20 w-20 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center">
+              <div className="h-20 w-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center">
                 <Target className="h-10 w-10" />
               </div>
             </div>
@@ -86,7 +86,7 @@ export default function SkillGapsPage() {
       <div>
         <h1 className="text-3xl font-bold tracking-tight text-slate-900">Skill Gap Analysis</h1>
         <p className="text-slate-500 mt-2 flex items-center gap-2">
-          Target Role: <Badge variant="secondary" className="text-blue-700 bg-blue-50">{data?.targetRole}</Badge>
+          Target Role: <Badge variant="secondary" className="text-emerald-700 bg-emerald-50">{data?.targetRole}</Badge>
         </p>
       </div>
 
@@ -127,7 +127,7 @@ export default function SkillGapsPage() {
                         <div className="flex items-center gap-2 text-sm text-slate-500 mt-1">
                           <span>Current: <span className="font-medium text-slate-700">{gap.currentProficiency || "None"}</span></span>
                           <span>→</span>
-                          <span>Required: <span className="font-medium text-blue-700">{gap.requiredProficiency}</span></span>
+                          <span>Required: <span className="font-medium text-emerald-700">{gap.requiredProficiency}</span></span>
                         </div>
                       </div>
                       <Link href={`/student/assessments?skill=${encodeURIComponent(gap.skill)}`} className="mt-4 sm:mt-0">
@@ -149,7 +149,7 @@ export default function SkillGapsPage() {
                 <ul className="space-y-4">
                   {data.recommendations?.map((rec, i) => (
                     <li key={i} className="flex gap-3 text-sm text-slate-600">
-                      <div className="mt-0.5 text-blue-600">
+                      <div className="mt-0.5 text-emerald-600">
                         <AlertCircle className="h-4 w-4" />
                       </div>
                       <span>{rec}</span>

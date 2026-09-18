@@ -1,30 +1,138 @@
 @import "tailwindcss";
 
-:root {
-  --background: #F8FAFC;
-  --foreground: #0F172A;
-  --primary: #2563EB;
-  --primary-hover: #1D4ED8;
-  --success: #16A34A;
-  --warning: #F59E0B;
-  --danger: #DC2626;
-  --card: #FFFFFF;
-  --border: #E2E8F0;
-  --text-secondary: #64748B;
+@theme inline {
+  --font-sans: var(--font-inter);
+  --font-outfit: var(--font-outfit);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-inter);
+:root {
+  /* Vibrant Light Theme - Indigo/Navy (ui.md) */
+  --background: #F7F8FA; /* Canvas */
+  --foreground: #111827; /* Primary ink */
+  
+  --primary: #4F46E5; /* Brand */
+  --primary-hover: #4338CA; /* Brand hover */
+  --primary-soft: #EEF2FF; /* Brand soft */
+  
+  --accent: #7C3AED;
+  
+  --success: #15803D;
+  --warning: #B45309;
+  --danger: #B91C1C;
+  
+  --card: #FFFFFF; /* Surface */
+  --border: #E2E8F0;
+  --text-secondary: #475569; /* Secondary ink */
+  --text-muted: #64748B;
+  --focus-ring: #818CF8;
+  
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(226, 232, 240, 0.6);
+  --glass-shadow: 0 8px 32px 0 rgba(79, 70, 229, 0.05);
+}
+
+html.dark {
+  /* Sleek Dark Theme (ui.md) */
+  --background: #0B1020; /* Canvas */
+  --foreground: #F8FAFC; /* Primary ink */
+  
+  --primary: #818CF8; /* Brand */
+  --primary-hover: #A5B4FC; /* Brand hover */
+  --primary-soft: #242052; /* Brand soft */
+  
+  --accent: #A78BFA;
+  
+  --success: #4ADE80;
+  --warning: #FBBF24;
+  --danger: #F87171;
+  
+  --card: #111827; /* Surface */
+  --border: #263247;
+  --text-secondary: #CBD5E1; /* Secondary ink */
+  --text-muted: #94A3B8;
+  --focus-ring: #A5B4FC;
+
+  --glass-bg: rgba(17, 24, 39, 0.75);
+  --glass-border: rgba(38, 50, 71, 0.8); 
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-inter), Inter, system-ui, -apple-system, sans-serif;
+  font-family: var(--font-sans), Inter, system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background-image: 
+    radial-gradient(circle at 15% 0%, rgba(79, 70, 229, 0.08), transparent 45vw),
+    radial-gradient(circle at 85% 100%, rgba(124, 58, 237, 0.08), transparent 45vw);
+  pointer-events: none;
+}
+
+html.dark body::before {
+  background-image: 
+    radial-gradient(circle at 15% 0%, rgba(129, 140, 248, 0.12), transparent 45vw),
+    radial-gradient(circle at 85% 100%, rgba(167, 139, 250, 0.12), transparent 45vw);
+}
+
+/* Headings use Outfit */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-outfit), var(--font-sans), sans-serif;
+  letter-spacing: -0.02em;
+}
+
+::selection { background: rgba(79, 70, 229, 0.3); }
+
+/* Glassmorphism Utilities */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+html.dark .glass-panel {
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.02), var(--glass-shadow);
+}
+
+/* Base tailwind overrides for dark mode inputs & generic backgrounds */
+html.dark .bg-white,
+html.dark [class*="bg-white/"] { background-color: var(--card) !important; }
+html.dark .bg-slate-50 { background-color: #0d1326 !important; }
+html.dark .bg-slate-100 { background-color: #111827 !important; }
+html.dark .bg-slate-200 { background-color: #182235 !important; }
+html.dark .border-slate-100,
+html.dark .border-slate-200,
+html.dark .border-slate-300 { border-color: var(--border) !important; }
+html.dark .text-slate-900,
+html.dark .text-slate-800,
+html.dark .text-slate-700 { color: var(--foreground) !important; }
+html.dark .text-slate-600,
+html.dark .text-slate-500 { color: var(--text-secondary) !important; }
+html.dark input,
+html.dark textarea,
+html.dark select { 
+  background-color: var(--card) !important; 
+  color: var(--foreground) !important; 
+  border-color: var(--border) !important; 
+}
+html.dark input:focus,
+html.dark textarea:focus,
+html.dark select:focus {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 1px var(--primary) !important;
 }
 
 * {

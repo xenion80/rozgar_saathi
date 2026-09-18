@@ -65,7 +65,8 @@ export default function StudentApplicationsPage() {
                     <th className="px-6 py-4">Opportunity</th>
                     <th className="px-6 py-4">Status</th>
                     <th className="px-6 py-4 text-center">Match Score</th>
-                    <th className="px-6 py-4">Cover Letter</th>
+                    <th className="px-6 py-4">Applied Date</th>
+                    <th className="px-6 py-4">Last Updated</th>
                     <th className="px-6 py-4 text-right">Actions</th>
                   </tr>
                 </thead>
@@ -73,7 +74,7 @@ export default function StudentApplicationsPage() {
                   {applications.map((app) => (
                     <tr key={app.id} className="hover:bg-slate-50/50 transition-colors">
                       <td className="px-6 py-4">
-                        <Link href={`/student/opportunities/${app.opportunityId}`} className="font-semibold text-slate-900 hover:text-blue-600 transition-colors">
+                        <Link href={`/student/opportunities/${app.opportunityId}`} className="font-semibold text-slate-900 hover:text-emerald-600 transition-colors">
                           {app.opportunityTitle}
                         </Link>
                         <div className="text-xs text-slate-500 mt-0.5">{app.companyName}</div>
@@ -86,18 +87,24 @@ export default function StudentApplicationsPage() {
                           {app.matchScore}%
                         </span>
                       </td>
-                      <td className="px-6 py-4">
-                        <p className="line-clamp-2 max-w-50 text-xs text-slate-500" title={app.coverLetter}>
-                          {app.coverLetter || <span className="italic text-slate-400">None provided</span>}
-                        </p>
+                      <td className="px-6 py-4 text-xs text-slate-500 whitespace-nowrap">
+                        {app.appliedAt ? new Date(app.appliedAt).toLocaleDateString() : "—"}
+                      </td>
+                      <td className="px-6 py-4 text-xs text-slate-500 whitespace-nowrap">
+                        {app.updatedAt ? new Date(app.updatedAt).toLocaleDateString() : "—"}
                       </td>
                       <td className="px-6 py-4 text-right">
+                        <Link href={`/student/applications/${app.id}`}>
+                          <Button variant="ghost" size="sm" className="text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700">
+                            View Details
+                          </Button>
+                        </Link>
                         {app.status !== "WITHDRAWN" && app.status !== "REJECTED" && (
                           <Button
                             variant="ghost"
                             size="sm"
                             onClick={() => handleWithdraw(app.id)}
-                            className="text-red-600 hover:bg-red-50 hover:text-red-700"
+                            className="text-red-600 hover:bg-red-50 hover:text-red-700 ml-2"
                           >
                             Withdraw
                           </Button>

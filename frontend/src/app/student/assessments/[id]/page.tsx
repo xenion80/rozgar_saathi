@@ -115,8 +115,8 @@ export default function AssessmentFlowPage() {
         </Link>
         <Card>
           <CardHeader className="text-center pb-8 border-b">
-            <div className="mx-auto bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mb-4">
-              <Award className="h-8 w-8 text-blue-600" />
+            <div className="mx-auto bg-emerald-100 w-16 h-16 rounded-full flex items-center justify-center mb-4">
+              <Award className="h-8 w-8 text-emerald-600" />
             </div>
             <CardTitle className="text-2xl">{assessment.title}</CardTitle>
             <CardDescription className="text-base mt-2">
@@ -155,15 +155,15 @@ export default function AssessmentFlowPage() {
     const percentage = Math.round((result.score / result.totalQuestions) * 100);
     return (
       <div className="max-w-2xl mx-auto mt-8">
-        <Card className="text-center border-t-8 border-t-blue-600 overflow-hidden">
+        <Card className="text-center border-t-8 border-t-emerald-600 overflow-hidden">
           <CardHeader className="bg-slate-50/50 pb-8 pt-8">
             <CardTitle className="text-3xl">Assessment Complete</CardTitle>
             <CardDescription className="text-base mt-2">Here's how you performed</CardDescription>
           </CardHeader>
           <CardContent className="py-12 space-y-8">
             <div>
-              <div className="inline-flex items-center justify-center w-32 h-32 rounded-full border-8 border-blue-50 bg-blue-100 mb-4">
-                <span className="text-4xl font-bold text-blue-700">{percentage}%</span>
+              <div className="inline-flex items-center justify-center w-32 h-32 rounded-full border-8 border-emerald-50 bg-emerald-100 mb-4">
+                <span className="text-4xl font-bold text-emerald-700">{percentage}%</span>
               </div>
               <p className="text-lg font-medium text-slate-900">
                 You scored {result.score} out of {result.totalQuestions}
@@ -175,7 +175,7 @@ export default function AssessmentFlowPage() {
                 <Award className="h-5 w-5 text-yellow-500" /> Skill Proficiency Updated
               </h4>
               <p className="text-slate-600 mb-3">Your validated proficiency level is now:</p>
-              <Badge variant="secondary" className="text-lg px-4 py-1.5 bg-blue-100 text-blue-800 hover:bg-blue-100">
+              <Badge variant="secondary" className="text-lg px-4 py-1.5 bg-emerald-100 text-emerald-800 hover:bg-emerald-100">
                 {result.newProficiency}
               </Badge>
             </div>
@@ -209,7 +209,7 @@ export default function AssessmentFlowPage() {
 
       <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
         <div 
-          className="bg-blue-600 h-full transition-all duration-300" 
+          className="bg-emerald-600 h-full transition-all duration-300" 
           style={{ width: `${((currentQuestionIdx) / assessment.questions.length) * 100}%` }}
         ></div>
       </div>
@@ -225,8 +225,8 @@ export default function AssessmentFlowPage() {
                 key={opt.id} 
                 className={`flex items-center p-4 border rounded-xl cursor-pointer transition-all ${
                   answers[question.id] === opt.id 
-                    ? "border-blue-600 bg-blue-50 ring-1 ring-blue-600 shadow-sm" 
-                    : "border-slate-200 hover:border-blue-300 hover:bg-slate-50"
+                    ? "border-emerald-600 bg-emerald-50 ring-1 ring-emerald-600 shadow-sm" 
+                    : "border-slate-200 hover:border-emerald-300 hover:bg-slate-50"
                 }`}
               >
                 <input
@@ -235,9 +235,9 @@ export default function AssessmentFlowPage() {
                   value={opt.id}
                   checked={answers[question.id] === opt.id}
                   onChange={() => handleSelectAnswer(question.id, opt.id)}
-                  className="w-4 h-4 text-blue-600 border-slate-300 focus:ring-blue-600"
+                  className="w-4 h-4 text-emerald-600 border-slate-300 focus:ring-emerald-600"
                 />
-                <span className={`ml-3 ${answers[question.id] === opt.id ? "font-medium text-blue-900" : "text-slate-700"}`}>
+                <span className={`ml-3 ${answers[question.id] === opt.id ? "font-medium text-emerald-900" : "text-slate-700"}`}>
                   {opt.text}
                 </span>
               </label>

@@ -1,0 +1,189 @@
+"use client";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Download, Calendar as CalendarIcon, Eye, Users, CheckCircle, Clock } from "lucide-react";
+import { motion } from "framer-motion";
+
+export default function AnalyticsPage() {
+  return (
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mx-auto max-w-6xl space-y-8">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Analytics</h1>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Track your hiring performance and candidate metrics.</p>
+        </div>
+        
+        <div className="flex items-center gap-3">
+          <Button variant="outline" className="gap-2 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+            <CalendarIcon size={16} /> Last 30 Days
+          </Button>
+          <Button variant="outline" className="gap-2 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+            <Download size={16} /> Export CSV
+          </Button>
+        </div>
+      </div>
+
+      {/* KPI Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+          <CardContent className="p-6">
+            <div className="flex justify-between items-start mb-4">
+              <div className="text-slate-500 dark:text-slate-400 text-sm font-medium">Job Views</div>
+              <div className="p-2 bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-lg">
+                <Eye size={20} />
+              </div>
+            </div>
+            <div className="text-3xl font-bold text-slate-900 dark:text-white mb-1">12,450</div>
+            <div className="text-xs font-medium text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+              +14% <span className="text-slate-400 dark:text-slate-500 font-normal">from last month</span>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+          <CardContent className="p-6">
+            <div className="flex justify-between items-start mb-4">
+              <div className="text-slate-500 dark:text-slate-400 text-sm font-medium">Total Applications</div>
+              <div className="p-2 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-lg">
+                <Users size={20} />
+              </div>
+            </div>
+            <div className="text-3xl font-bold text-slate-900 dark:text-white mb-1">842</div>
+            <div className="text-xs font-medium text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+              +8% <span className="text-slate-400 dark:text-slate-500 font-normal">from last month</span>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+          <CardContent className="p-6">
+            <div className="flex justify-between items-start mb-4">
+              <div className="text-slate-500 dark:text-slate-400 text-sm font-medium">Qualified Candidates</div>
+              <div className="p-2 bg-purple-50 dark:bg-purple-500/10 text-purple-600 dark:text-purple-400 rounded-lg">
+                <CheckCircle size={20} />
+              </div>
+            </div>
+            <div className="text-3xl font-bold text-slate-900 dark:text-white mb-1">215</div>
+            <div className="text-xs font-medium text-amber-600 dark:text-amber-500 flex items-center gap-1">
+              -2% <span className="text-slate-400 dark:text-slate-500 font-normal">from last month</span>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+          <CardContent className="p-6">
+            <div className="flex justify-between items-start mb-4">
+              <div className="text-slate-500 dark:text-slate-400 text-sm font-medium">Avg Time to Review</div>
+              <div className="p-2 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-lg">
+                <Clock size={20} />
+              </div>
+            </div>
+            <div className="text-3xl font-bold text-slate-900 dark:text-white mb-1">2.4 <span className="text-xl">days</span></div>
+            <div className="text-xs font-medium text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+              -0.5d <span className="text-slate-400 dark:text-slate-500 font-normal">faster</span>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Charts Section */}
+      <div className="grid lg:grid-cols-3 gap-6">
+        <Card className="lg:col-span-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+          <CardHeader>
+            <CardTitle className="text-lg">Applications Over Time</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {/* CSS Mock Chart */}
+            <div className="h-64 flex items-end gap-2 mt-4 relative">
+              <div className="absolute left-0 top-0 bottom-0 w-full flex flex-col justify-between pointer-events-none opacity-20">
+                <div className="border-b border-slate-300 dark:border-slate-600 w-full h-0"></div>
+                <div className="border-b border-slate-300 dark:border-slate-600 w-full h-0"></div>
+                <div className="border-b border-slate-300 dark:border-slate-600 w-full h-0"></div>
+                <div className="border-b border-slate-300 dark:border-slate-600 w-full h-0"></div>
+              </div>
+              
+              {[40, 65, 45, 80, 55, 90, 75, 100, 85, 60, 45, 70].map((val, i) => (
+                <div key={i} className="flex-1 flex flex-col justify-end group relative h-full">
+                  <div 
+                    className="w-full bg-indigo-500 dark:bg-indigo-400 rounded-t-sm hover:bg-indigo-600 dark:hover:bg-indigo-300 transition-colors" 
+                    style={{ height: `${val}%` }}
+                  ></div>
+                  <div className="opacity-0 group-hover:opacity-100 absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-xs py-1 px-2 rounded whitespace-nowrap z-10 transition-opacity">
+                    {val * 5} apps
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="flex justify-between mt-4 text-xs font-medium text-slate-400">
+              <span>Week 1</span>
+              <span>Week 2</span>
+              <span>Week 3</span>
+              <span>Week 4</span>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+          <CardHeader>
+            <CardTitle className="text-lg">Candidate Funnel</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-6 mt-2">
+              <div>
+                <div className="flex justify-between text-sm mb-1">
+                  <span className="text-slate-600 dark:text-slate-400">Viewed Job</span>
+                  <span className="font-bold text-slate-900 dark:text-white">12,450</span>
+                </div>
+                <div className="w-full bg-slate-100 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
+                  <div className="bg-slate-400 h-full w-full"></div>
+                </div>
+              </div>
+              <div>
+                <div className="flex justify-between text-sm mb-1">
+                  <span className="text-slate-600 dark:text-slate-400">Applied</span>
+                  <span className="font-bold text-slate-900 dark:text-white">842</span>
+                </div>
+                <div className="w-full bg-slate-100 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
+                  <div className="bg-blue-500 h-full w-[65%]"></div>
+                </div>
+              </div>
+              <div>
+                <div className="flex justify-between text-sm mb-1">
+                  <span className="text-slate-600 dark:text-slate-400">Shortlisted</span>
+                  <span className="font-bold text-slate-900 dark:text-white">215</span>
+                </div>
+                <div className="w-full bg-slate-100 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
+                  <div className="bg-indigo-500 h-full w-[45%]"></div>
+                </div>
+              </div>
+              <div>
+                <div className="flex justify-between text-sm mb-1">
+                  <span className="text-slate-600 dark:text-slate-400">Interviewed</span>
+                  <span className="font-bold text-slate-900 dark:text-white">64</span>
+                </div>
+                <div className="w-full bg-slate-100 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
+                  <div className="bg-purple-500 h-full w-[25%]"></div>
+                </div>
+              </div>
+              <div>
+                <div className="flex justify-between text-sm mb-1">
+                  <span className="text-slate-600 dark:text-slate-400">Offered</span>
+                  <span className="font-bold text-slate-900 dark:text-white">12</span>
+                </div>
+                <div className="w-full bg-slate-100 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
+                  <div className="bg-emerald-500 h-full w-[10%]"></div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="mt-8 p-4 bg-slate-50 dark:bg-slate-900/50 rounded-lg border border-slate-100 dark:border-slate-800 text-sm text-slate-600 dark:text-slate-400 text-center">
+              Your application-to-offer rate is <span className="font-bold text-emerald-600 dark:text-emerald-400">1.4%</span> (above industry average).
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </motion.div>
+  );
+}

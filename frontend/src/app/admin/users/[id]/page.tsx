@@ -7,7 +7,7 @@ import { LoadingState, ErrorState } from "@/components/ui/states";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, UserX, UserCheck, Mail, Shield, User as UserIcon } from "lucide-react";
+import { ArrowLeft, UserX, UserCheck, Mail, Shield, User as UserIcon, Clock } from "lucide-react";
 import Link from "next/link";
 import { useAuthStore } from "@/context/AuthContext";
 
@@ -17,6 +17,7 @@ interface UserDetail {
   email: string;
   role: string;
   enabled?: boolean;
+  createdAt?: string;
 }
 
 export default function UserDetailPage() {
@@ -121,6 +122,14 @@ export default function UserDetailPage() {
               <Badge variant="secondary" className="font-medium text-sm">
                 {user.role}
               </Badge>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-slate-500 mb-1 flex items-center gap-1.5">
+                <Clock className="h-4 w-4" /> Member Since
+              </p>
+              <p className="text-sm font-medium text-slate-900">
+                {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : "Not available"}
+              </p>
             </div>
             {/* Add more fields here as backend expands */}
           </div>

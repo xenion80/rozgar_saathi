@@ -3,11 +3,11 @@
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
-import { Briefcase, MapPin, Clock, ArrowRight } from "lucide-react";
+import { Briefcase, MapPin, Clock, ArrowRight, Building2, Search } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { CardSkeletonList } from "@/components/ui/skeleton";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 
 export default function OpportunitiesPage() {
   const [opportunities, setOpportunities] = useState<any[]>([]);
@@ -27,16 +27,29 @@ export default function OpportunitiesPage() {
     fetchOpps();
   }, []);
 
+  const container: Variants = {
+    hidden: { opacity: 0 },
+    show: { opacity: 1, transition: { staggerChildren: 0.1 } }
+  };
+
+  const item: Variants = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+  };
+
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mx-auto max-w-5xl">
-      <div className="mb-8 flex items-center justify-between">
+      <div className="mb-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">All Opportunities</h1>
-          <p className="mt-2 text-slate-600">Browse all available jobs, internships, and projects.</p>
+          <h1 className="text-4xl font-extrabold tracking-tight text-black dark:text-white">All Opportunities</h1>
+          <p className="mt-3 text-lg text-slate-600 dark:text-slate-400">
+            Browse all available jobs, internships, and projects across our network.
+          </p>
         </div>
         <Link href="/student/recommended">
-          <Button variant="outline" className="gap-2">
-            View Recommended <ArrowRight size={16} />
+          <Button className="group gap-2 rounded-full bg-linear-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white shadow-lg shadow-emerald-500/25 border-0">
+            <SparklesIcon className="h-4 w-4" /> View Recommended 
+            <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
           </Button>
         </Link>
       </div>
@@ -44,45 +57,84 @@ export default function OpportunitiesPage() {
       {loading ? (
         <CardSkeletonList count={4} />
       ) : opportunities.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-slate-300 bg-white p-12 text-center">
-          <Briefcase size={32} className="mx-auto text-slate-300 mb-4" />
-          <h3 className="text-lg font-medium text-slate-900">No opportunities available</h3>
-          <p className="mt-1 text-sm text-slate-500">Check back later or explore recommended matches.</p>
+        <motion.div 
+          initial={{ scale: 0.95, opacity: 0 }} 
+          animate={{ scale: 1, opacity: 1 }}
+          className="flex flex-col items-center justify-center rounded-3xl glass-panel p-16 text-center"
+        >
+          <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800">
+            <Search size={40} className="text-slate-300 dark:text-slate-600" />
+          </div>
+          <h3 className="text-2xl font-bold text-black dark:text-white">No opportunities available</h3>
+          <p className="mt-2 text-slate-500 dark:text-slate-400 max-w-md">
+            Check back later as recruiters are constantly posting new roles, or explore your recommended matches.
+          </p>
           <Link href="/student/recommended">
-            <Button variant="outline" className="mt-4">View Recommended</Button>
+            <Button variant="outline" className="mt-8 rounded-full">View Recommended</Button>
           </Link>
-        </div>
+        </motion.div>
       ) : (
-        <div className="grid gap-6">
+        <motion.div variants={container} initial="hidden" animate="show" className="grid gap-6 sm:grid-cols-2">
           {opportunities.map((opp) => (
-            <Link key={opp.id} href={`/student/opportunities/${opp.id}`}>
-              <div className="group rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-150 hover:border-blue-300 hover:shadow-md">
-                <div className="flex items-start justify-between">
+            <motion.div key={opp.id} variants={item} className="h-full">
+              <Link href={`/student/opportunities/${opp.id}`} className="block h-full">
+                <div className="group flex h-full flex-col justify-between overflow-hidden rounded-3xl glass-panel p-6 sm:p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-emerald-500/10 hover:border-emerald-500/30 dark:hover:border-emerald-400/30">
+                  
                   <div>
-                    <h2 className="text-xl font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
-                      {opp.title}
-                    </h2>
-                    <p className="mt-1 font-medium text-slate-700">{opp.companyName}</p>
-                  </div>
-                  <Badge variant={(opp.type?.toLowerCase()) as any}>{opp.type}</Badge>
-                </div>
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <h2 className="text-xl font-bold text-black group-hover:text-emerald-600 transition-colors line-clamp-2">
+                          {opp.title}
+                        </h2>
+                        <div className="mt-2 flex items-center gap-1.5 text-sm font-medium text-slate-600 dark:text-slate-400">
+                          <Building2 size={16} /> {opp.companyName}
+                        </div>
+                      </div>
+                      <Badge variant={(opp.type?.toLowerCase()) as any} className="shrink-0">{opp.type}</Badge>
+                    </div>
 
-                <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-slate-500">
-                  <div className="flex items-center gap-1.5">
-                    <MapPin size={15} className="text-slate-400" /> {opp.location}
+                    <p className="mt-4 text-sm text-slate-500 dark:text-slate-400 line-clamp-3 leading-relaxed">
+                      {opp.description || "No description provided."}
+                    </p>
                   </div>
-                  <div className="flex items-center gap-1.5">
-                    <Briefcase size={15} className="text-slate-400" /> {opp.workMode}
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <Clock size={15} className="text-slate-400" /> Apply by {new Date(opp.applicationDeadline).toLocaleDateString()}
+
+                  <div className="mt-6 flex flex-wrap items-center gap-4 text-xs font-semibold text-slate-500 dark:text-slate-400">
+                    <div className="flex items-center gap-1.5 rounded-full bg-slate-100 dark:bg-slate-800 px-3 py-1">
+                      <MapPin size={14} className="text-slate-400" /> {opp.location}
+                    </div>
+                    <div className="flex items-center gap-1.5 rounded-full bg-slate-100 dark:bg-slate-800 px-3 py-1">
+                      <Briefcase size={14} className="text-slate-400" /> {opp.workMode}
+                    </div>
+                    <div className="flex w-full items-center gap-1.5 mt-2 border-t border-slate-100 dark:border-slate-800 pt-4">
+                      <Clock size={14} className="text-emerald-400" /> 
+                      <span>Apply by {new Date(opp.applicationDeadline).toLocaleDateString()}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </Link>
+              </Link>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       )}
     </motion.div>
+  );
+}
+
+function SparklesIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" />
+    </svg>
   );
 }

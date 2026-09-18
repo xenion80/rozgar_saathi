@@ -30,6 +30,7 @@ export default function RecruiterDashboardPage() {
   // Compute stats from loaded data
   const activeCount = opportunities.filter((o) => o.status === "OPEN").length;
   const totalApplicants = opportunities.reduce((sum, o) => sum + (o.applicantCount ?? 0), 0);
+  const totalShortlisted = opportunities.reduce((sum, o) => sum + (o.shortlistedCount ?? 0), 0);
 
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mx-auto max-w-5xl">
@@ -54,10 +55,10 @@ export default function RecruiterDashboardPage() {
           <StatCardSkeleton />
         </div>
       ) : (
-        <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
             <div className="flex items-center gap-2 text-sm font-medium text-slate-500 mb-2">
-              <Briefcase size={16} className="text-blue-500" /> Active Opportunities
+              <Briefcase size={16} className="text-emerald-500" /> Active Opportunities
             </div>
             <p className="text-3xl font-bold text-slate-900">{activeCount}</p>
           </div>
@@ -72,6 +73,12 @@ export default function RecruiterDashboardPage() {
               <Users size={16} className="text-purple-500" /> Total Applicants
             </div>
             <p className="text-3xl font-bold text-slate-900">{totalApplicants > 0 ? totalApplicants : "—"}</p>
+          </div>
+          <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+            <div className="flex items-center gap-2 text-sm font-medium text-slate-500 mb-2">
+              <Users size={16} className="text-amber-500" /> Shortlisted
+            </div>
+            <p className="text-3xl font-bold text-slate-900">{totalShortlisted > 0 ? totalShortlisted : "—"}</p>
           </div>
         </div>
       )}
@@ -108,6 +115,10 @@ export default function RecruiterDashboardPage() {
                   <span>•</span>
                   <span className="flex items-center gap-1">
                     <Clock size={14} /> Deadline: {new Date(opp.applicationDeadline).toLocaleDateString()}
+                  </span>
+                  <span>•</span>
+                  <span className="flex items-center gap-1 font-semibold text-emerald-600">
+                    <Users size={14} /> {opp.applicantCount || 0} Applications
                   </span>
                 </div>
               </div>
