@@ -4,8 +4,45 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Download, Calendar as CalendarIcon, Users, Briefcase, Activity, AlertCircle } from "lucide-react";
 import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import { api } from "@/lib/api";
 
 export default function AdminReportsPage() {
+  const [data, setData] = useState<any>({
+    totalUsers: 0, totalUsersGrowth: 0,
+    activeJobs: 0, activeJobsGrowth: 0,
+    matchesMade: 0, matchesMadeGrowth: 0,
+    pendingModeration: 0,
+    userGrowth: [],
+    platformHealth: {
+      uptime: "0%",
+      avgResponseTime: "0ms",
+      databaseLoad: "0%",
+      errorRate: "0%"
+    }
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchReports = async () => {
+      try {
+        const res = await api.get("/admin/reports");
+        if (res.success && res.data) {
+          setData(res.data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch admin reports:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchReports();
+  }, []);
+
+  if (loading) {
+    return <div className="p-8 text-center text-slate-500">Loading reports...</div>;
+  }
+
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mx-auto max-w-6xl space-y-8">
       {/* Header */}
@@ -35,9 +72,9 @@ export default function AdminReportsPage() {
                 <Users size={20} />
               </div>
             </div>
-            <div className="text-3xl font-bold text-slate-900 dark:text-white mb-1">24,592</div>
+            <div className="text-3xl font-bold text-slate-900 dark:text-white mb-1">{data.totalUsers.toLocaleString()}</div>
             <div className="text-xs font-medium text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-              +12% <span className="text-slate-400 dark:text-slate-500 font-normal">vs last period</span>
+              {data.totalUsersGrowth > 0 ? "+" : ""}{data.totalUsersGrowth}% <span className="text-slate-400 dark:text-slate-500 font-normal">vs last period</span>
             </div>
           </CardContent>
         </Card>
@@ -50,9 +87,9 @@ export default function AdminReportsPage() {
                 <Briefcase size={20} />
               </div>
             </div>
-            <div className="text-3xl font-bold text-slate-900 dark:text-white mb-1">3,405</div>
+            <div className="text-3xl font-bold text-slate-900 dark:text-white mb-1">{data.activeJobs.toLocaleString()}</div>
             <div className="text-xs font-medium text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-              +5% <span className="text-slate-400 dark:text-slate-500 font-normal">vs last period</span>
+              {data.activeJobsGrowth > 0 ? "+" : ""}{data.activeJobsGrowth}% <span className="text-slate-400 dark:text-slate-500 font-normal">vs last period</span>
             </div>
           </CardContent>
         </Card>
@@ -65,9 +102,9 @@ export default function AdminReportsPage() {
                 <Activity size={20} />
               </div>
             </div>
-            <div className="text-3xl font-bold text-slate-900 dark:text-white mb-1">18,240</div>
+            <div className="text-3xl font-bold text-slate-900 dark:text-white mb-1">{data.matchesMade.toLocaleString()}</div>
             <div className="text-xs font-medium text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-              +24% <span className="text-slate-400 dark:text-slate-500 font-normal">vs last period</span>
+              {data.matchesMadeGrowth > 0 ? "+" : ""}{data.matchesMadeGrowth}% <span className="text-slate-400 dark:text-slate-500 font-normal">vs last period</span>
             </div>
           </CardContent>
         </Card>
@@ -80,7 +117,7 @@ export default function AdminReportsPage() {
                 <AlertCircle size={20} />
               </div>
             </div>
-            <div className="text-3xl font-bold text-slate-900 dark:text-white mb-1">42</div>
+            <div className="text-3xl font-bold text-slate-900 dark:text-white mb-1">{data.pendingModeration}</div>
             <div className="text-xs font-medium text-amber-600 dark:text-amber-500 flex items-center gap-1">
               Needs review <span className="text-slate-400 dark:text-slate-500 font-normal">ASAP</span>
             </div>
@@ -103,7 +140,7 @@ export default function AdminReportsPage() {
                 <div className="border-b border-slate-300 dark:border-slate-600 w-full h-0"></div>
               </div>
               
-              {[30, 45, 55, 60, 75, 80, 85, 100].map((val, i) => (
+              {(data.userGrowth || []).map((val: number, i: number) => (
                 <div key={i} className="flex-1 flex flex-col justify-end group relative h-full">
                   <div 
                     className="w-full bg-indigo-500 dark:bg-indigo-400 rounded-t-sm" 
@@ -137,7 +174,7 @@ export default function AdminReportsPage() {
                   <p className="text-sm text-slate-500 dark:text-slate-400">Trailing 30 days</p>
                 </div>
                 <div className="text-right">
-                  <span className="text-xl font-bold text-emerald-600 dark:text-emerald-400">99.98%</span>
+                  <span className="text-xl font-bold text-emerald-600 dark:text-emerald-400">{data.platformHealth?.uptime || "N/A"}</span>
                 </div>
               </div>
               <div className="flex justify-between items-center pb-4 border-b border-slate-100 dark:border-slate-700">
@@ -146,7 +183,7 @@ export default function AdminReportsPage() {
                   <p className="text-sm text-slate-500 dark:text-slate-400">Global median</p>
                 </div>
                 <div className="text-right">
-                  <span className="text-xl font-bold text-emerald-600 dark:text-emerald-400">124ms</span>
+                  <span className="text-xl font-bold text-emerald-600 dark:text-emerald-400">{data.platformHealth?.avgResponseTime || "N/A"}</span>
                 </div>
               </div>
               <div className="flex justify-between items-center pb-4 border-b border-slate-100 dark:border-slate-700">
@@ -155,7 +192,7 @@ export default function AdminReportsPage() {
                   <p className="text-sm text-slate-500 dark:text-slate-400">Current primary cluster</p>
                 </div>
                 <div className="text-right">
-                  <span className="text-xl font-bold text-indigo-600 dark:text-indigo-400">34%</span>
+                  <span className="text-xl font-bold text-indigo-600 dark:text-indigo-400">{data.platformHealth?.databaseLoad || "N/A"}</span>
                 </div>
               </div>
               <div className="flex justify-between items-center">
@@ -164,7 +201,7 @@ export default function AdminReportsPage() {
                   <p className="text-sm text-slate-500 dark:text-slate-400">Last 24 hours</p>
                 </div>
                 <div className="text-right">
-                  <span className="text-xl font-bold text-emerald-600 dark:text-emerald-400">0.02%</span>
+                  <span className="text-xl font-bold text-emerald-600 dark:text-emerald-400">{data.platformHealth?.errorRate || "N/A"}</span>
                 </div>
               </div>
             </div>

@@ -4,8 +4,40 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Download, Calendar as CalendarIcon, Eye, Users, CheckCircle, Clock } from "lucide-react";
 import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import { api } from "@/lib/api";
 
 export default function AnalyticsPage() {
+  const [data, setData] = useState<any>({
+    jobViews: 0, jobViewsGrowth: 0,
+    totalApplications: 0, applicationsGrowth: 0,
+    qualifiedCandidates: 0, qualifiedGrowth: 0,
+    avgTimeToReview: 0, timeToReviewGrowth: 0,
+    applicationsOverTime: [],
+    funnel: { viewed: 0, applied: 0, shortlisted: 0, interviewed: 0, offered: 0, offerRate: 0 }
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAnalytics = async () => {
+      try {
+        const res = await api.get("/recruiter/analytics");
+        if (res.success && res.data) {
+          setData(res.data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch analytics:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAnalytics();
+  }, []);
+
+  if (loading) {
+    return <div className="p-8 text-center text-slate-500">Loading analytics...</div>;
+  }
+
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mx-auto max-w-6xl space-y-8">
       {/* Header */}
@@ -35,9 +67,9 @@ export default function AnalyticsPage() {
                 <Eye size={20} />
               </div>
             </div>
-            <div className="text-3xl font-bold text-slate-900 dark:text-white mb-1">12,450</div>
+            <div className="text-3xl font-bold text-slate-900 dark:text-white mb-1">{data.jobViews.toLocaleString()}</div>
             <div className="text-xs font-medium text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-              +14% <span className="text-slate-400 dark:text-slate-500 font-normal">from last month</span>
+              {data.jobViewsGrowth > 0 ? "+" : ""}{data.jobViewsGrowth}% <span className="text-slate-400 dark:text-slate-500 font-normal">from last month</span>
             </div>
           </CardContent>
         </Card>
@@ -50,9 +82,9 @@ export default function AnalyticsPage() {
                 <Users size={20} />
               </div>
             </div>
-            <div className="text-3xl font-bold text-slate-900 dark:text-white mb-1">842</div>
+            <div className="text-3xl font-bold text-slate-900 dark:text-white mb-1">{data.totalApplications.toLocaleString()}</div>
             <div className="text-xs font-medium text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-              +8% <span className="text-slate-400 dark:text-slate-500 font-normal">from last month</span>
+              {data.applicationsGrowth > 0 ? "+" : ""}{data.applicationsGrowth}% <span className="text-slate-400 dark:text-slate-500 font-normal">from last month</span>
             </div>
           </CardContent>
         </Card>
@@ -65,9 +97,9 @@ export default function AnalyticsPage() {
                 <CheckCircle size={20} />
               </div>
             </div>
-            <div className="text-3xl font-bold text-slate-900 dark:text-white mb-1">215</div>
+            <div className="text-3xl font-bold text-slate-900 dark:text-white mb-1">{data.qualifiedCandidates.toLocaleString()}</div>
             <div className="text-xs font-medium text-amber-600 dark:text-amber-500 flex items-center gap-1">
-              -2% <span className="text-slate-400 dark:text-slate-500 font-normal">from last month</span>
+              {data.qualifiedGrowth > 0 ? "+" : ""}{data.qualifiedGrowth}% <span className="text-slate-400 dark:text-slate-500 font-normal">from last month</span>
             </div>
           </CardContent>
         </Card>
@@ -80,9 +112,9 @@ export default function AnalyticsPage() {
                 <Clock size={20} />
               </div>
             </div>
-            <div className="text-3xl font-bold text-slate-900 dark:text-white mb-1">2.4 <span className="text-xl">days</span></div>
+            <div className="text-3xl font-bold text-slate-900 dark:text-white mb-1">{data.avgTimeToReview} <span className="text-xl">days</span></div>
             <div className="text-xs font-medium text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-              -0.5d <span className="text-slate-400 dark:text-slate-500 font-normal">faster</span>
+              {data.timeToReviewGrowth > 0 ? "+" : ""}{data.timeToReviewGrowth}d <span className="text-slate-400 dark:text-slate-500 font-normal">faster</span>
             </div>
           </CardContent>
         </Card>
@@ -104,7 +136,7 @@ export default function AnalyticsPage() {
                 <div className="border-b border-slate-300 dark:border-slate-600 w-full h-0"></div>
               </div>
               
-              {[40, 65, 45, 80, 55, 90, 75, 100, 85, 60, 45, 70].map((val, i) => (
+              {(data.applicationsOverTime || []).map((val: number, i: number) => (
                 <div key={i} className="flex-1 flex flex-col justify-end group relative h-full">
                   <div 
                     className="w-full bg-indigo-500 dark:bg-indigo-400 rounded-t-sm hover:bg-indigo-600 dark:hover:bg-indigo-300 transition-colors" 
@@ -134,7 +166,7 @@ export default function AnalyticsPage() {
               <div>
                 <div className="flex justify-between text-sm mb-1">
                   <span className="text-slate-600 dark:text-slate-400">Viewed Job</span>
-                  <span className="font-bold text-slate-900 dark:text-white">12,450</span>
+                  <span className="font-bold text-slate-900 dark:text-white">{data.funnel?.viewed?.toLocaleString() || 0}</span>
                 </div>
                 <div className="w-full bg-slate-100 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
                   <div className="bg-slate-400 h-full w-full"></div>
@@ -143,43 +175,43 @@ export default function AnalyticsPage() {
               <div>
                 <div className="flex justify-between text-sm mb-1">
                   <span className="text-slate-600 dark:text-slate-400">Applied</span>
-                  <span className="font-bold text-slate-900 dark:text-white">842</span>
+                  <span className="font-bold text-slate-900 dark:text-white">{data.funnel?.applied?.toLocaleString() || 0}</span>
                 </div>
                 <div className="w-full bg-slate-100 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
-                  <div className="bg-blue-500 h-full w-[65%]"></div>
+                  <div className="bg-blue-500 h-full" style={{ width: `${(data.funnel?.applied / (data.funnel?.viewed || 1)) * 100}%` }}></div>
                 </div>
               </div>
               <div>
                 <div className="flex justify-between text-sm mb-1">
                   <span className="text-slate-600 dark:text-slate-400">Shortlisted</span>
-                  <span className="font-bold text-slate-900 dark:text-white">215</span>
+                  <span className="font-bold text-slate-900 dark:text-white">{data.funnel?.shortlisted?.toLocaleString() || 0}</span>
                 </div>
                 <div className="w-full bg-slate-100 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
-                  <div className="bg-indigo-500 h-full w-[45%]"></div>
+                  <div className="bg-indigo-500 h-full" style={{ width: `${(data.funnel?.shortlisted / (data.funnel?.viewed || 1)) * 100}%` }}></div>
                 </div>
               </div>
               <div>
                 <div className="flex justify-between text-sm mb-1">
                   <span className="text-slate-600 dark:text-slate-400">Interviewed</span>
-                  <span className="font-bold text-slate-900 dark:text-white">64</span>
+                  <span className="font-bold text-slate-900 dark:text-white">{data.funnel?.interviewed?.toLocaleString() || 0}</span>
                 </div>
                 <div className="w-full bg-slate-100 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
-                  <div className="bg-purple-500 h-full w-[25%]"></div>
+                  <div className="bg-purple-500 h-full" style={{ width: `${(data.funnel?.interviewed / (data.funnel?.viewed || 1)) * 100}%` }}></div>
                 </div>
               </div>
               <div>
                 <div className="flex justify-between text-sm mb-1">
                   <span className="text-slate-600 dark:text-slate-400">Offered</span>
-                  <span className="font-bold text-slate-900 dark:text-white">12</span>
+                  <span className="font-bold text-slate-900 dark:text-white">{data.funnel?.offered?.toLocaleString() || 0}</span>
                 </div>
                 <div className="w-full bg-slate-100 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
-                  <div className="bg-emerald-500 h-full w-[10%]"></div>
+                  <div className="bg-emerald-500 h-full" style={{ width: `${(data.funnel?.offered / (data.funnel?.viewed || 1)) * 100}%` }}></div>
                 </div>
               </div>
             </div>
             
             <div className="mt-8 p-4 bg-slate-50 dark:bg-slate-900/50 rounded-lg border border-slate-100 dark:border-slate-800 text-sm text-slate-600 dark:text-slate-400 text-center">
-              Your application-to-offer rate is <span className="font-bold text-emerald-600 dark:text-emerald-400">1.4%</span> (above industry average).
+              Your application-to-offer rate is <span className="font-bold text-emerald-600 dark:text-emerald-400">{data.funnel?.offerRate || 0}%</span> (above industry average).
             </div>
           </CardContent>
         </Card>

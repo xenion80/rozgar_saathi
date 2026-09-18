@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Briefcase, Filter, Search, MoreHorizontal, User } from "lucide-react";
@@ -16,16 +17,25 @@ type Candidate = {
 };
 
 export default function HiringPipelinePage() {
-  const [candidates, setCandidates] = useState<Candidate[]>([
-    { id: "1", name: "Arjun Kumar", role: "Frontend Developer", matchScore: 92, stage: "NEW", appliedAt: "2d ago" },
-    { id: "2", name: "Priya Singh", role: "Frontend Developer", matchScore: 88, stage: "NEW", appliedAt: "3d ago" },
-    { id: "3", name: "Sneha Patel", role: "Product Designer", matchScore: 85, stage: "SCREENING", appliedAt: "1w ago" },
-    { id: "4", name: "Rahul Joshi", role: "Frontend Developer", matchScore: 78, stage: "SCREENING", appliedAt: "2w ago" },
-    { id: "5", name: "Ananya Desai", role: "Product Designer", matchScore: 95, stage: "INTERVIEW", appliedAt: "3w ago" },
-    { id: "6", name: "Vikram Sharma", role: "Data Analyst", matchScore: 82, stage: "OFFER", appliedAt: "1mo ago" }
-  ]);
-
+  const [candidates, setCandidates] = useState<Candidate[]>([]);
+  const [loading, setLoading] = useState(true);
   const [activeRoleFilter, setActiveRoleFilter] = useState("All");
+  
+  useEffect(() => {
+    const fetchPipeline = async () => {
+      try {
+        const res = await api.get("/recruiter/pipeline");
+        if (res.success && res.data) {
+          setCandidates(res.data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch pipeline", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPipeline();
+  }, []);
   
   const roles = ["All", "Frontend Developer", "Product Designer", "Data Analyst"];
   
@@ -80,36 +90,36 @@ export default function HiringPipelinePage() {
       </div>
 
       {/* Pipeline Board */}
-      <div className="flex gap-6 overflow-x-auto pb-4 flex-1">
-        {stages.map(stage => {
-          const stageCandidates = filteredCandidates.filter(c => c.stage === stage.id);
-          
-          return (
-            <div key={stage.id} className="flex flex-col w-80 shrink-0">
-              <div className={`px-4 py-3 rounded-t-xl border-x border-t font-semibold text-sm flex justify-between items-center ${stage.color}`}>
-                <span>{stage.name}</span>
-                <span className="bg-white/50 dark:bg-black/20 px-2 py-0.5 rounded-full text-xs">{stageCandidates.length}</span>
-              </div>
+      <div className="flex-1 overflow-x-auto pb-4">
+        {loading ? (
+          <div className="text-center p-12 text-slate-500">Loading pipeline...</div>
+        ) : (
+          <div className="flex gap-6 min-w-max h-full">
+            {stages.map(stage => {
+              const stageCandidates = filteredCandidates.filter(c => c.stage === stage.id);
               
-              <div className="flex-1 bg-slate-50/50 dark:bg-slate-900/30 border-x border-b border-slate-200 dark:border-slate-800 rounded-b-xl p-3 flex flex-col gap-3 overflow-y-auto">
-                {stageCandidates.map(candidate => (
-                  <Card key={candidate.id} className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm cursor-grab hover:shadow-md transition-shadow">
-                    <CardContent className="p-4">
-                      <div className="flex justify-between items-start mb-3">
-                        <div className="flex items-center gap-2">
-                          <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center font-bold text-slate-500 text-xs">
-                            {candidate.name.split(' ').map(n => n[0]).join('')}
+              return (
+                <div key={stage.id} className="flex-none w-80 flex flex-col h-full bg-slate-50/50 dark:bg-slate-800/20 rounded-xl border border-slate-200 dark:border-slate-800">
+                  <div className={`px-4 py-3 border-b flex justify-between items-center rounded-t-xl ${stage.color}`}>
+                    <h3 className="font-medium text-sm">{stage.name}</h3>
+                    <span className="bg-white/60 dark:bg-black/20 px-2 py-0.5 rounded-full text-xs font-semibold">
+                      {stageCandidates.length}
+                    </span>
+                  </div>
+                  
+                  <div className="p-3 flex-1 overflow-y-auto flex flex-col gap-3">
+                    {stageCandidates.map(candidate => (
+                      <Card key={candidate.id} className="cursor-pointer shadow-sm hover:shadow transition-shadow dark:bg-slate-800 border-slate-200 dark:border-slate-700">
+                        <CardContent className="p-4">
+                          <div className="flex justify-between items-start mb-2">
+                            <div>
+                              <h4 className="font-medium text-sm text-slate-900 dark:text-white">{candidate.name}</h4>
+                              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{candidate.appliedAt}</p>
+                            </div>
+                            <Button variant="ghost" size="icon" className="h-6 w-6 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+                              <MoreHorizontal size={14} />
+                            </Button>
                           </div>
-                          <div>
-                            <h4 className="font-semibold text-slate-900 dark:text-white text-sm">{candidate.name}</h4>
-                            <p className="text-xs text-slate-500">{candidate.appliedAt}</p>
-                          </div>
-                        </div>
-                        <button className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
-                          <MoreHorizontal size={16} />
-                        </button>
-                      </div>
-                      
                       <div className="text-xs text-slate-600 dark:text-slate-400 mb-3 flex items-center gap-1.5">
                         <Briefcase size={12} /> {candidate.role}
                       </div>
@@ -141,6 +151,8 @@ export default function HiringPipelinePage() {
             </div>
           );
         })}
+          </div>
+        )}
       </div>
     </motion.div>
   );

@@ -13,18 +13,30 @@ import { motion } from "framer-motion";
 export default function StudentDashboard() {
   const { user } = useAuthStore();
   const [stats, setStats] = useState({
-    recommendedJobs: 12,
-    savedJobs: 3,
-    applications: 5,
-    profileCompletion: 75
+    recommendedJobs: 0,
+    savedJobs: 0,
+    applications: 0,
+    profileCompletion: 0,
+    recommendedList: [] as any[],
+    recentActivity: [] as any[]
   });
 
   const [loading, setLoading] = useState(true);
 
-  // Mock data for now, ideally fetch from backend
   useEffect(() => {
-    // In a real app, fetch dashboard stats here
-    setTimeout(() => setLoading(false), 500);
+    const fetchDashboard = async () => {
+      try {
+        const res = await api.get("/student/dashboard");
+        if (res.success && res.data) {
+          setStats(res.data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch dashboard stats", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchDashboard();
   }, []);
 
   if (loading) {
@@ -125,31 +137,26 @@ export default function StudentDashboard() {
               </Link>
             </div>
             <div className="space-y-3">
-              {/* Mock Recommended Job */}
-              <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-4 rounded-xl flex items-start gap-4">
-                <div className="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center shrink-0">
-                  <Briefcase className="text-slate-500" size={20} />
-                </div>
-                <div className="flex-1">
-                  <div className="flex justify-between items-start">
-                    <h3 className="font-bold text-slate-900 dark:text-white text-sm">Junior Frontend Engineer</h3>
-                    <span className="bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs font-bold px-2 py-0.5 rounded">95% Match</span>
+              {stats.recommendedList && stats.recommendedList.length > 0 ? (
+                stats.recommendedList.map((job: any, index: number) => (
+                  <div key={index} className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-4 rounded-xl flex items-start gap-4">
+                    <div className="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center shrink-0">
+                      <Briefcase className="text-slate-500" size={20} />
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex justify-between items-start">
+                        <h3 className="font-bold text-slate-900 dark:text-white text-sm">{job.title}</h3>
+                        <span className="bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs font-bold px-2 py-0.5 rounded">{job.matchScore}% Match</span>
+                      </div>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{job.company} • {job.location}</p>
+                    </div>
                   </div>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">TechNova Solutions • Remote</p>
+                ))
+              ) : (
+                <div className="text-center p-4 text-slate-500 text-sm border border-dashed rounded-xl border-slate-200 dark:border-slate-700">
+                  No recommended jobs found.
                 </div>
-              </div>
-              <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-4 rounded-xl flex items-start gap-4">
-                <div className="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center shrink-0">
-                  <Briefcase className="text-slate-500" size={20} />
-                </div>
-                <div className="flex-1">
-                  <div className="flex justify-between items-start">
-                    <h3 className="font-bold text-slate-900 dark:text-white text-sm">React Developer</h3>
-                    <span className="bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs font-bold px-2 py-0.5 rounded">88% Match</span>
-                  </div>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">CreativeMinds • Mumbai</p>
-                </div>
-              </div>
+              )}
             </div>
           </div>
         </div>
@@ -164,36 +171,22 @@ export default function StudentDashboard() {
               <div className="relative">
                 <div className="absolute top-2 bottom-2 left-2.75 w-0.5 bg-slate-100 dark:bg-slate-700"></div>
                 <div className="space-y-6">
-                  <div className="relative flex gap-4">
-                    <div className="w-6 h-6 rounded-full bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0 z-10 ring-4 ring-white dark:ring-slate-800">
-                      <Send size={12} />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-slate-900 dark:text-white">Application Submitted</p>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Frontend Developer at TechNova</p>
-                      <p className="text-xs text-slate-400 dark:text-slate-500 mt-1 flex items-center gap-1"><Clock size={12}/> 2 hours ago</p>
-                    </div>
-                  </div>
-                  <div className="relative flex gap-4">
-                    <div className="w-6 h-6 rounded-full bg-purple-100 dark:bg-purple-900/50 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0 z-10 ring-4 ring-white dark:ring-slate-800">
-                      <CheckCircle2 size={12} />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-slate-900 dark:text-white">Application Shortlisted</p>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">UI Designer at CreativeMinds</p>
-                      <p className="text-xs text-slate-400 dark:text-slate-500 mt-1 flex items-center gap-1"><Clock size={12}/> 1 day ago</p>
-                    </div>
-                  </div>
-                  <div className="relative flex gap-4 opacity-75">
-                    <div className="w-6 h-6 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-500 flex items-center justify-center shrink-0 z-10 ring-4 ring-white dark:ring-slate-800">
-                      <Send size={12} />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-slate-900 dark:text-white">Application Submitted</p>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Data Analyst at DataCorp</p>
-                      <p className="text-xs text-slate-400 dark:text-slate-500 mt-1 flex items-center gap-1"><Clock size={12}/> 3 days ago</p>
-                    </div>
-                  </div>
+                  {stats.recentActivity && stats.recentActivity.length > 0 ? (
+                    stats.recentActivity.map((activity: any, index: number) => (
+                      <div key={index} className="relative flex gap-4">
+                        <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 z-10 ring-4 ring-white dark:ring-slate-800 ${activity.type === 'shortlisted' ? 'bg-purple-100 dark:bg-purple-900/50 text-purple-600 dark:text-purple-400' : 'bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400'}`}>
+                          {activity.type === 'shortlisted' ? <CheckCircle2 size={12} /> : <Send size={12} />}
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-slate-900 dark:text-white">{activity.title}</p>
+                          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{activity.description}</p>
+                          <p className="text-xs text-slate-400 dark:text-slate-500 mt-1 flex items-center gap-1"><Clock size={12}/> {activity.timeAgo}</p>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-xs text-slate-500 dark:text-slate-400">No recent activity</div>
+                  )}
                 </div>
               </div>
               <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-700">

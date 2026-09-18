@@ -48,46 +48,7 @@ interface ChatMessage {
   loading?: boolean;
 }
 
-/* ------------------------------------------------------------------ */
-/* Mock AI response — replace with real endpoint when available         */
-/* ------------------------------------------------------------------ */
 
-function mockAIResponse(question: string, opportunity: Opportunity): string {
-  const missing = opportunity.missingSkills ?? [];
-  const matched = opportunity.matchedSkills ?? [];
-  const title = opportunity.title || opportunity.opportunityTitle || "this role";
-
-  const lower = question.toLowerCase();
-
-  if (lower.includes("how") && (lower.includes("learn") || lower.includes("improve") || lower.includes("get"))) {
-    if (missing.length === 0) return `Great news — you already have all the skills listed for ${title}! Focus on polishing your portfolio and practising system-design questions to stand out.`;
-    return `To get ready for **${title}**, I'd suggest starting with **${missing[0]}** since it appears most frequently in similar job listings. Free resources: official docs, freeCodeCamp, and Coursera's beginner tracks. Aim for a small project that demonstrates ${missing[0]} within two weeks.`;
-  }
-
-  if (lower.includes("time") || lower.includes("long") || lower.includes("week")) {
-    if (missing.length === 0) return `You're already a strong match! With your existing skills you could apply right now.`;
-    return `Given you already know ${matched.slice(0, 2).join(" and ") || "some of the required skills"}, bridging the gap for ${missing.slice(0, 2).join(" and ")} typically takes **4–8 weeks** of consistent study (1–2 hours per day).`;
-  }
-
-  if (lower.includes("project") || lower.includes("portfolio")) {
-    if (missing.length === 0) return `With your current skills you could build a full-stack CRUD app, a REST API, or a data dashboard — all solid portfolio pieces for ${title}.`;
-    return `A great portfolio project combining your existing skills (${matched.slice(0, 2).join(", ") || "your current stack"}) with ${missing[0] || "the missing skill"} would be a real-world clone — e.g., a job-board or e-commerce site. It shows initiative and covers the skill gap visibly.`;
-  }
-
-  if (lower.includes("salary") || lower.includes("pay") || lower.includes("compensation")) {
-    return `Compensation for ${title} roles in India typically ranges from ₹8L to ₹20L depending on the company and experience level. Bridging your skill gaps can significantly push you toward the upper end.`;
-  }
-
-  if (lower.includes("interview") || lower.includes("prepare")) {
-    return `For ${title} interviews, expect: (1) a technical screen covering ${(matched[0] || "core concepts")}, (2) a take-home or live coding round, and (3) a system design or case discussion. Practice on LeetCode (medium difficulty) and mock interviews on Pramp or interviewing.io.`;
-  }
-
-  if (missing.length === 0) {
-    return `You're a great fit for **${title}**! Your matched skills cover everything listed. I'd recommend applying soon and preparing a strong cover letter that highlights your experience with ${matched.slice(0, 2).join(" and ") || "relevant technologies"}.`;
-  }
-
-  return `For **${title}**, your biggest opportunity is closing the gap on **${missing.join(", ")}**. I recommend: 1) Completing one focused course per skill, 2) Building a demo project that uses all of them together, 3) Applying once you have at least a working prototype to show. Would you like a detailed roadmap for any specific skill?`;
-}
 
 /* ------------------------------------------------------------------ */
 /* Match Score Ring                                                      */
@@ -158,7 +119,7 @@ export default function SkillGapOpportunityPage() {
       {
         id: "seed",
         role: "ai",
-        content: `Hi! I can help you bridge the skill gap for **${title}**. Ask me anything — how to learn a missing skill, how long it'll take, what projects to build, or how to prepare for the interview.`,
+        content: `Hi! The AI Coach for **${title}** is currently unavailable as the backend service is not yet implemented.`,
       },
     ]);
     setInput("");
@@ -178,10 +139,9 @@ export default function SkillGapOpportunityPage() {
     setInput("");
     setChatLoading(true);
 
-    /* Simulate ~800ms AI "thinking" then reply with mock */
-    await new Promise((r) => setTimeout(r, 800));
-    const reply = mockAIResponse(userMsg.content, active);
-    setMessages((prev) => prev.filter((m) => m.id !== "thinking").concat({ id: Date.now().toString(), role: "ai", content: reply }));
+    /* Simulate a quick response indicating it's not implemented */
+    await new Promise((r) => setTimeout(r, 500));
+    setMessages((prev) => prev.filter((m) => m.id !== "thinking").concat({ id: Date.now().toString(), role: "ai", content: "The AI Skill Coach service is currently unavailable." }));
     setChatLoading(false);
   };
 

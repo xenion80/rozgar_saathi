@@ -1,44 +1,46 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Briefcase, MapPin, Clock, Bookmark, Search, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { api } from "@/lib/api";
 
 export default function SavedJobsPage() {
-  // Mock data for saved jobs
-  const [savedJobs, setSavedJobs] = useState([
-    {
-      id: 1,
-      title: "Product Designer",
-      company: "CreativeMinds",
-      location: "Mumbai",
-      type: "Full-time",
-      salary: "₹12L - ₹18L",
-      savedAt: "2026-09-18T10:00:00Z",
-      closingDate: "2026-10-15T00:00:00Z",
-      matchScore: 85
-    },
-    {
-      id: 2,
-      title: "Data Analyst",
-      company: "DataCorp",
-      location: "Bangalore",
-      type: "Full-time",
-      salary: "₹10L - ₹14L",
-      savedAt: "2026-09-15T14:30:00Z",
-      closingDate: "2026-09-30T00:00:00Z",
-      matchScore: 72
-    }
-  ]);
-
+  const [savedJobs, setSavedJobs] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState<"list" | "card">("card");
 
-  const removeJob = (id: number) => {
-    setSavedJobs(savedJobs.filter(job => job.id !== id));
+  useEffect(() => {
+    const fetchSavedJobs = async () => {
+      try {
+        const res = await api.get("/student/saved-jobs");
+        if (res.success && res.data) {
+          setSavedJobs(res.data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch saved jobs:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchSavedJobs();
+  }, []);
+
+  const removeJob = async (id: number) => {
+    try {
+      await api.delete(`/student/saved-jobs/${id}`);
+      setSavedJobs(savedJobs.filter(job => job.id !== id));
+    } catch (err) {
+      console.error("Failed to remove saved job:", err);
+    }
   };
+
+  if (loading) {
+    return <div className="p-8 text-center text-slate-500">Loading saved jobs...</div>;
+  }
 
   if (savedJobs.length === 0) {
     return (
