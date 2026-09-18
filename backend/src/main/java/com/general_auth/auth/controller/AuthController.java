@@ -1,8 +1,7 @@
 package com.general_auth.auth.controller;
 
-import com.general_auth.auth.dto.Request.ForgotPasswordRequest;
+import com.general_auth.auth.dto.Request.ChangePasswordRequest;
 import com.general_auth.auth.dto.Request.LoginRequest;
-import com.general_auth.auth.dto.Request.ResetPasswordRequest;
 import com.general_auth.auth.dto.Response.LoginResponse;
 import com.general_auth.auth.services.AuthService;
 import com.general_auth.common.response.ApiResponse;
@@ -16,6 +15,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -34,12 +34,6 @@ public class AuthController {
                 ApiResponse.success("User Register successfully",response)
 
         );
-
-    }
-    @GetMapping("/verify-email")
-    public ResponseEntity<ApiResponse<String>> verify(@RequestParam String token){
-        authService.verify(token);
-        return ResponseEntity.ok(ApiResponse.success("Email is verified successfully",null));
 
     }
     @PostMapping("/login")
@@ -71,19 +65,20 @@ public class AuthController {
                 ApiResponse.success("Refreshed accessed token successfully",response)
         );
     }
-    @PostMapping("/forgot-password")
-    public ResponseEntity<ApiResponse<String>> forgot_password(@Valid @RequestBody ForgotPasswordRequest request){
-        authService.requestPasswordReset(request.getEmail());
+    @PutMapping("/change-password")
+    public ResponseEntity<ApiResponse<String>> changePassword(
+            Authentication authentication,
+            @Valid @RequestBody ChangePasswordRequest request
+    ) {
+        authService.changePassword(
+                authentication,
+                request.getCurrentPassword(),
+                request.getNewPassword()
+        );
+
         return ResponseEntity.ok(
-                ApiResponse.success("If account with this email exists, a reset password link will be sent",null)
+                ApiResponse.success("Password changed successfully", null)
         );
     }
 
-    @PostMapping("/reset-password")
-    public ResponseEntity<ApiResponse<String>> reset_Password(@Valid@RequestBody ResetPasswordRequest request){
-        authService.resetPassword(request.getToken(),request.getNewPassword());
-        return ResponseEntity.ok(
-                ApiResponse.success("The password has been reset successfully",null)
-        );
-    }
 }

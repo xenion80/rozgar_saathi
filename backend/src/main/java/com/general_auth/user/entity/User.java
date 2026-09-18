@@ -38,7 +38,7 @@ public class User implements UserDetails {
     private Role role;
 
     private boolean active=true;
-    private boolean emailVerified;
+
 
 
     @Override

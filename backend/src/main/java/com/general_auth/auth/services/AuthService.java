@@ -2,11 +2,7 @@ package com.general_auth.auth.services;
 
 import com.general_auth.auth.dto.Request.LoginRequest;
 import com.general_auth.auth.dto.Response.LoginResponse;
-import com.general_auth.auth.entity.EmailVerificationToken;
-import com.general_auth.auth.entity.ForgotPasswordResetToken;
 import com.general_auth.auth.entity.RefreshToken;
-import com.general_auth.auth.repository.EmailVerificationTokenRepository;
-import com.general_auth.auth.repository.ForgotPasswordResetTokenRepository;
 import com.general_auth.auth.repository.RefreshTokenRepository;
 import com.general_auth.common.exception.InvalidTokenException;
 import com.general_auth.common.exception.TokenNotFoundException;
@@ -18,20 +14,16 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.lang.module.ResolutionException;
 import java.time.LocalDateTime;
-import java.util.Optional;
-import java.util.UUID;
+
 
 @Service
 @RequiredArgsConstructor
@@ -39,24 +31,8 @@ public class AuthService {
     private final AuthenticationManager manager;
     private final JwtAuthService jwtAuthService;
     private final PasswordEncoder passwordEncoder;
-    private final EmailVerificationTokenRepository emailVerificationTokenRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final UserRepository userRepository;
-    private final ForgotPasswordResetTokenRepository forgotPasswordResetTokenRepository;
-    private final EmailService emailService;
-
-    @Transactional
-    public void verify(String token) {
-        EmailVerificationToken emailVerificationToken=emailVerificationTokenRepository.findByToken(token).orElseThrow(()->new ResolutionException("Invalid verification token"));
-        if(emailVerificationToken.getExpiresAt().isBefore(LocalDateTime.now())){
-            throw new IllegalArgumentException("The token has been expired");
-        }
-        User user=emailVerificationToken.getUser();
-        user.setEmailVerified(true);
-        user.setEnabled(true);
-        userRepository.save(user);
-        emailVerificationTokenRepository.delete(emailVerificationToken);
-    }
 
     public LoginResponse login(@Valid LoginRequest loginRequest) {
         Authentication authentication= manager.authenticate(
@@ -112,39 +88,23 @@ public class AuthService {
         return new LoginResponse(user.getId(),user.getName(),user.getEmail(),user.getRole(),token,accessToken);
 
     }
+    @Transactional
+    public void changePassword(
+            Authentication authentication,
+            String currentPassword,
+            String newPassword
+    ) {
+        User user = (User) authentication.getPrincipal();
 
-    @Transactional
-    public void requestPasswordReset(@Email(message = "enter correct email") @NotBlank(message = "the email section cannot be blank") String email) {
-        Optional<User> optionalUser=userRepository.findByEmail(email);
-        if(optionalUser.isEmpty())return;
-        User user=optionalUser.get();
-        String token= UUID.randomUUID().toString();
-        ForgotPasswordResetToken passwordResetToken=new ForgotPasswordResetToken();
-        passwordResetToken.setToken(token);
-        passwordResetToken.setUser(user);
-        passwordResetToken.setExpiresAt(LocalDateTime.now().plusMinutes(20));
-        forgotPasswordResetTokenRepository.save(passwordResetToken);
-        String url=buildResetPasswordUrl(token);
-        emailService.sendMail(user.getEmail(),"Reset Password","click here: "+url);
-    }
-    @Transactional
-    public void resetPassword( String token, String newPassword) {
-        ForgotPasswordResetToken passwordResetToken=forgotPasswordResetTokenRepository.findByToken(token).orElseThrow(()->new TokenNotFoundException("Token not found"));
-        if(passwordResetToken.getExpiresAt().isBefore(LocalDateTime.now()))throw new InvalidTokenException("Reset Link is expired");
-        User user=passwordResetToken.getUser();
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            throw new BadCredentialsException("Current password is incorrect");
+        }
+
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
+
+        // Invalidate all existing refresh tokens
         refreshTokenRepository.revokeAllByUser(user);
-        forgotPasswordResetTokenRepository.deleteByUser(user);
-
-    }
-
-
-
-
-
-    private String buildResetPasswordUrl(String token){
-        return "http://localhost:8080/auth/reset-password?token="+token;
     }
 
 

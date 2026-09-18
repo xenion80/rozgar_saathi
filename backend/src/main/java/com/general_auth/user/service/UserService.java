@@ -1,9 +1,6 @@
 package com.general_auth.user.service;
 
-import com.general_auth.auth.entity.EmailVerificationToken;
-import com.general_auth.auth.repository.EmailVerificationTokenRepository;
 import com.general_auth.auth.repository.RefreshTokenRepository;
-import com.general_auth.auth.services.EmailService;
 import com.general_auth.common.exception.IdentityAlreadyExistException;
 import com.general_auth.user.dto.request.ModifyUserDetailRequest;
 import com.general_auth.user.dto.request.SignUpInputModel;
@@ -31,22 +28,18 @@ import java.util.UUID;
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
-    private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
-    private final EmailVerificationTokenRepository tokenRepository;
     private final RefreshTokenRepository refreshTokenRepository;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepository.findByEmail(email).orElseThrow(()->new UsernameNotFoundException("User of this email not found"));
     }
-    private String buildVerifyEmailUrl(String token){
 
-        return "http://localhost:8080/auth/verify-email?token=" + token;
-    }
     public User getUserById(Long userId){
         return userRepository.findById(userId).orElseThrow(()->new BadCredentialsException("Userid not found"));
     }
+    @Transactional
     public UserResponse signUp(SignUpInputModel signUpInputModel){
         Optional<User> user=userRepository.findByEmail(signUpInputModel.getEmail());
         if(user.isPresent()){
@@ -54,28 +47,16 @@ public class UserService implements UserDetailsService {
         }
         User user1=modelMapper.map(signUpInputModel,User.class);
         user1.setPassword(passwordEncoder.encode(signUpInputModel.getPassword()));
-        user1.setEnabled(false);
+        user1.setEnabled(true);
         Role role = signUpInputModel.getRole() != null ? signUpInputModel.getRole() : Role.USER;
         if (role == Role.ADMIN) {
             throw new IllegalArgumentException("Cannot register an ADMIN account through signup");
         }
         user1.setRole(role);
-        user1.setEmailVerified(false);
+
 
         User saved=userRepository.save(user1);
-        String token= UUID.randomUUID().toString();
-        EmailVerificationToken emailVerificationToken =new EmailVerificationToken();
-        emailVerificationToken.setToken(token);
-        emailVerificationToken.setUser(saved);
-        emailVerificationToken.setExpiresAt(LocalDateTime.now().plusHours(20));
-        tokenRepository.save(emailVerificationToken);
-        String verifyEmail=buildVerifyEmailUrl(token);
-        emailService.sendMail(
-                saved.getEmail(),
-                "Verify your email",
-                "Click here: "+verifyEmail
 
-        );
         return modelMapper.map(saved,UserResponse.class);
 
     }
