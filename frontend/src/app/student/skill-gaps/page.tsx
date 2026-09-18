@@ -67,7 +67,7 @@ export default function SkillGapsPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="pt-8 flex flex-col items-center">
-            <p className="text-slate-600 text-center mb-8 max-w-md">
+            <p className="text-slate-600 dark:text-slate-300 text-center mb-8 max-w-md">
               Update your profile with your target role to get personalized recommendations on what skills you need to improve to become job-ready.
             </p>
             <Link href="/student/profile">
@@ -84,8 +84,8 @@ export default function SkillGapsPage() {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight text-slate-900">Skill Gap Analysis</h1>
-        <p className="text-slate-500 mt-2 flex items-center gap-2">
+        <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Skill Gap Analysis</h1>
+        <p className="text-slate-500 dark:text-slate-400 mt-2 flex items-center gap-2">
           Target Role: <Badge variant="secondary" className="text-emerald-700 bg-emerald-50">{data?.targetRole}</Badge>
         </p>
       </div>
@@ -118,14 +118,14 @@ export default function SkillGapsPage() {
                   {data.gaps.map((gap, i) => (
                     <div key={i} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-lg border border-slate-100 bg-slate-50/50">
                       <div>
-                        <h4 className="font-semibold text-slate-900 flex items-center gap-2">
+                        <h4 className="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
                           {gap.skill}
                           {gap.importance === "HIGH" && (
                             <Badge variant="outline" className="text-red-600 bg-red-50 border-red-200 text-[10px] px-1.5 py-0">Critical</Badge>
                           )}
                         </h4>
-                        <div className="flex items-center gap-2 text-sm text-slate-500 mt-1">
-                          <span>Current: <span className="font-medium text-slate-700">{gap.currentProficiency || "None"}</span></span>
+                        <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mt-1">
+                          <span>Current: <span className="font-medium text-slate-700 dark:text-slate-200">{gap.currentProficiency || "None"}</span></span>
                           <span>→</span>
                           <span>Required: <span className="font-medium text-emerald-700">{gap.requiredProficiency}</span></span>
                         </div>
@@ -148,7 +148,7 @@ export default function SkillGapsPage() {
               <CardContent className="pt-6">
                 <ul className="space-y-4">
                   {data.recommendations?.map((rec, i) => (
-                    <li key={i} className="flex gap-3 text-sm text-slate-600">
+                    <li key={i} className="flex gap-3 text-sm text-slate-600 dark:text-slate-300">
                       <div className="mt-0.5 text-emerald-600">
                         <AlertCircle className="h-4 w-4" />
                       </div>
@@ -156,7 +156,7 @@ export default function SkillGapsPage() {
                     </li>
                   ))}
                   {(!data.recommendations || data.recommendations.length === 0) && (
-                    <li className="text-sm text-slate-500 italic text-center py-4">No specific recommendations at this time.</li>
+                    <li className="text-sm text-slate-500 dark:text-slate-400 italic text-center py-4">No specific recommendations at this time.</li>
                   )}
                 </ul>
               </CardContent>

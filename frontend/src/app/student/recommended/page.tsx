@@ -72,7 +72,7 @@ export default function RecommendedOpportunitiesPage() {
           <p className="mt-2 text-slate-500 dark:text-slate-400 max-w-md">
             We need more data to find your perfect match. Try adding more skills or completing assessments.
           </p>
-          <Link href="/student/skills">
+          <Link href="/student/profile">
             <Button className="mt-8 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-500/25">
               Update My Skills
             </Button>

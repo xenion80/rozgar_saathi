@@ -40,7 +40,7 @@ export default function StudentDashboard() {
   }, []);
 
   if (loading) {
-    return <div className="p-8 text-center text-slate-500">Loading dashboard...</div>;
+    return <div className="p-8 text-center text-slate-500 dark:text-slate-400">Loading dashboard...</div>;
   }
 
   return (
@@ -145,7 +145,7 @@ export default function StudentDashboard() {
                 stats.recommendedList.map((job: any, index: number) => (
                   <div key={index} className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-4 rounded-xl flex items-start gap-4">
                     <div className="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center shrink-0">
-                      <Briefcase className="text-slate-500" size={20} />
+                      <Briefcase className="text-slate-500 dark:text-slate-400" size={20} />
                     </div>
                     <div className="flex-1">
                       <div className="flex justify-between items-start">
@@ -157,7 +157,7 @@ export default function StudentDashboard() {
                   </div>
                 ))
               ) : (
-                <div className="text-center p-4 text-slate-500 text-sm border border-dashed rounded-xl border-slate-200 dark:border-slate-700">
+                <div className="text-center p-4 text-slate-500 dark:text-slate-400 text-sm border border-dashed rounded-xl border-slate-200 dark:border-slate-700">
                   No recommended jobs found.
                 </div>
               )}

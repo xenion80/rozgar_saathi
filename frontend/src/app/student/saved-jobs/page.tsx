@@ -39,7 +39,7 @@ export default function SavedJobsPage() {
   };
 
   if (loading) {
-    return <div className="p-8 text-center text-slate-500">Loading saved jobs...</div>;
+    return <div className="p-8 text-center text-slate-500 dark:text-slate-400">Loading saved jobs...</div>;
   }
 
   if (savedJobs.length === 0) {
@@ -96,7 +96,7 @@ export default function SavedJobsPage() {
               <CardContent className="p-6 flex-1 flex flex-col">
                 <div className="flex justify-between items-start mb-4">
                   <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center shrink-0">
-                    <Briefcase className="text-slate-500" size={24} />
+                    <Briefcase className="text-slate-500 dark:text-slate-400" size={24} />
                   </div>
                   <button onClick={() => removeJob(job.id)} className="text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 p-2 rounded-full transition-colors" title="Remove from saved">
                     <Bookmark size={20} className="fill-current" />
@@ -107,16 +107,16 @@ export default function SavedJobsPage() {
                 <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">{job.company}</p>
                 
                 <div className="flex flex-wrap gap-2 mb-6">
-                  <span className="flex items-center text-xs text-slate-500 bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded">
+                  <span className="flex items-center text-xs text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded">
                     <MapPin size={12} className="mr-1" /> {job.location}
                   </span>
-                  <span className="text-xs text-slate-500 bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded">
+                  <span className="text-xs text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded">
                     {job.salary}
                   </span>
                 </div>
                 
                 <div className="mt-auto pt-4 border-t border-slate-100 dark:border-slate-700 space-y-3">
-                  <div className="flex justify-between text-xs text-slate-500">
+                  <div className="flex justify-between text-xs text-slate-500 dark:text-slate-400">
                     <span>Saved: {new Date(job.savedAt).toLocaleDateString()}</span>
                     <span className="text-amber-600 dark:text-amber-500 flex items-center gap-1"><Clock size={12} /> Closes {new Date(job.closingDate).toLocaleDateString()}</span>
                   </div>
@@ -131,7 +131,7 @@ export default function SavedJobsPage() {
       ) : (
         <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm">
           <table className="w-full text-left text-sm">
-            <thead className="bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-700 text-slate-500">
+            <thead className="bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400">
               <tr>
                 <th className="px-6 py-4 font-medium">Role</th>
                 <th className="px-6 py-4 font-medium">Saved Date</th>

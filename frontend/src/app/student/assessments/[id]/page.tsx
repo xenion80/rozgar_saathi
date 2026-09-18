@@ -108,7 +108,7 @@ export default function AssessmentFlowPage() {
   if (status === "INTRO") {
     return (
       <div className="max-w-2xl mx-auto mt-8">
-        <Link href="/student/skills">
+        <Link href="/student/profile">
           <Button variant="ghost" size="sm" className="mb-4 -ml-3 text-slate-500">
             <ArrowLeft className="h-4 w-4 mr-2" /> Back to Skills
           </Button>
@@ -185,7 +185,7 @@ export default function AssessmentFlowPage() {
             )}
           </CardContent>
           <CardFooter className="bg-slate-50 border-t justify-center py-6">
-            <Link href="/student/skills">
+            <Link href="/student/profile">
               <Button>Return to Skills Dashboard</Button>
             </Link>
           </CardFooter>

@@ -182,7 +182,7 @@ export default function SkillGapOpportunityPage() {
             <div className="flex flex-col items-center justify-center rounded-2xl glass-panel p-8 text-center">
               <Target size={32} className="mb-3 text-slate-300 dark:text-slate-600" />
               <p className="text-sm text-slate-500 dark:text-slate-400">No opportunities with ≥75% match found yet.</p>
-              <Link href="/student/skills" className="mt-4">
+              <Link href="/student/profile" className="mt-4">
                 <Button size="sm" variant="outline" className="rounded-full text-xs">Update Skills</Button>
               </Link>
             </div>

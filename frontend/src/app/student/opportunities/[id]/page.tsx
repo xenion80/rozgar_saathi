@@ -86,56 +86,56 @@ export default function OpportunityDetailPage({ params }: { params: Promise<{ id
           <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
             <div className="flex items-start justify-between">
               <div>
-                <h1 className="text-2xl font-bold text-slate-900">{opp.title}</h1>
+                <h1 className="text-2xl font-bold text-slate-900 dark:text-white">{opp.title}</h1>
                 <p className="mt-1 text-lg font-medium text-emerald-600">{opp.companyName}</p>
               </div>
-              <span className="inline-flex rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-700">
+              <span className="inline-flex rounded-full bg-slate-100 dark:bg-slate-700 px-3 py-1 text-sm font-medium text-slate-700 dark:text-slate-200">
                 {opp.type}
               </span>
             </div>
 
-            <div className="mt-6 flex flex-wrap gap-4 text-sm text-slate-600">
-              <div className="flex items-center gap-1.5 bg-slate-50 px-3 py-1.5 rounded-md">
+            <div className="mt-6 flex flex-wrap gap-4 text-sm text-slate-600 dark:text-slate-300">
+              <div className="flex items-center gap-1.5 bg-slate-50 dark:bg-slate-800 px-3 py-1.5 rounded-md">
                 <MapPin size={16} className="text-slate-400" /> {opp.location}
               </div>
-              <div className="flex items-center gap-1.5 bg-slate-50 px-3 py-1.5 rounded-md">
+              <div className="flex items-center gap-1.5 bg-slate-50 dark:bg-slate-800 px-3 py-1.5 rounded-md">
                 <Briefcase size={16} className="text-slate-400" /> {opp.workMode}
               </div>
-              <div className="flex items-center gap-1.5 bg-slate-50 px-3 py-1.5 rounded-md">
+              <div className="flex items-center gap-1.5 bg-slate-50 dark:bg-slate-800 px-3 py-1.5 rounded-md">
                 <Clock size={16} className="text-slate-400" /> Apply by {new Date(opp.applicationDeadline).toLocaleDateString()}
               </div>
             </div>
 
             <div className="mt-8">
-              <h3 className="text-lg font-bold text-slate-900 mb-3">About the Role</h3>
-              <p className="whitespace-pre-wrap text-slate-600 leading-relaxed">
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3">About the Role</h3>
+              <p className="whitespace-pre-wrap text-slate-600 dark:text-slate-300 leading-relaxed">
                 {opp.description}
               </p>
             </div>
 
             <div className="mt-8">
-              <h3 className="text-lg font-bold text-slate-900 mb-3">Minimum Qualification</h3>
-              <p className="text-slate-600">{opp.minimumQualification}</p>
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3">Minimum Qualification</h3>
+              <p className="text-slate-600 dark:text-slate-300">{opp.minimumQualification}</p>
             </div>
           </div>
         </div>
 
         {/* Match Analysis Sidebar */}
         <div className="space-y-6">
-          <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-            <h3 className="text-lg font-bold text-slate-900 mb-4">Match Analysis</h3>
+          <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 shadow-sm">
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">Match Analysis</h3>
             
-            <div className="mb-6 flex flex-col items-center justify-center p-4 rounded-xl bg-slate-50">
+            <div className="mb-6 flex flex-col items-center justify-center p-4 rounded-xl bg-slate-50 dark:bg-slate-900/50">
               <div className="text-4xl font-extrabold" style={{ color: matchScore >= 60 ? '#10b981' : '#f59e0b' }}>
                 {matchScore}%
               </div>
-              <p className="mt-1 font-medium text-slate-600">
+              <p className="mt-1 font-medium text-slate-600 dark:text-slate-300">
                 {isEligible ? "Eligible to Apply" : "Not Eligible (Needs 60%)"}
               </p>
             </div>
 
             <div className="space-y-4">
-              <h4 className="font-semibold text-slate-900 text-sm">Skill Breakdown</h4>
+              <h4 className="font-semibold text-slate-900 dark:text-white text-sm">Skill Breakdown</h4>
               {matchData?.skillDetails?.map((detail: any) => (
                 <div key={detail.skill} className="flex items-center justify-between text-sm">
                   <div className="flex items-center gap-2">
@@ -144,18 +144,18 @@ export default function OpportunityDetailPage({ params }: { params: Promise<{ id
                     ) : (
                       <XCircle size={16} className="text-red-500" />
                     )}
-                    <span className={detail.matched ? "text-slate-900 font-medium" : "text-slate-500"}>
+                    <span className={detail.matched ? "text-slate-900 dark:text-white font-medium" : "text-slate-500 dark:text-slate-400"}>
                       {detail.skill}
                     </span>
                   </div>
-                  <div className="text-xs text-slate-400">
+                  <div className="text-xs text-slate-400 dark:text-slate-500">
                     {detail.currentProficiency}/{detail.requiredProficiency} req.
                   </div>
                 </div>
               ))}
             </div>
             
-            <div className="mt-8 border-t border-slate-100 pt-6">
+            <div className="mt-8 border-t border-slate-100 dark:border-slate-700 pt-6">
               {applied ? (
                 <Button className="w-full" disabled variant="outline">Already Applied</Button>
               ) : opp.status === "CLOSED" ? (
@@ -190,17 +190,17 @@ export default function OpportunityDetailPage({ params }: { params: Promise<{ id
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="relative w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl"
+              className="relative w-full max-w-lg rounded-2xl bg-white dark:bg-slate-900 p-6 shadow-2xl"
             >
-              <h2 className="text-xl font-bold text-slate-900 mb-2">Apply for {opp.title}</h2>
-              <p className="text-sm text-slate-500 mb-6">Write a short cover letter to stand out (optional).</p>
+              <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Apply for {opp.title}</h2>
+              <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">Write a short cover letter to stand out (optional).</p>
 
               <form onSubmit={handleApply} className="space-y-4">
                 <textarea
                   rows={5}
                   value={coverLetter}
                   onChange={(e) => setCoverLetter(e.target.value)}
-                  className="w-full rounded-md border border-slate-300 p-3 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                  className="w-full rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white p-3 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
                   placeholder="I am very interested in this role because..."
                 />
                 

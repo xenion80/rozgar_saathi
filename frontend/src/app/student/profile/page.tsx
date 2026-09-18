@@ -5,8 +5,23 @@ import { api } from "@/lib/api";
 import { useAuthStore } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, User, GraduationCap, Briefcase, FileText, UploadCloud, CheckCircle2, Trash2, Plus } from "lucide-react";
+import { X, User, GraduationCap, Briefcase, FileText, UploadCloud, CheckCircle2, Trash2, Plus, Star } from "lucide-react";
+
+interface CatalogueSkill {
+  id: number;
+  name: string;
+  category: string;
+  description: string;
+}
+
+interface StudentSkill {
+  id: number;
+  skill: CatalogueSkill;
+  proficiency: number;
+  source: string;
+}
 
 interface Profile {
   id: number;
@@ -25,11 +40,6 @@ const TARGET_ROLES = [
   "Data Analyst",
 ];
 
-const PREDEFINED_SKILLS = [
-  "JavaScript", "TypeScript", "React", "Node.js", "Python", "Java", "C++", 
-  "HTML/CSS", "SQL", "MongoDB", "AWS", "Docker", "Git", "Figma", "UI/UX"
-];
-
 export default function StudentProfilePage() {
   const { user, accessToken, setAuth } = useAuthStore();
   const [profile, setProfile] = useState<Partial<Profile>>({});
@@ -44,9 +54,15 @@ export default function StudentProfilePage() {
   const [tenthDetails, setTenthDetails] = useState({ school: "", marks: "" });
   const [twelfthDetails, setTwelfthDetails] = useState({ school: "", marks: "" });
 
-  // Skills state
-  const [skills, setSkills] = useState<string[]>([]);
-  const [selectedSkill, setSelectedSkill] = useState("");
+  // Skills state (API-driven, same as /student/skills page)
+  const [mySkills, setMySkills] = useState<StudentSkill[]>([]);
+  const [catalogue, setCatalogue] = useState<CatalogueSkill[]>([]);
+  const [skillsLoading, setSkillsLoading] = useState(false);
+  const [isSkillModalOpen, setIsSkillModalOpen] = useState(false);
+  const [selectedSkillId, setSelectedSkillId] = useState("");
+  const [skillProficiency, setSkillProficiency] = useState(3);
+  const [skillError, setSkillError] = useState("");
+  const [skillSaving, setSkillSaving] = useState(false);
 
   // Resume state
   const [resumeUploading, setResumeUploading] = useState(false);
@@ -73,6 +89,28 @@ export default function StudentProfilePage() {
     };
     fetchProfile();
   }, []);
+
+  const fetchMySkills = async () => {
+    setSkillsLoading(true);
+    try {
+      const [mySkillsRes, catalogueRes] = await Promise.all([
+        api.get("/students/me/skills"),
+        api.get("/skills"),
+      ]);
+      if (mySkillsRes.success) setMySkills(mySkillsRes.data);
+      if (catalogueRes.success) setCatalogue(catalogueRes.data);
+    } catch (err) {
+      console.error("Failed to fetch skills", err);
+    } finally {
+      setSkillsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === "skills") {
+      fetchMySkills();
+    }
+  }, [activeTab]);
 
   useEffect(() => {
     if (message.text) {
@@ -112,15 +150,39 @@ export default function StudentProfilePage() {
     }
   };
 
-  const handleAddSkill = () => {
-    if (selectedSkill && !skills.includes(selectedSkill)) {
-      setSkills([...skills, selectedSkill]);
+  const handleAddSkill = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedSkillId) {
+      setSkillError("Please select a skill");
+      return;
     }
-    setSelectedSkill("");
+    setSkillSaving(true);
+    setSkillError("");
+    try {
+      await api.post("/students/me/skills", {
+        skillId: parseInt(selectedSkillId),
+        proficiency: skillProficiency,
+      });
+      setIsSkillModalOpen(false);
+      setSelectedSkillId("");
+      setSkillProficiency(3);
+      fetchMySkills();
+    } catch (err: any) {
+      setSkillError(err?.message || "Failed to add skill.");
+    } finally {
+      setSkillSaving(false);
+    }
   };
 
-  const handleRemoveSkill = (skillToRemove: string) => {
-    setSkills(skills.filter(s => s !== skillToRemove));
+  const handleUpdateProficiency = async (skillId: number, newProficiency: number) => {
+    try {
+      await api.put(`/students/me/skills/${skillId}`, { proficiency: newProficiency });
+      setMySkills((prev) =>
+        prev.map((s) => (s.skill.id === skillId ? { ...s, proficiency: newProficiency } : s))
+      );
+    } catch (err) {
+      console.error("Failed to update proficiency", err);
+    }
   };
 
   const handleResumeUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -135,7 +197,7 @@ export default function StudentProfilePage() {
   };
 
   if (loading) {
-    return <div className="flex h-64 items-center justify-center text-slate-500">Loading profile...</div>;
+    return <div className="flex h-64 items-center justify-center text-slate-500 dark:text-slate-400">Loading profile...</div>;
   }
 
   const initials = user?.name
@@ -272,49 +334,169 @@ export default function StudentProfilePage() {
             {/* SKILLS TAB */}
             {activeTab === "skills" && (
               <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
-                <div>
-                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Technical Skills</h3>
-                  <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">Add skills to help us match you with the right opportunities.</p>
-                </div>
-                
-                <div className="flex items-end gap-3">
-                  <div className="flex-1">
-                    <label className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300">Select a Skill</label>
-                    <select
-                      value={selectedSkill}
-                      onChange={(e) => setSelectedSkill(e.target.value)}
-                      className="flex h-10 w-full rounded-md border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-600 focus:outline-none dark:text-slate-200"
-                    >
-                      <option value="">-- Choose a predefined skill --</option>
-                      {PREDEFINED_SKILLS.filter(s => !skills.includes(s)).map((skill) => (
-                        <option key={skill} value={skill}>{skill}</option>
-                      ))}
-                    </select>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-1">My Skills</h3>
+                    <p className="text-sm text-slate-500 dark:text-slate-400">Add and manage your skills to improve your match score.</p>
                   </div>
-                  <Button onClick={handleAddSkill} disabled={!selectedSkill} className="bg-indigo-600 hover:bg-indigo-700 text-white">
-                    <Plus size={16} className="mr-1" /> Add
+                  <Button onClick={() => setIsSkillModalOpen(true)} className="gap-2 bg-indigo-600 hover:bg-indigo-700 text-white">
+                    <Plus size={16} /> Add Skill
                   </Button>
                 </div>
 
-                <div className="mt-8 border-t border-slate-100 dark:border-slate-800 pt-6">
-                  <h4 className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-4">Your Skills</h4>
-                  {skills.length === 0 ? (
-                    <div className="text-center p-8 border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-xl">
-                      <p className="text-slate-500 dark:text-slate-400 text-sm">No skills added yet.</p>
-                    </div>
-                  ) : (
-                    <div className="flex flex-wrap gap-2">
-                      {skills.map(skill => (
-                        <div key={skill} className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full px-3 py-1.5 text-sm text-slate-700 dark:text-slate-300">
-                          {skill}
-                          <button type="button" onClick={() => handleRemoveSkill(skill)} className="text-slate-400 hover:text-red-500 transition-colors">
-                            <X size={14} />
+                {skillsLoading ? (
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    {Array.from({ length: 4 }).map((_, i) => (
+                      <div key={i} className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-5 shadow-sm">
+                        <Skeleton className="h-5 w-2/3 mb-2" />
+                        <Skeleton className="h-4 w-1/3 mb-4" />
+                        <Skeleton className="h-3 w-full mb-1" />
+                        <Skeleton className="h-3 w-4/5 mb-4" />
+                        <div className="flex gap-1">
+                          {[1,2,3,4,5].map(s => <Skeleton key={s} className="h-5 w-5 rounded-full" />)}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    {mySkills.length === 0 ? (
+                      <div className="col-span-full rounded-xl border border-dashed border-slate-300 dark:border-slate-600 p-12 text-center">
+                        <h4 className="text-base font-medium text-slate-900 dark:text-white">No skills added yet</h4>
+                        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                          Get started by adding technical or soft skills from the catalogue.
+                        </p>
+                        <Button onClick={() => setIsSkillModalOpen(true)} variant="outline" className="mt-4">
+                          Add your first skill
+                        </Button>
+                      </div>
+                    ) : (
+                      mySkills.map((item) => (
+                        <div key={item.id} className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-5 shadow-sm transition-shadow hover:shadow-md">
+                          <div className="flex items-start justify-between">
+                            <div>
+                              <h4 className="font-semibold text-slate-900 dark:text-white">{item.skill.name}</h4>
+                              <span className="mt-1 inline-flex rounded-full bg-slate-100 dark:bg-slate-700 px-2 py-0.5 text-xs font-medium text-slate-600 dark:text-slate-300">
+                                {item.skill.category}
+                              </span>
+                            </div>
+                            <span className="text-xs text-slate-400" title="Source">{item.source}</span>
+                          </div>
+                          <p className="mt-3 text-xs text-slate-500 dark:text-slate-400 line-clamp-2" title={item.skill.description}>
+                            {item.skill.description}
+                          </p>
+                          <div className="mt-4 flex items-center gap-1">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                              <button
+                                key={star}
+                                type="button"
+                                onClick={() => handleUpdateProficiency(item.skill.id, star)}
+                                className="focus:outline-none"
+                              >
+                                <Star
+                                  size={20}
+                                  className={`transition-colors ${
+                                    star <= item.proficiency
+                                      ? "fill-yellow-400 text-yellow-400"
+                                      : "fill-slate-100 text-slate-200 hover:fill-yellow-200 hover:text-yellow-200"
+                                  }`}
+                                />
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                )}
+
+                {/* Add Skill Modal */}
+                <AnimatePresence>
+                  {isSkillModalOpen && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm"
+                        onClick={() => setIsSkillModalOpen(false)}
+                      />
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.95 }}
+                        className="relative w-full max-w-lg rounded-2xl bg-white dark:bg-slate-900 p-6 shadow-2xl"
+                      >
+                        <div className="mb-5 flex items-center justify-between">
+                          <h2 className="text-xl font-bold text-slate-900 dark:text-white">Add Skill</h2>
+                          <button
+                            onClick={() => setIsSkillModalOpen(false)}
+                            className="rounded-full p-1 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-600"
+                          >
+                            <X size={20} />
                           </button>
                         </div>
-                      ))}
+
+                        <form onSubmit={handleAddSkill} className="space-y-5">
+                          <div>
+                            <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Select Skill</label>
+                            <select
+                              required
+                              value={selectedSkillId}
+                              onChange={(e) => setSelectedSkillId(e.target.value)}
+                              className="flex h-10 w-full rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 dark:text-slate-200"
+                            >
+                              <option value="" disabled>Choose a skill...</option>
+                              {catalogue
+                                .filter((c) => !mySkills.some((m) => m.skill.id === c.id))
+                                .map((skill) => (
+                                  <option key={skill.id} value={skill.id}>
+                                    {skill.name} ({skill.category})
+                                  </option>
+                                ))}
+                            </select>
+                          </div>
+
+                          <div>
+                            <label className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300">
+                              Proficiency (1–5)
+                            </label>
+                            <div className="flex items-center gap-2">
+                              {[1, 2, 3, 4, 5].map((star) => (
+                                <button
+                                  key={star}
+                                  type="button"
+                                  onClick={() => setSkillProficiency(star)}
+                                  className="focus:outline-none"
+                                >
+                                  <Star
+                                    size={32}
+                                    className={`transition-colors ${
+                                      star <= skillProficiency
+                                        ? "fill-yellow-400 text-yellow-400"
+                                        : "fill-slate-100 text-slate-200 hover:fill-yellow-200 hover:text-yellow-200"
+                                    }`}
+                                  />
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+
+                          {skillError && <div className="text-sm text-red-500 font-medium">{skillError}</div>}
+
+                          <div className="mt-6 flex justify-end gap-3 border-t border-slate-100 dark:border-slate-800 pt-5">
+                            <Button type="button" variant="ghost" onClick={() => setIsSkillModalOpen(false)}>
+                              Cancel
+                            </Button>
+                            <Button type="submit" disabled={skillSaving || !selectedSkillId}>
+                              {skillSaving ? "Adding..." : "Add Skill"}
+                            </Button>
+                          </div>
+                        </form>
+                      </motion.div>
                     </div>
                   )}
-                </div>
+                </AnimatePresence>
               </div>
             )}
 
@@ -412,7 +594,7 @@ export default function StudentProfilePage() {
                     <div className="flex flex-col items-center gap-3 text-emerald-600 dark:text-emerald-500">
                       <CheckCircle2 size={48} className="mb-2" />
                       <p className="text-sm font-medium">Resume uploaded successfully!</p>
-                      <p className="text-xs text-slate-500">Click anywhere to replace.</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400">Click anywhere to replace.</p>
                     </div>
                   ) : (
                     <div className="flex flex-col items-center gap-3">
@@ -434,7 +616,7 @@ export default function StudentProfilePage() {
                       </div>
                       <div>
                         <p className="text-sm font-medium text-slate-900 dark:text-white">{user?.name ? `${user.name.split(" ").join("_")}_Resume.pdf` : "Resume.pdf"}</p>
-                        <p className="text-xs text-slate-500">Updated just now</p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">Updated just now</p>
                       </div>
                     </div>
                     <Button variant="ghost" size="icon" className="text-slate-400 hover:text-red-500 z-20" onClick={() => setResumeSuccess(false)}>

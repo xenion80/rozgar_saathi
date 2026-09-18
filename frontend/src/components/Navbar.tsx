@@ -22,8 +22,8 @@ export default function Navbar() {
   };
 
   const NavLink = ({ href, children, isActive }: { href: string; children: React.ReactNode; isActive: boolean }) => (
-    <Link 
-      href={href} 
+    <Link
+      href={href}
       className={cn(
         "relative rounded-full px-4 py-2 text-sm font-medium transition-colors",
         isActive ? "text-indigo-700 dark:text-indigo-400" : "text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100 hover:bg-slate-100/50 dark:hover:bg-slate-800/50"
@@ -48,7 +48,7 @@ export default function Navbar() {
           <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-lg transition-transform group-hover:scale-105">
             <Image src="/Rozgar_Saathi.webp" alt="Rozgar Saathi Logo" width={40} height={40} className="object-cover" />
           </div>
-          <span className="text-xl font-extrabold tracking-wider text-slate-900 hidden sm:block">
+          <span className="text-xl font-extrabold tracking-wider text-slate-900 dark:text-white hidden sm:block">
             Rozgar Saathi
           </span>
         </Link>
@@ -81,7 +81,7 @@ export default function Navbar() {
                 </>
               )}
             </nav>
-            
+
             <div className="flex items-center gap-3">
               <ThemeToggle />
               <div className="h-6 w-px bg-slate-200 dark:bg-slate-700 hidden sm:block" />
