@@ -35,7 +35,7 @@ export default function RecruiterDashboardPage() {
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mx-auto max-w-5xl">
       {/* Header */}
-      <div className="mb-8 flex items-center justify-between">
+      <div className="mb-8 flex items-center justify-between px-5 md:px-10 lg:px-20">
         <div>
           <h1 className="text-3xl font-bold text-slate-900">Recruiter Dashboard</h1>
           <p className="mt-2 text-slate-600">Manage your posted opportunities and review candidates.</p>

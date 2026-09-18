@@ -31,12 +31,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${inter.variable} ${outfit.variable} antialiased min-h-screen flex flex-col`}>
+    <html lang="en" className="dark">
+      <body className={`${inter.variable} ${outfit.variable} antialiased min-h-screen flex flex-col bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50`}>
         <ThemeProvider>
           <RouteGuard>
             <Navbar />
-            <main className="flex-1 w-full mx-auto bg-white pt-20 md:pt-28">
+            <main className="flex-1 w-full mx-auto pt-20 pb-10 md:pt-28 md:pb-10">
               {children}
             </main>
           </RouteGuard>

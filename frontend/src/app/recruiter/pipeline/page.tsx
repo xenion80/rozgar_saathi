@@ -52,7 +52,7 @@ export default function HiringPipelinePage() {
 
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="h-[calc(100vh-8rem)] flex flex-col">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 shrink-0">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 shrink-0 px-5 md:px-10 lg:px-20">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Hiring Pipeline</h1>
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Track candidates across all active roles.</p>

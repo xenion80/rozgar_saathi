@@ -12,12 +12,11 @@ type ThemeContextValue = {
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("light");
+  const [theme, setTheme] = useState<Theme>("dark");
 
   useEffect(() => {
     const savedTheme = window.localStorage.getItem("rozgar-saathi-theme") as Theme | null;
-    const preferredTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-    setTheme(savedTheme === "dark" || savedTheme === "light" ? savedTheme : preferredTheme);
+    setTheme(savedTheme === "dark" || savedTheme === "light" ? savedTheme : "dark");
   }, []);
 
   useEffect(() => {
