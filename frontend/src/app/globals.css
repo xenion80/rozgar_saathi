@@ -116,6 +116,7 @@ html.dark .bg-slate-200 { background-color: #182235 !important; }
 html.dark .border-slate-100,
 html.dark .border-slate-200,
 html.dark .border-slate-300 { border-color: var(--border) !important; }
+html.dark .text-black,
 html.dark .text-slate-900,
 html.dark .text-slate-800,
 html.dark .text-slate-700 { color: var(--foreground) !important; }
