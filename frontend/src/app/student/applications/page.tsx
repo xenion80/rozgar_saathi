@@ -73,7 +73,7 @@ export default function StudentApplicationsPage() {
                   {applications.map((app) => (
                     <tr key={app.id} className="hover:bg-slate-50/50 transition-colors">
                       <td className="px-6 py-4">
-                        <Link href={`/student/opportunities/${app.opportunityId}`} className="font-semibold text-slate-900 hover:text-blue-600 transition-colors">
+                        <Link href={`/student/opportunities/${app.opportunityId}`} className="font-semibold text-slate-900 hover:text-emerald-600 transition-colors">
                           {app.opportunityTitle}
                         </Link>
                         <div className="text-xs text-slate-500 mt-0.5">{app.companyName}</div>

@@ -7,11 +7,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [role, setRole] = useState("STUDENT");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -57,7 +59,7 @@ export default function RegisterPage() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className="mt-1"
-                placeholder="John Doe"
+                placeholder="Enter Full Name"
               />
             </div>
             <div>
@@ -68,19 +70,28 @@ export default function RegisterPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="mt-1"
-                placeholder="john@example.com"
+                placeholder="example@gmail.com"
               />
             </div>
             <div>
               <label className="text-sm font-medium text-slate-700">Password</label>
-              <Input
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="mt-1"
-                placeholder="••••••••"
-              />
+              <div className="relative mt-1">
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="pr-10"
+                  placeholder="Enter Password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600"
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
             </div>
             <div>
               <label className="text-sm font-medium text-slate-700">I am a</label>
@@ -90,7 +101,7 @@ export default function RegisterPage() {
                   onClick={() => setRole("STUDENT")}
                   className={`rounded-lg border px-4 py-2 text-sm font-medium transition-colors ${
                     role === "STUDENT"
-                      ? "border-blue-600 bg-blue-50 text-blue-700"
+                      ? "border-emerald-600 bg-emerald-50 text-emerald-700"
                       : "border-slate-200 text-slate-600 hover:bg-slate-50"
                   }`}
                 >
@@ -101,7 +112,7 @@ export default function RegisterPage() {
                   onClick={() => setRole("RECRUITER")}
                   className={`rounded-lg border px-4 py-2 text-sm font-medium transition-colors ${
                     role === "RECRUITER"
-                      ? "border-blue-600 bg-blue-50 text-blue-700"
+                      ? "border-emerald-600 bg-emerald-50 text-emerald-700"
                       : "border-slate-200 text-slate-600 hover:bg-slate-50"
                   }`}
                 >
@@ -120,7 +131,7 @@ export default function RegisterPage() {
 
         <p className="text-center text-sm text-slate-500">
           Already have an account?{" "}
-          <Link href="/login" className="font-semibold text-blue-600 hover:text-blue-500">
+          <Link href="/login" className="font-semibold text-emerald-600 hover:text-emerald-500">
             Sign in
           </Link>
         </p>

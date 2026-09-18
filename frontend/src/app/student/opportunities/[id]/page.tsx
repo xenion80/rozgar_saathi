@@ -87,7 +87,7 @@ export default function OpportunityDetailPage({ params }: { params: Promise<{ id
             <div className="flex items-start justify-between">
               <div>
                 <h1 className="text-2xl font-bold text-slate-900">{opp.title}</h1>
-                <p className="mt-1 text-lg font-medium text-blue-600">{opp.companyName}</p>
+                <p className="mt-1 text-lg font-medium text-emerald-600">{opp.companyName}</p>
               </div>
               <span className="inline-flex rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-700">
                 {opp.type}
@@ -200,7 +200,7 @@ export default function OpportunityDetailPage({ params }: { params: Promise<{ id
                   rows={5}
                   value={coverLetter}
                   onChange={(e) => setCoverLetter(e.target.value)}
-                  className="w-full rounded-md border border-slate-300 p-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="w-full rounded-md border border-slate-300 p-3 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
                   placeholder="I am very interested in this role because..."
                 />
                 

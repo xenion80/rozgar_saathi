@@ -136,7 +136,7 @@ export function UsersTable({ roleFilter = "ALL", title, description }: UsersTabl
                     <td className="px-6 py-4 text-slate-500">{user.email}</td>
                     <td className="px-6 py-4">
                       <Badge variant="outline" className={
-                        user.role === "STUDENT" ? "text-blue-700 bg-blue-50 border-blue-200" :
+                        user.role === "STUDENT" ? "text-emerald-700 bg-emerald-50 border-emerald-200" :
                         user.role === "RECRUITER" ? "text-orange-700 bg-orange-50 border-orange-200" :
                         "text-slate-700 bg-slate-100 border-slate-200"
                       }>
@@ -158,7 +158,7 @@ export function UsersTable({ roleFilter = "ALL", title, description }: UsersTabl
                     </td>
                     <td className="px-6 py-4 text-right">
                       <Link href={`/admin/users/${user.id}`}>
-                        <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-700 hover:bg-blue-50">
+                        <Button variant="ghost" size="sm" className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50">
                           View Details
                         </Button>
                       </Link>

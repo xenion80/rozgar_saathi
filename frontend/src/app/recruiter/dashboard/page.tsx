@@ -57,7 +57,7 @@ export default function RecruiterDashboardPage() {
         <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
           <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
             <div className="flex items-center gap-2 text-sm font-medium text-slate-500 mb-2">
-              <Briefcase size={16} className="text-blue-500" /> Active Opportunities
+              <Briefcase size={16} className="text-emerald-500" /> Active Opportunities
             </div>
             <p className="text-3xl font-bold text-slate-900">{activeCount}</p>
           </div>

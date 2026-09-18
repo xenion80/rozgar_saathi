@@ -150,14 +150,14 @@ export default function StudentProfilePage() {
       <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
         {/* Profile Header section with avatar */}
         <div className="bg-slate-50 p-6 sm:p-8 border-b border-slate-200 flex flex-col sm:flex-row items-center sm:items-start gap-6">
-          <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-full bg-blue-600 text-3xl font-bold text-white shadow-md">
+          <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-3xl font-bold text-white shadow-md">
             {initials}
           </div>
           <div className="text-center sm:text-left flex-1">
             <h2 className="text-2xl font-bold text-slate-900">{user?.name}</h2>
             <p className="text-slate-500 mb-4">{user?.email}</p>
             {!isEditing && (
-              <div className="inline-flex items-center rounded-full bg-blue-50 px-3 py-1 text-sm font-medium text-blue-700">
+              <div className="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-sm font-medium text-emerald-700">
                 Target Role: {profile.targetRole || "Not specified"}
               </div>
             )}
@@ -262,7 +262,7 @@ export default function StudentProfilePage() {
                     required
                     value={profile.targetRole || ""}
                     onChange={handleChange}
-                    className="flex h-10 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2"
+                    className="flex h-10 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
                   >
                     <option value="" disabled>Select a role</option>
                     {TARGET_ROLES.map((role) => (
@@ -282,7 +282,7 @@ export default function StudentProfilePage() {
                   rows={4}
                   value={profile.bio || ""}
                   onChange={handleChange}
-                  className="flex w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm ring-offset-background placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2"
+                  className="flex w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm ring-offset-background placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
                   placeholder="Tell recruiters a bit about yourself..."
                 />
               </div>

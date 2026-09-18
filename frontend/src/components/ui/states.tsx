@@ -10,7 +10,7 @@ interface StateProps {
 export function LoadingState({ title = "Loading...", message, className }: StateProps) {
   return (
     <div className={cn("flex flex-col items-center justify-center p-8 text-center min-h-50", className)}>
-      <Loader2 className="h-8 w-8 animate-spin text-blue-600 mb-4" />
+      <Loader2 className="h-8 w-8 animate-spin text-emerald-600 mb-4" />
       <h3 className="text-lg font-medium text-slate-900">{title}</h3>
       {message && <p className="text-sm text-slate-500 mt-2 max-w-sm">{message}</p>}
     </div>

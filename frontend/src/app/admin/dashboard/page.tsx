@@ -77,7 +77,7 @@ export default function AdminDashboard() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Students</CardTitle>
-            <GraduationCap className="h-4 w-4 text-blue-600" />
+            <GraduationCap className="h-4 w-4 text-emerald-600" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{students}</div>

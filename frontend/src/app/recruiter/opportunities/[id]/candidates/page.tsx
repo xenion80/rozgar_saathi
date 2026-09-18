@@ -98,7 +98,7 @@ export default function CandidatesReviewPage({ params }: { params: Promise<{ id:
                     </td>
                     <td className="px-6 py-4">
                       <button onClick={() => setSelectedCandidate(candidate)} className="text-left focus:outline-none group">
-                        <div className="font-semibold text-slate-900 group-hover:text-blue-600">{candidate.studentName}</div>
+                        <div className="font-semibold text-slate-900 group-hover:text-emerald-600">{candidate.studentName}</div>
                         <div className="text-xs text-slate-500">{candidate.studentEmail}</div>
                         <div className="mt-1 flex flex-wrap gap-1">
                           {candidate.matchedSkills.slice(0, 3).map((skill: string) => (
@@ -114,7 +114,7 @@ export default function CandidatesReviewPage({ params }: { params: Promise<{ id:
                     </td>
                     <td className="px-6 py-4">
                       <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${
-                        candidate.status === "APPLIED" ? "bg-blue-50 text-blue-700" :
+                        candidate.status === "APPLIED" ? "bg-emerald-50 text-emerald-700" :
                         candidate.status === "SHORTLISTED" ? "bg-amber-50 text-amber-700" :
                         candidate.status === "INTERVIEW" ? "bg-purple-50 text-purple-700" :
                         candidate.status === "SELECTED" ? "bg-green-50 text-green-700" :
@@ -127,7 +127,7 @@ export default function CandidatesReviewPage({ params }: { params: Promise<{ id:
                     <td className="px-6 py-4">
                       {candidate.status !== "WITHDRAWN" && (
                         <select
-                          className="h-8 rounded-md border border-slate-300 bg-white px-2 text-xs focus:border-blue-500 focus:outline-none"
+                          className="h-8 rounded-md border border-slate-300 bg-white px-2 text-xs focus:border-emerald-500 focus:outline-none"
                           value={candidate.status}
                           onChange={(e) => handleStatusChange(candidate.applicationId, e.target.value)}
                         >
@@ -177,7 +177,7 @@ export default function CandidatesReviewPage({ params }: { params: Promise<{ id:
               <div className="p-6 space-y-8">
                 <div className="flex items-start justify-between">
                   <div className="flex gap-4">
-                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 text-blue-600">
+                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
                       <User size={32} />
                     </div>
                     <div>
@@ -241,7 +241,7 @@ export default function CandidatesReviewPage({ params }: { params: Promise<{ id:
                     <div className="text-sm font-medium text-slate-700">Update Status</div>
                     {selectedCandidate.status !== "WITHDRAWN" ? (
                       <select
-                        className="h-10 rounded-md border border-slate-300 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none"
+                        className="h-10 rounded-md border border-slate-300 bg-white px-3 text-sm focus:border-emerald-500 focus:outline-none"
                         value={selectedCandidate.status}
                         onChange={(e) => handleStatusChange(selectedCandidate.applicationId, e.target.value)}
                       >

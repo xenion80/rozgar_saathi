@@ -13,13 +13,13 @@ export default function Home() {
         animate={{ opacity: 1, y: 0 }}
         className="text-center max-w-3xl px-4"
       >
-        <div className="inline-flex items-center justify-center p-2 mb-6 rounded-full bg-blue-50 text-blue-700 font-semibold text-sm ring-1 ring-inset ring-blue-700/10">
+        <div className="inline-flex items-center justify-center p-2 mb-6 rounded-full bg-emerald-50 text-emerald-700 font-semibold text-sm ring-1 ring-inset ring-emerald-700/10">
           SIH 2026 Prototype
         </div>
         
         <h1 className="text-5xl md:text-6xl font-extrabold text-slate-900 tracking-tight mb-6">
           Academia–Industry <br className="hidden md:block" />
-          <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-600 to-indigo-600">
+          <span className="text-transparent bg-clip-text bg-linear-to-r from-emerald-600 to-teal-600">
             Collaboration Portal
           </span>
         </h1>
@@ -49,7 +49,7 @@ export default function Home() {
         className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-24 max-w-4xl px-4"
       >
         <div className="bg-white p-8 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col items-center text-center">
-          <div className="h-16 w-16 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center mb-6">
+          <div className="h-16 w-16 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center mb-6">
             <GraduationCap size={32} />
           </div>
           <h2 className="text-2xl font-bold text-slate-900 mb-3">For Students</h2>
@@ -59,7 +59,7 @@ export default function Home() {
         </div>
 
         <div className="bg-white p-8 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col items-center text-center">
-          <div className="h-16 w-16 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center mb-6">
+          <div className="h-16 w-16 rounded-2xl bg-teal-100 text-teal-600 flex items-center justify-center mb-6">
             <Briefcase size={32} />
           </div>
           <h2 className="text-2xl font-bold text-slate-900 mb-3">For Recruiters</h2>
