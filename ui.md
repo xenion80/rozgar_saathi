@@ -1,65 +1,116 @@
-# Rozgar Saathi UI Plan
+# Rozgar Saathi UI Specification
 
-## 1. Product direction
+## 1. Product identity
 
-Rozgar Saathi should feel like a calm, trustworthy employment platform: simple enough for a first-time job seeker, structured enough for employers and administrators. The interface should combine:
+**App name:** Rozgar Saathi  
+**Meaning:** A trusted companion for finding work, building a career, and hiring the right people.  
+**Brand promise:** Make the next career step clearer, simpler, and more accessible.
 
-- **Nexus reference:** a confident, high-contrast landing page with a strong hero, restrained navigation, compact proof points, and a product-preview moment.
-- **Dashboard Design Requirements reference:** a practical application shell with a persistent sidebar, clear workspace header, searchable content, lightweight analytics, and one prominent primary action.
+The product should feel trustworthy, welcoming, and useful for first-time job seekers while still being efficient for employers and administrators. Use the Nexus reference for the confident landing-page composition and the dashboard reference for the clear, operational product shell.
 
-The visual language should be modern and premium without feeling corporate or intimidating. Avoid visual clutter, excessive gradients, and dense data tables above the fold.
+### Logo system
 
-## 2. Design system
+Create a simple, original Rozgar Saathi logo that works at small sizes:
 
-### Color palette
+- **Primary mark:** an abstract connection between two rounded forms, suggesting a person, opportunity, and supportive partnership.
+- **Wordmark:** `Rozgar Saathi` set in the primary sans-serif font with medium or semibold weight.
+- **Favicon/app mark:** use only the connection mark inside a rounded square; never use the full wordmark at favicon sizes.
+- **Light-theme logo:** deep navy mark and wordmark, with indigo accent detail.
+- **Dark-theme logo:** white wordmark and light lavender mark, with indigo accent detail.
+- **App icon:** solid indigo rounded square with the mark in white; it must remain recognizable without text.
+- **Logo clear space:** reserve at least the height of the mark around every side.
+- Do not use unofficial partner logos, copied marketplace logos, or logo treatments that change the shape of the mark.
 
-Use a light-first interface with dark brand accents and one energetic action color.
-
-- **Canvas:** warm off-white / very light gray (`#F7F8FA`)
-- **Surface:** white (`#FFFFFF`)
-- **Ink:** near-black navy (`#111827`)
-- **Muted text:** slate gray (`#64748B`)
-- **Brand:** deep indigo / violet (`#4F46E5`)
-- **Action accent:** violet-to-purple only for primary buttons and selected states
-- **Success:** emerald (`#16A34A`)
-- **Warning:** amber (`#D97706`)
-- **Border:** cool gray (`#E2E8F0`)
-
-Use color sparingly: most of the interface should be neutral, with indigo reserved for focus, navigation selection, links, and primary calls to action.
+## 2. Shared design system
 
 ### Typography
 
-- Use one modern sans-serif family throughout, preferably Geist or Inter.
-- Hero headline: large, tight, and confident; use a maximum width so it wraps intentionally.
-- Dashboard headings: compact and highly scannable.
+- Use Geist or Inter throughout the product.
+- Landing hero: large, tight, confident headline with a controlled max width.
+- Dashboard headings: compact, scannable, and sentence case.
 - Body copy: 15–17px with relaxed line height.
-- Labels and metadata: 12–14px, muted, never overly uppercase.
+- Labels and metadata: 12–14px; avoid excessive all-caps text.
+- Use no more than two font families and keep font weights intentional.
 
 ### Shape and depth
 
-- Use 12–16px corner radii on cards and controls.
-- Keep borders subtle and use shadows only for floating menus, dialogs, and elevated preview cards.
-- Buttons should be rounded rectangles, not pill-shaped by default. Reserve pills for statuses and filters.
-- Use a consistent 4px spacing scale with generous section padding.
+- Card and input radius: 12–16px.
+- Button radius: 10–12px; use pills only for statuses, filters, and tags.
+- Use borders for structure and shadows only for floating surfaces, dialogs, and product previews.
+- Use a consistent 4px spacing scale.
+- Prefer flexbox for most layouts and CSS grid for dashboard card arrangements.
+- Use subtle transitions for hover, focus, menus, and drawers; never delay primary tasks with animation.
 
-## 3. Landing page plan
+## 3. Theme tokens
+
+Every component must support both themes through semantic tokens. Do not hardcode a light-only color directly into a component.
+
+### Bright theme
+
+- **Canvas:** `#F7F8FA`
+- **Surface:** `#FFFFFF`
+- **Elevated surface:** `#FFFFFF`
+- **Primary ink:** `#111827`
+- **Secondary ink:** `#475569`
+- **Muted ink:** `#64748B`
+- **Brand:** `#4F46E5`
+- **Brand hover:** `#4338CA`
+- **Brand soft:** `#EEF2FF`
+- **Accent:** `#7C3AED`
+- **Success:** `#15803D`
+- **Warning:** `#B45309`
+- **Danger:** `#B91C1C`
+- **Border:** `#E2E8F0`
+- **Focus ring:** `#818CF8`
+
+Bright surfaces should be clean and airy. Use deep navy text for hierarchy, indigo for selected states and primary actions, and neutral gray for supporting content.
+
+### Dark theme
+
+- **Canvas:** `#0B1020`
+- **Surface:** `#111827`
+- **Elevated surface:** `#182235`
+- **Primary ink:** `#F8FAFC`
+- **Secondary ink:** `#CBD5E1`
+- **Muted ink:** `#94A3B8`
+- **Brand:** `#818CF8`
+- **Brand hover:** `#A5B4FC`
+- **Brand soft:** `#242052`
+- **Accent:** `#A78BFA`
+- **Success:** `#4ADE80`
+- **Warning:** `#FBBF24`
+- **Danger:** `#F87171`
+- **Border:** `#263247`
+- **Focus ring:** `#A5B4FC`
+
+Dark surfaces should use layered navy rather than pure black. Maintain clear separation between canvas, cards, sidebar, and dialogs. Avoid low-contrast gray text and avoid large glowing gradients.
+
+### Theme behavior
+
+- Provide a visible theme switcher with `Light`, `Dark`, and `System` options.
+- Add an accessible label: `Change theme`.
+- Respect the system preference on first visit when the user has not chosen a theme.
+- Persist the user’s choice through the existing application preference mechanism; do not duplicate theme state per page.
+- Ensure charts, status badges, borders, focus rings, illustrations, and logos all change with the theme.
+- Test every page at both themes, including empty, loading, error, dialog, and mobile states.
+
+## 4. Landing page
 
 ### Header
 
-Create a slim, sticky header with a white or translucent surface:
+Use a slim sticky header inspired by Nexus:
 
-- Left: Rozgar Saathi wordmark with a simple employment / connection mark.
-- Center or right: `Find jobs`, `For employers`, `Resources`.
-- Right: `Log in` as a quiet outline action and `Get started` as the filled primary action.
-- On mobile: collapse links into a menu button while keeping `Get started` visible.
+- Left: Rozgar Saathi logo and wordmark.
+- Navigation: `Find jobs`, `For employers`, `Career resources`.
+- Right actions: `Log in` and filled `Get started`.
+- Theme switcher beside the account actions.
+- Mobile: menu button, compact logo, theme switcher, and `Get started` remain accessible.
+- Bright theme: translucent white or white header with a subtle bottom border.
+- Dark theme: translucent navy header with a soft border and no heavy shadow.
 
-The header should be less than 72px tall and have a light bottom border rather than a heavy shadow.
+### Hero
 
-### Hero section
-
-Follow the Nexus composition: a short status eyebrow, an assertive two-line headline, supporting copy, and two actions.
-
-Suggested content:
+Use a high-confidence two-column layout:
 
 - Eyebrow: `A better way to move forward`
 - Headline: `Find the work that moves you forward.`
@@ -68,234 +119,203 @@ Suggested content:
 - Secondary CTA: `Explore opportunities`
 - Trust line: `Helping job seekers and employers connect across India`
 
-Place the hero in a generous two-column layout on desktop. The left side carries the message; the right side shows a polished product preview rather than a generic illustration. The preview can show a job search card with a search field, filters, and three opportunity rows.
+The right side should show a product preview, not a generic stock illustration. The preview can contain a search field, filter chips, match score, and three opportunity rows. In dark mode, show the same preview with layered navy surfaces and readable contrast.
 
-On mobile, stack the preview below the actions and keep the first viewport focused on the headline and primary CTA.
+### Landing sections
 
-### Proof strip
+1. **Trust strip:** Verified opportunities, Personalized matches, Simple applications, Built for growing teams.
+2. **How it works:** Create your profile, Discover the right match, Apply with confidence.
+3. **Featured opportunities:** Three or four realistic job cards with role, company, location, salary, tags, and `View role`.
+4. **Employer section:** Dark-indigo or dark-theme-compatible panel with `Build your next great team`, candidate pipeline preview, and `Post a job`.
+5. **Final CTA:** `Your next opportunity starts here.` with `Get started`.
+6. **Footer:** Product, Company, Legal, social/contact links, theme-aware logo, and copyright.
 
-Use a compact trust strip inspired by Nexus rather than a large logo wall:
+Never invent partner or customer logos. If logo placeholders are needed in a prototype, label them as illustrative rather than implying endorsement.
 
-- `Verified opportunities`
-- `Personalized matches`
-- `Simple applications`
-- `Built for growing teams`
+## 5. Shared dashboard shell
 
-Represent these as quiet text-and-icon items or four small stat blocks. Do not invent partner logos or unsupported claims.
+Use the dashboard reference as the foundation for every authenticated workspace.
 
-### How it works
+### Desktop shell
 
-Three horizontally aligned steps on desktop, stacked on mobile:
+- Fixed sidebar: 248–264px.
+- Sidebar top: Rozgar Saathi app logo and current workspace/account label.
+- Main content: flexible width with a max readable width of approximately 1280px.
+- Top bar: 64–72px with breadcrumb, global search, notifications, theme switcher, and profile menu.
+- Sidebar and top bar must use separate surface tokens so they remain distinct in both themes.
 
-1. **Create your profile** — Add skills, experience, preferred location, and work goals.
-2. **Discover the right match** — Browse relevant roles with clear salary, location, and work-mode details.
-3. **Apply with confidence** — Track applications and hear what happens next.
+### Mobile shell
 
-Each step should use a numbered marker, short title, and one concise sentence.
-
-### Featured opportunities
-
-Show a curated preview of real product content:
-
-- Search / keyword input
-- Location selector
-- Work mode filter
-- Job cards with role, company, location, salary range, tags, and `View role`
-
-Keep the landing page preview to 3–4 cards. The full search experience belongs in the dashboard.
-
-### Employer section
-
-Add a contrasting dark-indigo band with a split layout:
-
-- Heading: `Build your next great team.`
-- Copy explaining that employers can publish roles, manage candidates, and track hiring progress.
-- CTA: `Post a job`
-- Supporting visual: a compact candidate pipeline or workflow preview.
-
-This section should make the two-sided marketplace clear without competing with the job-seeker hero.
-
-### Final CTA and footer
-
-End with a focused CTA panel:
-
-- `Your next opportunity starts here.`
-- `Create a free profile and take the next step.`
-- `Get started`
-
-Footer groups:
-
-- Product: Find jobs, Post a job, Dashboard
-- Company: About, Contact, Help
-- Legal: Privacy, Terms
-
-## 4. Dashboard plan
-
-Use the Dashboard Design Requirements reference as the structural model: a fixed sidebar, a workspace header, a searchable content area, and a clear overview page.
-
-### Application shell
-
-Desktop layout:
-
-- Fixed left sidebar: 248–264px wide.
-- Main content: flexible width with a maximum readable content width.
-- Top workspace bar: 64–72px tall with breadcrumb, global search, notifications, and profile menu.
-
-Mobile layout:
-
-- Sidebar becomes a drawer.
-- Top bar keeps a menu button, page title, notifications, and avatar.
-- Search moves into the content area as a full-width control.
+- Sidebar becomes an accessible drawer.
+- Top bar contains menu button, page title, theme switcher, notifications, and avatar.
+- Global search moves below the page heading as a full-width control.
+- Keep the primary action visible without requiring horizontal scrolling.
 
 ### Job seeker navigation
 
-Primary items:
-
-- Overview
-- Find jobs
-- Saved jobs
-- Applications
-- Profile
-
-Secondary items:
-
-- Career resources
-- Help and support
-- Settings
-
-The selected item should use a soft indigo background, indigo icon, and dark text. Do not rely on color alone: include a visible selected background and strong text weight.
+Primary: `Overview`, `Find jobs`, `Saved jobs`, `Applications`, `Profile`  
+Secondary: `Career resources`, `Help and support`, `Settings`
 
 ### Employer navigation
 
-Primary items:
+Primary: `Overview`, `Job postings`, `Candidates`, `Hiring pipeline`, `Analytics`  
+Secondary: `Team settings`, `Help and support`, `Settings`
 
-- Overview
-- Job postings
-- Candidates
-- Hiring pipeline
-- Analytics
+### Admin navigation
 
-Secondary items:
+Primary: `Overview`, `Users`, `Jobs`, `Applications`, `Reports`  
+Secondary: `Moderation`, `Support`, `System settings`
 
-- Team settings
-- Help and support
-- Settings
+Selected navigation must use a soft brand background, strong text, selected icon treatment, and a visible indicator. Never rely on color alone.
 
-Role-specific navigation should be determined by account type, but the shell should remain visually consistent.
+## 6. Dashboard pages
 
-### Dashboard overview: job seeker
+### A. Job seeker overview
 
-Page header:
+Header: `Good morning, [Name]`  
+Supporting text: `Here is what is happening with your job search.`  
+Primary action: `Find jobs`
 
-- Breadcrumb: `Dashboard / Overview`
-- Heading: `Good morning, [Name]`
-- Supporting text: `Here is what is happening with your job search.`
-- Primary action: `Find jobs`
-
-Top metric cards:
+Metric cards:
 
 - Recommended jobs
 - Saved jobs
 - Applications sent
 - Profile completion
 
-Main content grid:
+Content:
 
-1. **Recommended for you** — Three job cards with match indicators and save actions.
-2. **Application activity** — A timeline showing recently submitted, viewed, or updated applications.
-3. **Profile completion** — A progress card with one next-best action, such as adding skills or uploading a resume.
+- **Recommended for you:** three job cards with match indicators and save actions.
+- **Application activity:** timeline of submitted, viewed, interview, and outcome events.
+- **Profile completion:** progress bar with one next-best action, such as adding skills or uploading a resume.
 
-Keep the first viewport action-oriented: the user should immediately see what to do next, not only statistics.
+### B. Find jobs
 
-### Dashboard overview: employer
+- Prominent search: `Search job title, skill, or company`.
+- Location search and filters: work mode, experience, salary, date posted.
+- Results list with save action, match score, tags, and `View role`.
+- Bright theme uses white cards on a soft gray canvas; dark theme uses elevated navy cards on a deep navy canvas.
+- Empty state: explain the absence of results and offer `Clear filters` or `Create a job alert`.
 
-Page header:
+### C. Job details and application flow
 
-- Breadcrumb: `Dashboard / Overview`
-- Heading: `Hiring overview`
-- Supporting text: `Monitor your open roles and candidate activity.`
-- Primary action: `Post a job`
+- Job title, company, location, salary, work mode, posting date, and verified status.
+- Clear primary action: `Apply now`.
+- Sticky apply action on mobile.
+- Application form should preserve entered data after validation errors.
+- Confirmation state should show the next step and link back to `Applications`.
 
-Top metric cards:
+### D. Saved jobs
+
+- List or card view toggle.
+- Saved date, closing date if available, and `Apply` action.
+- Empty state: `Save roles you want to revisit` with `Find jobs` CTA.
+
+### E. Applications
+
+- Summary cards for Applied, In review, Interview, Offer, and Closed.
+- Application table on desktop and stacked cards on mobile.
+- Timeline/status labels must include text, not only color.
+- Filters: status, date applied, company.
+
+### F. Profile
+
+- Completion percentage and profile strength.
+- Sections: personal details, skills, experience, education, preferred work, resume.
+- One clear `Edit profile` or section-level action at a time.
+- Use progressive disclosure so the page does not feel like one long form.
+
+### G. Employer overview
+
+Header: `Hiring overview`  
+Supporting text: `Monitor your open roles and candidate activity.`  
+Primary action: `Post a job`
+
+Metric cards:
 
 - Active jobs
 - New applicants
 - Candidates in review
 - Interviews scheduled
 
-Main content grid:
+Content:
 
-1. **Hiring pipeline** — A concise stage summary: New, Screening, Interview, Offer.
-2. **Recent applicants** — Candidate rows with role, stage, date, and a clear review action.
-3. **Posting performance** — Views, applications, and conversion for active roles.
+- **Hiring pipeline:** New, Screening, Interview, Offer.
+- **Recent applicants:** candidate, role, stage, date, and `Review`.
+- **Posting performance:** views, applications, and conversion for active roles.
 
-### Search and filters
+### H. Job postings
 
-Mirror the reference dashboard’s prominent search control:
+- Tabs or filters for Active, Draft, Paused, and Closed.
+- Table columns: role, location, applicants, status, updated, actions.
+- Primary action: `Post a job`.
+- Empty state should help the employer create the first posting.
 
-- Global search placeholder: `Search jobs, applications, or resources...`
-- Job search filters: location, work mode, experience, salary, date posted.
-- Use a horizontal filter row on desktop and a filter sheet on mobile.
-- Keep active filters visible as removable chips.
+### I. Candidates and hiring pipeline
 
-### Cards, tables, and empty states
+- Candidate table with search, role filter, stage filter, and bulk-safe actions.
+- Pipeline board with accessible stage labels and a list alternative for keyboard and mobile users.
+- Candidate detail drawer or page with resume, profile, notes, and activity.
+- Destructive actions require confirmation.
 
-- Prefer cards for summaries and job discovery.
-- Use tables only for employer applicant management where comparison matters.
-- Every empty state should explain what is missing and provide one primary action.
-- Every loading state should use skeleton blocks that preserve layout.
-- Errors should be inline, specific, and recoverable; never show a generic blank screen.
+### J. Analytics
 
-## 5. Responsive behavior
+- Date range selector and export action.
+- KPI cards: job views, applications, qualified candidates, time to review.
+- Use charts with text summaries and accessible legends.
+- Charts need theme-aware grid lines, labels, tooltips, and contrast.
 
-### Desktop
+### K. Admin overview
 
-- Max content width: 1280px.
-- Use a 12-column grid for hero and dashboard content.
-- Maintain generous whitespace around headings and section boundaries.
+- System KPIs: active users, active jobs, applications, pending moderation.
+- Moderation queue with priority/status filters.
+- Recent support activity and system health summary.
+- Admin controls should be visually distinct from normal user actions and require confirmation for destructive changes.
 
-### Tablet
+## 7. Components and states
 
-- Reduce sidebar width and collapse secondary navigation where necessary.
-- Change multi-column card grids to two columns.
-- Keep the global search visible if there is room.
+Build reusable primitives for logo, theme switcher, sidebar, top bar, cards, buttons, inputs, search, filters, badges, tabs, tables, timelines, charts, dialogs, drawers, toasts, skeletons, and empty states.
 
-### Mobile
+Every feature must define:
 
-- Use 16–20px page gutters.
-- Stack all cards and hero content.
-- Make primary actions full-width when they are the main task.
-- Use bottom sheets or drawers for filters and navigation.
+- Bright and dark appearance.
+- Default, hover, focus, disabled, loading, success, and error states.
+- Mobile behavior.
+- Keyboard navigation and accessible labels.
+
+## 8. Accessibility and responsive rules
+
+- Use semantic `header`, `nav`, `main`, `section`, and `footer` landmarks.
+- Every icon-only button needs an accessible label.
+- Maintain visible keyboard focus states in both themes.
+- Meet WCAG AA contrast for text and controls.
+- Use text labels alongside status colors.
+- Use 16–20px mobile gutters and a 1280px desktop content maximum.
+- Stack cards on mobile; use drawers or bottom sheets for filters and navigation.
 - Avoid horizontal scrolling except for intentionally scrollable filter chips.
 
-## 6. Accessibility and interaction rules
+## 9. Recommended implementation order
 
-- Use semantic landmarks: `header`, `nav`, `main`, `section`, and `footer`.
-- Every icon-only button needs an accessible label.
-- Maintain visible keyboard focus states.
-- Meet WCAG AA contrast for text and controls.
-- Provide text labels in addition to status colors.
-- Use dialogs for destructive actions and confirm before deleting jobs, applications, or candidates.
-- Preserve entered form data when validation fails.
-- Use subtle transitions for navigation, cards, and drawers; avoid animation that delays core tasks.
+1. Define semantic light/dark theme tokens and typography.
+2. Create the Rozgar Saathi logo mark, wordmark, favicon, and app icon variants.
+3. Build shared buttons, cards, inputs, badges, theme switcher, and navigation primitives.
+4. Build the landing page with the Nexus-inspired hero and product preview.
+5. Build the shared responsive dashboard shell.
+6. Build job seeker overview, jobs, applications, saved jobs, and profile pages.
+7. Build employer overview, job postings, candidates, pipeline, and analytics pages.
+8. Build the admin overview, moderation, users, jobs, and reports pages.
+9. Add loading, empty, error, dialog, mobile, and keyboard states.
+10. Validate every route in both bright and dark themes at desktop and mobile widths.
 
-## 7. Recommended build order
+## 10. Success criteria
 
-1. Establish design tokens, typography, buttons, inputs, cards, badges, and navigation primitives.
-2. Build the responsive landing page and product-preview hero.
-3. Build the shared dashboard shell with role-aware navigation.
-4. Build the job seeker overview page.
-5. Build the employer overview page.
-6. Add search, filters, empty states, loading states, and error states.
-7. Validate desktop and mobile screenshots against the reference composition and test keyboard navigation.
+The finished UI should make these actions obvious within seconds:
 
-## 8. Success criteria
+- A visitor understands Rozgar Saathi and can start finding work.
+- A job seeker can discover a role, save it, and start an application.
+- An employer can post a job and review candidate activity.
+- An administrator can monitor users, jobs, applications, and moderation.
+- A returning user can understand progress from the dashboard overview.
+- The same app identity, logo system, navigation language, and action hierarchy are consistent in bright and dark themes.
 
-The finished experience should make these actions obvious within seconds:
-
-- A job seeker can discover a role and start an application.
-- A new user can understand the value of Rozgar Saathi from the landing page.
-- An employer can post a job and see candidate activity.
-- A returning user can understand their current progress from the dashboard overview.
-
-The landing page should feel editorial and confident like Nexus. The dashboard should feel operational and clear like Dashboard Design Requirements. Keep the brand, spacing, typography, and action hierarchy consistent between both surfaces.
+The landing page should feel editorial and confident like Nexus. The dashboard should feel operational and clear like Dashboard Design Requirements. Both should unmistakably belong to Rozgar Saathi.
