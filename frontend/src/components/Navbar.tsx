@@ -34,6 +34,9 @@ export default function Navbar() {
                   <Link href="/student/skills" className={cn("transition-colors hover:text-blue-600", pathname === "/student/skills" && "text-blue-600 font-semibold")}>
                     Skills
                   </Link>
+                  <Link href="/student/skill-gaps" className={cn("transition-colors hover:text-blue-600", pathname === "/student/skill-gaps" && "text-blue-600 font-semibold")}>
+                    Skill Gaps
+                  </Link>
                   <Link href="/student/opportunities" className={cn("transition-colors hover:text-blue-600", pathname.startsWith("/student/opportunities") && "text-blue-600 font-semibold")}>
                     Opportunities
                   </Link>
