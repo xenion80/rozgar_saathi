@@ -41,7 +41,7 @@ export default function OpportunitiesPage() {
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mx-auto max-w-5xl">
       <div className="mb-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
         <div>
-          <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">All Opportunities</h1>
+          <h1 className="text-4xl font-extrabold tracking-tight text-black dark:text-white">All Opportunities</h1>
           <p className="mt-3 text-lg text-slate-600 dark:text-slate-400">
             Browse all available jobs, internships, and projects across our network.
           </p>
@@ -65,7 +65,7 @@ export default function OpportunitiesPage() {
           <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800">
             <Search size={40} className="text-slate-300 dark:text-slate-600" />
           </div>
-          <h3 className="text-2xl font-bold text-slate-900 dark:text-white">No opportunities available</h3>
+          <h3 className="text-2xl font-bold text-black dark:text-white">No opportunities available</h3>
           <p className="mt-2 text-slate-500 dark:text-slate-400 max-w-md">
             Check back later as recruiters are constantly posting new roles, or explore your recommended matches.
           </p>
@@ -83,7 +83,7 @@ export default function OpportunitiesPage() {
                   <div>
                     <div className="flex items-start justify-between gap-4">
                       <div>
-                        <h2 className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors line-clamp-2">
+                        <h2 className="text-xl font-bold text-black dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors line-clamp-2">
                           {opp.title}
                         </h2>
                         <div className="mt-2 flex items-center gap-1.5 text-sm font-medium text-slate-600 dark:text-slate-400">

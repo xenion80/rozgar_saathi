@@ -40,7 +40,7 @@ export default function RecommendedOpportunitiesPage() {
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mx-auto max-w-5xl">
       <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="flex items-center gap-3 text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+          <h1 className="flex items-center gap-3 text-4xl font-extrabold tracking-tight text-black dark:text-white">
             <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-linear-to-br from-amber-400 to-orange-500 text-white shadow-lg shadow-amber-500/25">
               <Sparkles size={24} />
             </span>
@@ -68,7 +68,7 @@ export default function RecommendedOpportunitiesPage() {
           <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800">
             <Sparkles size={40} className="text-slate-300 dark:text-slate-600" />
           </div>
-          <h3 className="text-2xl font-bold text-slate-900 dark:text-white">No strong matches yet</h3>
+          <h3 className="text-2xl font-bold text-black dark:text-white">No strong matches yet</h3>
           <p className="mt-2 text-slate-500 dark:text-slate-400 max-w-md">
             We need more data to find your perfect match. Try adding more skills or completing assessments.
           </p>
@@ -91,8 +91,8 @@ export default function RecommendedOpportunitiesPage() {
                   <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
                     <div className="flex-1 space-y-4">
                       <div>
-                        <h2 className="text-2xl font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
-                          {opp.opportunityTitle}
+                        <h2 className="text-2xl font-bold text-black dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                          {opp.title || opp.opportunityTitle}
                         </h2>
                         
                         {/* Fallback rendering for Company/Location if API provides it in the future, else styled generic badges */}
@@ -171,7 +171,7 @@ export default function RecommendedOpportunitiesPage() {
                           />
                         </svg>
                         <div className="text-center">
-                          <span className="block text-2xl font-black text-slate-900 dark:text-white leading-none">{opp.matchScore}%</span>
+                          <span className="block text-2xl font-black text-black dark:text-white leading-none">{opp.matchScore}%</span>
                           <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mt-1">Match</span>
                         </div>
                       </div>
