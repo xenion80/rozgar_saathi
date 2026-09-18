@@ -118,7 +118,7 @@ frontend/src/
 │           ├── [id]/edit/   # /recruiter/opportunities/:id/edit
 │           └── [id]/candidates/ # /recruiter/opportunities/:id/candidates — ranked list
 ├── components/
-│   ├── Navbar.tsx           # Role-aware top navigation ("Berozgar Saathi")
+│   ├── Navbar.tsx           # Role-aware top navigation ("Rozgar Saathi")
 │   ├── RouteGuard.tsx       # Role-based route protection
 │   ├── OpportunityForm.tsx  # Shared create/edit form for recruiters
 │   └── ui/                  # Button, Input, Skeleton, Badge primitives

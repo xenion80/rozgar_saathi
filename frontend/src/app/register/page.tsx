@@ -44,7 +44,7 @@ export default function RegisterPage() {
       >
         <div className="text-center">
           <h2 className="text-3xl font-bold tracking-tight text-slate-900">Create an account</h2>
-          <p className="mt-2 text-sm text-slate-500">Join Berozgar Saathi today</p>
+          <p className="mt-2 text-sm text-slate-500">Join Rozgar Saathi today</p>
         </div>
 
         <form onSubmit={handleRegister} className="space-y-6">

@@ -11,7 +11,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Berozgar Saathi",
+  title: "Rozgar Saathi",
   description: "Academia-Industry Collaboration Portal — Find opportunities matched to your skills.",
 };
 

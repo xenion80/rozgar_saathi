@@ -19,7 +19,7 @@ export default function Navbar() {
             <GraduationCap size={20} />
           </div>
           <span className="text-xl font-bold text-slate-900 tracking-tight">
-            Berozgar Saathi
+            Rozgar Saathi
           </span>
         </Link>
 
