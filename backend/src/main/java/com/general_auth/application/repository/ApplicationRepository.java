@@ -3,6 +3,7 @@ package com.general_auth.application.repository;
 import com.general_auth.application.entity.Application;
 import com.general_auth.opportunity.entity.Opportunity;
 import com.general_auth.student.entity.StudentProfile;
+import com.general_auth.application.entity.ApplicationStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -19,4 +20,8 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
     Optional<Application> findByStudentAndOpportunity(StudentProfile student, Opportunity opportunity);
 
     boolean existsByStudentAndOpportunity(StudentProfile student, Opportunity opportunity);
+
+    long countByOpportunityId(Long opportunityId);
+
+    long countByOpportunityIdAndStatus(Long opportunityId, ApplicationStatus status);
 }

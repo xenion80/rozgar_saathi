@@ -22,7 +22,7 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
   if (!initialData) return <div className="flex h-64 items-center justify-center">Opportunity not found.</div>;
 
   return (
-    <div className="py-4">
+    <div className="pt-5 sm:pt-10 md:pt-20 lg:pt-35 pb-5 sm:pb-10 md:pb-15 lg:pb-20 ">
       <div className="mb-6 max-w-4xl mx-auto">
         <h1 className="text-3xl font-bold text-slate-900">Edit Opportunity</h1>
         <p className="mt-2 text-slate-600">Update details for {initialData.title}</p>

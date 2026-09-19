@@ -39,61 +39,65 @@ export default function StudentApplicationsPage() {
   };
 
   return (
-    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mx-auto max-w-5xl">
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mx-auto max-w-5xl pt-5 sm:pt-10 md:pt-20 lg:pt-35 pb-10 sm:pb-15">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900">My Applications</h1>
-        <p className="mt-2 text-slate-600">Track the status of your opportunity applications.</p>
+        <h1 className="text-3xl font-bold text-slate-900 dark:text-white">My Applications</h1>
+        <p className="mt-2 text-slate-600 dark:text-white">Track the status of your opportunity applications.</p>
       </div>
 
       {loading ? (
         <CardSkeletonList count={3} />
       ) : (
-        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+        <div className="overflow-hidden">
           {applications.length === 0 ? (
             <div className="p-12 text-center">
-              <h3 className="text-lg font-medium text-slate-900">No applications found</h3>
-              <p className="mt-1 text-sm text-slate-500">You haven't applied to any opportunities yet.</p>
+              <h3 className="text-lg font-medium text-slate-900 dark:text-white">No applications found</h3>
+              <p className="mt-1 text-sm text-slate-500 dark:text-white">You haven't applied to any opportunities yet.</p>
               <Link href="/student/recommended">
-                <Button variant="outline" className="mt-4">Find Opportunities</Button>
+                <Button variant="outline" className="mt-4 dark:text-white dark:border-white">Find Opportunities</Button>
               </Link>
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm text-slate-600">
-                <thead className="border-b border-slate-200 bg-slate-50 text-xs font-semibold uppercase tracking-wide text-slate-700">
+              <table className="w-full text-left text-sm text-slate-600 dark:text-white border-separate border-spacing-y-3">
+                <thead className="text-xs font-semibold uppercase tracking-wide text-slate-700 dark:text-white">
                   <tr>
-                    <th className="px-6 py-4">Opportunity</th>
-                    <th className="px-6 py-4">Status</th>
-                    <th className="px-6 py-4 text-center">Match Score</th>
-                    <th className="px-6 py-4">Applied Date</th>
-                    <th className="px-6 py-4">Last Updated</th>
-                    <th className="px-6 py-4 text-right">Actions</th>
+                    <th className="px-6 py-2">Opportunity</th>
+                    <th className="px-6 py-2">Status</th>
+                    <th className="px-6 py-2 text-center">Match Score</th>
+                    <th className="px-6 py-2 whitespace-nowrap">Applied Date</th>
+                    <th className="px-6 py-2 whitespace-nowrap">Last Updated</th>
+                    <th className="px-6 py-2 text-center">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {applications.map((app) => (
-                    <tr key={app.id} className="hover:bg-slate-50/50 transition-colors">
-                      <td className="px-6 py-4">
-                        <Link href={`/student/opportunities/${app.opportunityId}`} className="font-semibold text-slate-900 hover:text-emerald-600 transition-colors">
+                <tbody className="dark:text-white">
+                  {applications.map((app) => {
+                    const tdClass = "px-6 py-4 border-y-2 border-slate-200 dark:border-slate-700 group-hover:border-green-400 dark:group-hover:border-green-400! bg-white dark:bg-slate-900 transition-colors";
+                    const firstTdClass = `${tdClass} border-l-2 rounded-l-xl`;
+                    const lastTdClass = `${tdClass} border-r-2 rounded-r-xl`;
+                    return (
+                    <tr key={app.id} className="group">
+                      <td className={firstTdClass}>
+                        <Link href={`/student/opportunities/${app.opportunityId}`} className="font-semibold text-slate-900 hover:text-emerald-600 transition-colors dark:text-white">
                           {app.opportunityTitle}
                         </Link>
-                        <div className="text-xs text-slate-500 mt-0.5">{app.companyName}</div>
+                        <div className="text-xs text-slate-500 dark:text-slate-300 mt-0.5">{app.companyName}</div>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className={tdClass}>
                         <StatusBadge status={app.status} />
                       </td>
-                      <td className="px-6 py-4 text-center font-bold">
+                      <td className={`${tdClass} text-center font-bold`}>
                         <span className={app.matchScore >= 60 ? "text-green-600" : "text-amber-500"}>
                           {app.matchScore}%
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-xs text-slate-500 whitespace-nowrap">
+                      <td className={`${tdClass} text-xs text-slate-500 dark:text-slate-300 whitespace-nowrap`}>
                         {app.appliedAt ? new Date(app.appliedAt).toLocaleDateString() : "—"}
                       </td>
-                      <td className="px-6 py-4 text-xs text-slate-500 whitespace-nowrap">
+                      <td className={`${tdClass} text-xs text-slate-500 dark:text-slate-300 whitespace-nowrap`}>
                         {app.updatedAt ? new Date(app.updatedAt).toLocaleDateString() : "—"}
                       </td>
-                      <td className="px-6 py-4 text-right">
+                      <td className={`${lastTdClass} text-right`}>
                         <Link href={`/student/applications/${app.id}`}>
                           <Button variant="ghost" size="sm" className="text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700">
                             View Details
@@ -111,7 +115,7 @@ export default function StudentApplicationsPage() {
                         )}
                       </td>
                     </tr>
-                  ))}
+                  )})}
                 </tbody>
               </table>
             </div>

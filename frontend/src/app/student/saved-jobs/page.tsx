@@ -39,12 +39,12 @@ export default function SavedJobsPage() {
   };
 
   if (loading) {
-    return <div className="p-8 text-center text-slate-500 dark:text-slate-400">Loading saved jobs...</div>;
+    return <div className="p-8 text-center text-slate-500 dark:text-slate-400 pt-5 sm:pt-10 md:pt-20 lg:pt-35 pb-5 sm:pb-10 md:pb-15 lg:pb-20 ">Loading saved jobs...</div>;
   }
 
   if (savedJobs.length === 0) {
     return (
-      <div className="mx-auto max-w-4xl pt-12">
+      <div className="mx-auto max-w-4xl pt-5 sm:pt-10 md:pt-20 lg:pt-35 pb-5 sm:pb-10 md:pb-15 lg:pb-20 ">
         <div className="flex flex-col items-center justify-center text-center p-12 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 border-dashed">
           <div className="w-16 h-16 rounded-full bg-indigo-50 dark:bg-indigo-900/50 flex items-center justify-center text-indigo-500 mb-6">
             <Bookmark size={24} />
@@ -64,7 +64,7 @@ export default function SavedJobsPage() {
   }
 
   return (
-    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mx-auto max-w-5xl space-y-6">
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mx-auto max-w-5xl space-y-6 pt-5 sm:pt-10 md:pt-20 lg:pt-35 pb-10 sm:pb-15">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Saved Jobs</h1>

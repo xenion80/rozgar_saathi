@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import Image from "next/image";
 import {
   ArrowRight,
   CheckCircle2,
@@ -127,7 +128,7 @@ export default function Home() {
       };
 
   return (
-    <div className="flex min-h-screen flex-col bg-white text-slate-900">
+    <div className="flex min-h-screen flex-col bg-white text-slate-900 pt-5 sm:pt-10 md:pt-15 lg:pt-20 ">
       {/* Hero */}
       <section className="relative overflow-hidden pt-16 pb-24 lg:pt-24 lg:pb-32">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -141,7 +142,7 @@ export default function Home() {
               <div className="inline-flex items-center rounded-full bg-indigo-50 dark:bg-indigo-500/10 px-3 py-1 text-sm font-semibold text-indigo-600 dark:text-indigo-400 mb-6">
                 A better way to move forward
               </div>
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight mb-6 leading-[1.1]">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-6 leading-[1.1]">
                 Find the work that <span className="text-indigo-600 dark:text-indigo-400">moves you forward.</span>
               </h1>
               <p className="text-lg sm:text-xl text-slate-600 dark:text-slate-400 mb-8 max-w-2xl mx-auto lg:mx-0">
@@ -155,7 +156,7 @@ export default function Home() {
                   </Button>
                 </Link>
                 <Link href="/explore">
-                  <Button variant="outline" size="lg" className="w-full sm:w-auto text-base h-12 px-8 rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-700">
+                  <Button variant="outline" size="lg" className="w-full sm:w-auto text-base h-12 px-8 rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800! text-slate-900 dark:text-white hover:bg-slate-300! dark:hover:text-emerald-600!">
                     Explore opportunities
                   </Button>
                 </Link>
@@ -173,16 +174,14 @@ export default function Home() {
               transition={{ delay: 0.2 }}
               className="lg:col-span-6 relative"
             >
-              <div className="absolute inset-0 bg-linear-to-tr from-indigo-500/10 to-purple-500/10 dark:from-indigo-500/20 dark:to-purple-500/20 rounded-4xl blur-3xl -z-10 transform rotate-6 scale-105"></div>
-
-              <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-2xl overflow-hidden flex flex-col">
+              <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-2xl shadow-indigo-500/20 dark:shadow-indigo-500/30 overflow-hidden flex flex-col">
                 <div className="border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 p-4">
                   <div className="flex items-center gap-3">
                     <div className="flex-1 relative">
                       <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                       <input type="text" placeholder="Search roles..." className="w-full pl-9 pr-4 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-sm outline-none" readOnly />
                     </div>
-                    <Button size="sm" variant="outline" className="hidden sm:flex rounded-lg">Filters</Button>
+                    <Button size="sm" variant="outline" className="hidden sm:flex rounded-lg text-black dark:text-white!">Filters</Button>
                   </div>
                   <div className="flex gap-2 mt-3 overflow-hidden">
                     <span className="px-3 py-1 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 rounded-full text-xs font-medium whitespace-nowrap">Full-time</span>
@@ -244,8 +243,8 @@ export default function Home() {
           <div className="grid grid-cols-2 gap-y-8 text-center md:grid-cols-4 md:gap-y-0 md:divide-x md:divide-slate-200">
             {trustItems.map(({ icon: Icon, label }) => (
               <div key={label} className="flex flex-col items-center justify-center px-4">
-                <Icon className="mb-2 h-6 w-6 text-slate-500" />
-                <span className="text-sm font-medium text-slate-700">{label}</span>
+                <Icon className="mb-2 h-6 w-6 text-emerald-500" />
+                <span className="text-sm font-medium text-slate-900 dark:text-white">{label}</span>
               </div>
             ))}
           </div>
@@ -253,17 +252,17 @@ export default function Home() {
       </section>
 
       {/* How it works */}
-      <section className="bg-white py-24">
+      <section className="py-16">
         <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
-          <h2 className="mb-16 text-3xl font-bold text-slate-900">How it works</h2>
+          <h2 className="mb-16 text-3xl font-bold text-slate-900 dark:text-white">How it works</h2>
           <div className="grid gap-12 md:grid-cols-3">
             {steps.map((step, i) => (
               <div key={step.title} className="flex flex-col items-center">
                 <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-50 text-2xl font-bold text-indigo-600 ring-1 ring-indigo-100">
                   {i + 1}
                 </div>
-                <h3 className="mb-3 text-xl font-bold text-slate-900">{step.title}</h3>
-                <p className="max-w-xs text-slate-600">{step.body}</p>
+                <h3 className="mb-3 text-xl font-bold text-slate-900 dark:text-white">{step.title}</h3>
+                <p className="max-w-xs text-slate-600 dark:text-slate-400">{step.body}</p>
               </div>
             ))}
           </div>
@@ -271,14 +270,14 @@ export default function Home() {
       </section>
 
       {/* Featured opportunities */}
-      <section className="border-t border-slate-200 bg-slate-50 py-24">
+      <section className="border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-12 flex items-end justify-between gap-6">
             <div>
-              <h2 className="text-3xl font-bold text-slate-900">
+              <h2 className="text-3xl font-bold text-slate-900 dark:text-white">
                 Featured opportunities
               </h2>
-              <p className="mt-2 text-slate-600">
+              <p className="mt-2 text-slate-800 dark:text-slate-400">
                 Roles companies are actively hiring for.
               </p>
             </div>
@@ -296,31 +295,30 @@ export default function Home() {
             {featuredJobs.map((job) => (
               <div
                 key={job.title}
-                className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
+                className="group rounded-2xl border border-slate-200 bg-white dark:bg-slate-800 p-6 shadow-sm transition-shadow hover:shadow-md hover:ring-1 hover:ring-indigo-200 hover:scale-1.35!"
               >
                 <div className="mb-4 flex items-start justify-between">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-100">
-                    <Briefcase className="text-slate-500" />
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-100! transition-transform duration-300 group-hover:rotate-[-25deg] group-hover:bg-emerald-300!">
+                    <Briefcase className="text-slate-900" />
                   </div>
                   <span className="rounded-lg bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700">
                     Active
                   </span>
                 </div>
 
-                <h3 className="mb-1 text-xl font-bold text-slate-900">{job.title}</h3>
+                <h3 className="mb-1 text-xl font-bold text-slate-900 dark:text-white">{job.title}</h3>
                 <p className="mb-4 text-sm text-slate-600">{job.company}</p>
 
-                <div className="mb-6 flex flex-wrap gap-2">
+                <div className="mb-6 flex flex-wrap gap-2 text-slate-900 dark:text-slate-200! font-bold">
                   <span className={chip}>
                     <MapPin size={12} />
                     {job.location}
                   </span>
-                  <span className={chip}>{job.salary}</span>
                 </div>
 
                 <Button
                   variant="outline"
-                  className="w-full border-slate-200 bg-white text-slate-900 hover:bg-slate-50"
+                  className="w-full border-slate-200 bg-white dark:border-slate-700 dark:text-white dark:bg-slate-950! text-slate-900 hover:bg-slate-50 group-hover:text-emerald-500 "
                 >
                   View role
                 </Button>
@@ -331,7 +329,7 @@ export default function Home() {
       </section>
 
       {/* Employer section */}
-      <section className="bg-slate-900 py-24 text-white">
+      <section className="bg-slate-900 py-24 text-white border-y border-slate-700 ">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid items-center gap-16 lg:grid-cols-2">
             <div>
@@ -403,12 +401,12 @@ export default function Home() {
       </section>
 
       {/* Final CTA */}
-      <section className="bg-white py-24">
+      <section className="bg-white py-12">
         <div className="mx-auto max-w-4xl px-4 text-center">
-          <h2 className="mb-6 text-4xl font-extrabold text-slate-900">
+          <h2 className="mb-6 text-4xl font-extrabold text-slate-900 dark:text-white">
             Your next opportunity starts here
           </h2>
-          <p className="mx-auto mb-10 max-w-2xl text-xl text-slate-600">
+          <p className="mx-auto mb-10 max-w-2xl text-xl text-slate-600 dark:text-slate-400">
             Join thousands of job seekers and employers making better connections every
             day.
           </p>
@@ -424,11 +422,13 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-slate-200 bg-slate-50 py-4 text-center">
+      <footer className="border-t border-slate-200 bg-slate-50 py-6 text-center">
         <div className="mx-auto flex max-w-7xl justify-between items-center px-4">
-          <div className="text-xl font-bold text-slate-900">Rozgar Saathi</div>
-          <div className="text-xs text-slate-500">
-            &copy; {new Date().getFullYear()} All rights reserved.
+          <div className="text-xl flex items-center font-bold text-slate-900 dark:text-white">
+            <Image src="/Rozgar_Saathi.webp" alt="Rozgar Saathi Logo" width={30} height={30} className="object-cover mr-2" />RozgarSaathi
+          </div>
+          <div className="text-sm text-slate-500 dark:text-slate-400">
+            &copy; {new Date().getFullYear()} All rights reserved
           </div>
         </div>
       </footer>

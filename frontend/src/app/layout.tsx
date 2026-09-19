@@ -36,7 +36,7 @@ export default function RootLayout({
         <ThemeProvider>
           <RouteGuard>
             <Navbar />
-            <main className="flex-1 w-full mx-auto pt-20 pb-10 md:pt-28 md:pb-10">
+            <main className="flex-1 w-full mx-auto">
               {children}
             </main>
           </RouteGuard>

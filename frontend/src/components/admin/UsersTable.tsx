@@ -94,7 +94,7 @@ export function UsersTable({ roleFilter = "ALL", title, description }: UsersTabl
   if (error) return <ErrorState title="Error" message={error} />;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pt-5 sm:pt-10 md:pt-20 lg:pt-35 pb-5 sm:pb-10 md:pb-15 lg:pb-20 ">
       <div>
         <h1 className="text-3xl font-bold tracking-tight text-slate-900">{title}</h1>
         <p className="text-slate-500 mt-2">{description}</p>

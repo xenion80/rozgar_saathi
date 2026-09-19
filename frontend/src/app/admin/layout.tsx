@@ -16,7 +16,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   ];
 
   return (
-    <div className="flex min-h-[calc(100vh-4rem)]">
+    <div className="flex min-h-[calc(100vh-4rem)] pt-5 sm:pt-10 md:pt-20 lg:pt-35 pb-5 sm:pb-10 md:pb-15 lg:pb-20 ">
       <aside className="w-64 border-r bg-white p-4 hidden md:block">
         <nav className="space-y-1">
           {navItems.map((item) => {

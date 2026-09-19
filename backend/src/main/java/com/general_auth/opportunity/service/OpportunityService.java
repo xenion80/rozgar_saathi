@@ -1,5 +1,8 @@
 package com.general_auth.opportunity.service;
 
+import com.general_auth.application.repository.ApplicationRepository;
+import com.general_auth.application.entity.ApplicationStatus;
+
 import com.general_auth.common.exception.ForbiddenException;
 import com.general_auth.common.exception.ResourceNotFoundException;
 import com.general_auth.common.security.AuthUtils;
@@ -34,6 +37,7 @@ public class OpportunityService {
     private final OpportunityRepository opportunityRepository;
     private final OpportunitySkillRepository opportunitySkillRepository;
     private final SkillRepository skillRepository;
+    private final ApplicationRepository applicationRepository;
     private final OpportunityMatchingService matchingService;
 
     @Transactional
@@ -155,6 +159,9 @@ public class OpportunityService {
                         os.getImportance()
                 ))
                 .toList();
+        long applicantCount = applicationRepository.countByOpportunityId(opportunity.getId());
+        long shortlistedCount = applicationRepository.countByOpportunityIdAndStatus(opportunity.getId(), ApplicationStatus.SHORTLISTED);
+
         return new OpportunityResponse(
                 opportunity.getId(),
                 opportunity.getRecruiter().getId(),
@@ -168,7 +175,9 @@ public class OpportunityService {
                 opportunity.getStatus(),
                 opportunity.getApplicationDeadline(),
                 opportunity.getCreatedAt(),
-                skills
+                skills,
+                applicantCount,
+                shortlistedCount
         );
     }
 

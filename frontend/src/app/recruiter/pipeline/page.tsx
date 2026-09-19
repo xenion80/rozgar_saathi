@@ -51,8 +51,8 @@ export default function HiringPipelinePage() {
     : candidates.filter(c => c.role === activeRoleFilter);
 
   return (
-    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="h-[calc(100vh-8rem)] flex flex-col">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 shrink-0 px-5 md:px-10 lg:px-20">
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="min-h-[calc(100vh-4rem)] flex flex-col pt-5 sm:pt-10 md:pt-20 lg:pt-35 pb-5 sm:pb-10 md:pb-15 lg:pb-20 px-4 sm:px-6 md:px-10 max-w-7xl mx-auto w-full">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 shrink-0">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Hiring Pipeline</h1>
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Track candidates across all active roles.</p>
@@ -64,16 +64,16 @@ export default function HiringPipelinePage() {
             <input 
               type="text" 
               placeholder="Search candidates..." 
-              className="pl-9 pr-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm w-64 outline-none focus:border-indigo-500"
+              className="pl-9 pr-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm w-64 outline-none focus:border-indigo-500 dark:text-white dark:placeholder-slate-400"
             />
           </div>
-          <Button variant="outline" className="gap-2 bg-white dark:bg-slate-800">
+          <Button variant="outline" className="gap-2 bg-white dark:bg-slate-800 dark:text-white dark:border-slate-700 dark:hover:bg-slate-700">
             <Filter size={16} /> Filters
           </Button>
         </div>
       </div>
 
-      <div className="flex gap-2 mb-6 overflow-x-auto pb-2 shrink-0">
+      <div className="flex flex-wrap justify-center gap-2 mb-6 pb-2 shrink-0">
         {roles.map(role => (
           <button
             key={role}
@@ -90,16 +90,16 @@ export default function HiringPipelinePage() {
       </div>
 
       {/* Pipeline Board */}
-      <div className="flex-1 overflow-x-auto pb-4">
+      <div className="flex-1 pb-4">
         {loading ? (
           <div className="text-center p-12 text-slate-500">Loading pipeline...</div>
         ) : (
-          <div className="flex gap-6 min-w-max h-full">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {stages.map(stage => {
               const stageCandidates = filteredCandidates.filter(c => c.stage === stage.id);
               
               return (
-                <div key={stage.id} className="flex-none w-80 flex flex-col h-full bg-slate-50/50 dark:bg-slate-800/20 rounded-xl border border-slate-200 dark:border-slate-800">
+                <div key={stage.id} className="flex flex-col h-125 lg:h-150 bg-slate-50/50 dark:bg-slate-800/20 rounded-xl border border-slate-200 dark:border-slate-800">
                   <div className={`px-4 py-3 border-b flex justify-between items-center rounded-t-xl ${stage.color}`}>
                     <h3 className="font-medium text-sm">{stage.name}</h3>
                     <span className="bg-white/60 dark:bg-black/20 px-2 py-0.5 rounded-full text-xs font-semibold">

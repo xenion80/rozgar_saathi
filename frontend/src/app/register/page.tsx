@@ -38,21 +38,21 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex min-h-[calc(100vh-10rem)] items-center justify-center">
+    <div className="flex min-h-[calc(100vh-10rem)] items-center justify-center pt-20 sm:pt-25 md:pt-30 pb-5 sm:pb-20">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md space-y-8 rounded-2xl bg-white p-8 shadow-xl border border-slate-100"
+        className="w-full max-w-md space-y-8 rounded-2xl bg-white dark:bg-slate-900 p-8 shadow-2xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-800"
       >
         <div className="text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-slate-900">Create an account</h2>
-          <p className="mt-2 text-sm text-slate-500">Join Rozgar Saathi today</p>
+          <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Create an account</h2>
+          <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">Join Rozgar Saathi today</p>
         </div>
 
         <form onSubmit={handleRegister} className="space-y-6">
           <div className="space-y-4">
             <div>
-              <label className="text-sm font-medium text-slate-700">Full Name</label>
+              <label className="text-sm font-medium text-slate-700 dark:text-slate-400">Full Name</label>
               <Input
                 type="text"
                 required
@@ -63,7 +63,7 @@ export default function RegisterPage() {
               />
             </div>
             <div>
-              <label className="text-sm font-medium text-slate-700">Email address</label>
+              <label className="text-sm font-medium text-slate-700 dark:text-slate-400">Email address</label>
               <Input
                 type="email"
                 required
@@ -74,7 +74,7 @@ export default function RegisterPage() {
               />
             </div>
             <div>
-              <label className="text-sm font-medium text-slate-700">Password</label>
+              <label className="text-sm font-medium text-slate-700 dark:text-slate-400">Password</label>
               <div className="relative mt-1">
                 <Input
                   type={showPassword ? "text" : "password"}
@@ -94,15 +94,15 @@ export default function RegisterPage() {
               </div>
             </div>
             <div>
-              <label className="text-sm font-medium text-slate-700">I am a</label>
+              <label className="text-sm font-medium text-slate-700 dark:text-slate-400">I am a</label>
               <div className="mt-1 grid grid-cols-2 gap-4">
                 <button
                   type="button"
                   onClick={() => setRole("STUDENT")}
-                  className={`rounded-lg border px-4 py-2 text-sm font-medium transition-colors ${
+                  className={`rounded-lg border px-4 py-2 text-sm font-medium transition-all duration-300 active:scale-95 ${
                     role === "STUDENT"
-                      ? "border-emerald-600 bg-emerald-50 text-emerald-700"
-                      : "border-slate-200 text-slate-600 hover:bg-slate-50"
+                      ? "border-emerald-600 bg-emerald-50 text-emerald-700 shadow-sm dark:border-emerald-500 dark:bg-emerald-500/10 dark:text-emerald-400"
+                      : "border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50 hover:shadow-md dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:border-slate-600"
                   }`}
                 >
                   Student
@@ -110,10 +110,10 @@ export default function RegisterPage() {
                 <button
                   type="button"
                   onClick={() => setRole("RECRUITER")}
-                  className={`rounded-lg border px-4 py-2 text-sm font-medium transition-colors ${
+                  className={`rounded-lg border px-4 py-2 text-sm font-medium transition-all duration-300 active:scale-95 ${
                     role === "RECRUITER"
-                      ? "border-emerald-600 bg-emerald-50 text-emerald-700"
-                      : "border-slate-200 text-slate-600 hover:bg-slate-50"
+                      ? "border-emerald-600 bg-emerald-50 text-emerald-700 shadow-sm dark:border-emerald-500 dark:bg-emerald-500/10 dark:text-emerald-400"
+                      : "border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50 hover:shadow-md dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:border-slate-600"
                   }`}
                 >
                   Recruiter

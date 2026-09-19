@@ -73,7 +73,7 @@ export default function OpportunityDetailPage({ params }: { params: Promise<{ id
   const matchScore = matchData?.matchScore || 0;
 
   return (
-    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mx-auto max-w-4xl">
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mx-auto max-w-4xl pt-5 sm:pt-10 md:pt-20 lg:pt-35 pb-10 sm:pb-15">
       <div className="mb-6">
         <Button variant="ghost" onClick={() => router.back()} className="gap-2 text-slate-600 pl-0 hover:bg-transparent">
           <ArrowLeft size={16} /> Back

@@ -133,7 +133,7 @@ export default function StudentProfilePage() {
 
     try {
       if (userName && userName !== user?.name) {
-        const userRes = await api.patch("/users/me", { name: userName });
+        const userRes = await api.patch("/users/me", { name: userName, email: user?.email });
         if (userRes.success && user && accessToken) {
           setAuth({ ...user, name: userName }, accessToken);
         }
@@ -212,7 +212,7 @@ export default function StudentProfilePage() {
   ];
 
   return (
-    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mx-auto max-w-6xl space-y-6">
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mx-auto max-w-6xl space-y-6 pt-5 sm:pt-10 md:pt-20 lg:pt-35 pb-10 sm:pb-15">
       
       <div className="flex items-center justify-between mb-2">
         <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Profile Dashboard</h1>

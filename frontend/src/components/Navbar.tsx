@@ -86,7 +86,7 @@ export default function Navbar() {
               <ThemeToggle />
               <div className="h-6 w-px bg-slate-200 dark:bg-slate-700 hidden sm:block" />
               <div className="hidden text-right sm:block">
-                <p className="text-sm font-bold text-slate-900 leading-tight">{user.name}</p>
+                <p className="text-sm font-bold text-slate-900 dark:text-white leading-tight">{user.name}</p>
                 <p className="text-xs font-medium text-indigo-600 dark:text-indigo-400">{user.role}</p>
               </div>
               <Button variant="ghost" size="icon" className="rounded-full hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-500/10 dark:hover:text-red-400" onClick={logout} title="Log out">

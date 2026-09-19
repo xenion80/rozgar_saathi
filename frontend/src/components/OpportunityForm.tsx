@@ -106,31 +106,31 @@ export default function OpportunityForm({ initialData = null, isEdit = false }: 
   };
 
   return (
-    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mx-auto max-w-4xl bg-white rounded-xl shadow-sm border border-slate-200 p-6 sm:p-8">
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mx-auto max-w-4xl bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6 sm:p-8">
       <form onSubmit={handleSubmit} className="space-y-8">
         
         {/* Basic Information */}
         <div>
-          <h2 className="text-xl font-bold text-slate-900 mb-4 border-b pb-2">Basic Information</h2>
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4 border-b dark:border-slate-800 pb-2">Basic Information</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="md:col-span-2">
-              <label className="mb-1 block text-sm font-medium text-slate-700">Job Title *</label>
+              <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Job Title *</label>
               <Input name="title" required value={formData.title} onChange={handleChange} placeholder="e.g. Senior Frontend Engineer" />
             </div>
             
             <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">Company Name *</label>
+              <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Company Name *</label>
               <Input name="companyName" required value={formData.companyName} onChange={handleChange} />
             </div>
             
             <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">Location</label>
+              <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Location</label>
               <Input name="location" value={formData.location} onChange={handleChange} placeholder="e.g. Bangalore" />
             </div>
 
             <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">Opportunity Type *</label>
-              <select name="type" required value={formData.type} onChange={handleChange} className="flex h-10 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm">
+              <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Opportunity Type *</label>
+              <select name="type" required value={formData.type} onChange={handleChange} className="flex h-10 w-full rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-sm dark:text-white">
                 <option value="JOB">Job</option>
                 <option value="INTERNSHIP">Internship</option>
                 <option value="APPRENTICESHIP">Apprenticeship</option>
@@ -139,8 +139,8 @@ export default function OpportunityForm({ initialData = null, isEdit = false }: 
             </div>
 
             <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">Work Mode *</label>
-              <select name="workMode" required value={formData.workMode} onChange={handleChange} className="flex h-10 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm">
+              <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Work Mode *</label>
+              <select name="workMode" required value={formData.workMode} onChange={handleChange} className="flex h-10 w-full rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-sm dark:text-white">
                 <option value="ONSITE">On-site</option>
                 <option value="REMOTE">Remote</option>
                 <option value="HYBRID">Hybrid</option>
@@ -148,23 +148,23 @@ export default function OpportunityForm({ initialData = null, isEdit = false }: 
             </div>
 
             <div className="md:col-span-2">
-              <label className="mb-1 block text-sm font-medium text-slate-700">Description *</label>
-              <textarea name="description" required rows={5} value={formData.description} onChange={handleChange} className="flex w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm" />
+              <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Description *</label>
+              <textarea name="description" required rows={5} value={formData.description} onChange={handleChange} className="flex w-full rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-sm dark:text-white" />
             </div>
 
             <div className="md:col-span-2">
-              <label className="mb-1 block text-sm font-medium text-slate-700">Minimum Qualification</label>
+              <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Minimum Qualification</label>
               <Input name="minimumQualification" value={formData.minimumQualification} onChange={handleChange} placeholder="e.g. B.Tech Computer Science" />
             </div>
             
             <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">Application Deadline *</label>
+              <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Application Deadline *</label>
               <Input type="date" name="applicationDeadline" required value={formData.applicationDeadline} onChange={handleChange} />
             </div>
 
             <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">Status *</label>
-              <select name="status" required value={formData.status} onChange={handleChange} className="flex h-10 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm">
+              <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Status *</label>
+              <select name="status" required value={formData.status} onChange={handleChange} className="flex h-10 w-full rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-sm dark:text-white">
                 <option value="DRAFT">Draft</option>
                 <option value="OPEN">Open</option>
                 <option value="CLOSED">Closed</option>
@@ -175,8 +175,8 @@ export default function OpportunityForm({ initialData = null, isEdit = false }: 
 
         {/* Required Skills */}
         <div>
-          <div className="flex items-center justify-between mb-4 border-b pb-2">
-            <h2 className="text-xl font-bold text-slate-900">Required Skills</h2>
+          <div className="flex items-center justify-between mb-4 border-b dark:border-slate-800 pb-2">
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white">Required Skills</h2>
             <Button type="button" variant="outline" size="sm" onClick={handleAddSkill} className="gap-2">
               <Plus size={14} /> Add Skill
             </Button>
@@ -184,17 +184,17 @@ export default function OpportunityForm({ initialData = null, isEdit = false }: 
           
           <div className="space-y-4">
             {formData.skills.length === 0 ? (
-              <div className="text-sm text-slate-500 italic">No skills required. Add skills to improve candidate matching.</div>
+              <div className="text-sm text-slate-500 dark:text-slate-400 italic">No skills required. Add skills to improve candidate matching.</div>
             ) : (
               formData.skills.map((skill: any, index: number) => (
-                <div key={index} className="flex items-end gap-4 p-4 rounded-lg bg-slate-50 border border-slate-200">
+                <div key={index} className="flex items-end gap-4 p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700">
                   <div className="flex-1">
-                    <label className="mb-1 block text-xs font-medium text-slate-700">Skill</label>
+                    <label className="mb-1 block text-xs font-medium text-slate-700 dark:text-slate-300">Skill</label>
                     <select
                       required
                       value={skill.skillId}
                       onChange={(e) => handleSkillChange(index, "skillId", e.target.value)}
-                      className="flex h-9 w-full rounded-md border border-slate-300 bg-white px-3 py-1 text-sm"
+                      className="flex h-9 w-full rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-1 text-sm dark:text-white"
                     >
                       <option value="" disabled>Select skill...</option>
                       {catalogue.map(c => (
@@ -203,14 +203,14 @@ export default function OpportunityForm({ initialData = null, isEdit = false }: 
                     </select>
                   </div>
                   <div className="w-32">
-                    <label className="mb-1 block text-xs font-medium text-slate-700">Proficiency (1-5)</label>
+                    <label className="mb-1 block text-xs font-medium text-slate-700 dark:text-slate-300">Proficiency (1-5)</label>
                     <Input type="number" min="1" max="5" required value={skill.requiredProficiency} onChange={(e) => handleSkillChange(index, "requiredProficiency", e.target.value)} className="h-9" />
                   </div>
                   <div className="w-32">
-                    <label className="mb-1 block text-xs font-medium text-slate-700">Importance (1-5)</label>
+                    <label className="mb-1 block text-xs font-medium text-slate-700 dark:text-slate-300">Importance (1-5)</label>
                     <Input type="number" min="1" max="5" required value={skill.importance} onChange={(e) => handleSkillChange(index, "importance", e.target.value)} className="h-9" />
                   </div>
-                  <Button type="button" variant="ghost" size="icon" onClick={() => handleRemoveSkill(index)} className="h-9 w-9 text-red-500 hover:text-red-700 hover:bg-red-50">
+                  <Button type="button" variant="ghost" size="icon" onClick={() => handleRemoveSkill(index)} className="h-9 w-9 text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-500/10 dark:hover:text-red-400">
                     <Trash2 size={16} />
                   </Button>
                 </div>
@@ -219,10 +219,10 @@ export default function OpportunityForm({ initialData = null, isEdit = false }: 
           </div>
         </div>
 
-        {error && <div className="text-sm font-medium text-red-500">{error}</div>}
+        {error && <div className="text-sm font-medium text-red-500 dark:text-red-400">{error}</div>}
 
-        <div className="flex justify-end gap-4 pt-4 border-t">
-          <Button type="button" variant="ghost" onClick={() => router.back()}>Cancel</Button>
+        <div className="flex justify-end gap-4 pt-4 border-t dark:border-slate-800">
+          <Button type="button" variant="ghost" onClick={() => router.back()} className="dark:text-slate-300 dark:hover:text-white">Cancel</Button>
           <Button type="submit" disabled={loading}>{loading ? "Saving..." : isEdit ? "Update Opportunity" : "Create Opportunity"}</Button>
         </div>
 

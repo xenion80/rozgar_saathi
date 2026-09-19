@@ -46,39 +46,39 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-[calc(100vh-10rem)] items-center justify-center">
+    <div className="flex min-h-[calc(100vh-10rem)] items-center justify-center mt-10 sm:mt-15 md:mt-20">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-md space-y-8 rounded-2xl bg-white p-8 shadow-xl border border-slate-100"
       >
         <div className="text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-slate-900">Welcome back</h2>
-          <p className="mt-2 text-sm text-slate-500">Please sign in to your account</p>
+          <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Welcome back</h2>
+          <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">Please sign in to your account</p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-6">
           <div className="space-y-4">
             <div>
-              <label className="text-sm font-medium text-slate-700">Email address</label>
+              <label className="text-sm font-medium text-slate-700 dark:text-slate-400">Email address</label>
               <Input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="mt-1"
+                className="mt-1 dark:bg-black! dark:text-white!"
                 placeholder="example@gmail.com"
               />
             </div>
             <div>
-              <label className="text-sm font-medium text-slate-700">Password</label>
+              <label className="text-sm font-medium text-slate-700 dark:text-slate-400">Password</label>
               <div className="relative mt-1">
                 <Input
                   type={showPassword ? "text" : "password"}
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="pr-10"
+                  className="pr-10 dark:bg-black! dark:text-white!"
                   placeholder="Enter password"
                 />
                 <button

@@ -56,7 +56,7 @@ export default function ApplicationDetailPage({ params }: { params: Promise<{ id
   else if (["SELECTED", "REJECTED", "WITHDRAWN"].includes(application.status)) currentStageIndex = 3;
 
   return (
-    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mx-auto max-w-4xl space-y-6">
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mx-auto max-w-4xl space-y-6 pt-5 sm:pt-10 md:pt-20 lg:pt-35 pb-10 sm:pb-15">
       <Link href="/student/applications">
         <Button variant="ghost" className="gap-2 -ml-3 text-slate-600">
           <ArrowLeft size={16} /> Back to Applications

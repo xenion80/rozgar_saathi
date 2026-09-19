@@ -28,4 +28,6 @@ public class OpportunityResponse {
     private LocalDate applicationDeadline;
     private LocalDateTime createdAt;
     private List<OpportunitySkillResponse> requiredSkills;
+    private Long applicantCount;
+    private Long shortlistedCount;
 }

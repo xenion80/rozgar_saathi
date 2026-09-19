@@ -40,11 +40,11 @@ export default function StudentDashboard() {
   }, []);
 
   if (loading) {
-    return <div className="p-8 text-center text-slate-500 dark:text-slate-400">Loading dashboard...</div>;
+    return <div className="p-8 text-center text-slate-500 dark:text-slate-400 pt-5 sm:pt-10 md:pt-20 lg:pt-35 pb-10 sm:pb-15">Loading dashboard...</div>;
   }
 
   return (
-    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mx-auto max-w-5xl space-y-8">
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mx-auto max-w-5xl space-y-8 pt-5 sm:pt-10 md:pt-20 lg:pt-35 pb-10 sm:pb-15">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
         <div>

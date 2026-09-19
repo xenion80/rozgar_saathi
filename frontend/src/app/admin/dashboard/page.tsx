@@ -58,7 +58,7 @@ export default function AdminDashboard() {
   const admins = data.filter(u => u.role === "ADMIN").length;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pt-5 sm:pt-10 md:pt-20 lg:pt-35 pb-5 sm:pb-10 md:pb-15 lg:pb-20 ">
       <div>
         <h1 className="text-3xl font-bold tracking-tight text-slate-900">Dashboard</h1>
         <p className="text-slate-500 mt-2">Overview of the Rozgar Saathi platform.</p>

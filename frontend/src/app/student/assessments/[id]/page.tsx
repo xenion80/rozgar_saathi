@@ -12,16 +12,17 @@ import { Badge } from "@/components/ui/badge";
 
 interface Question {
   id: number;
-  text: string;
-  options: { id: string; text: string }[];
+  questionText: string;
+  questionType: string;
+  targetSkill: string;
+  options: string[];
+  weight: number;
 }
 
 interface Assessment {
   id: number;
   title: string;
-  description: string;
-  durationMinutes: number;
-  skillName: string;
+  status: string;
   questions: Question[];
 }
 
@@ -91,7 +92,13 @@ export default function AssessmentFlowPage() {
 
     try {
       setSubmitting(true);
-      const res = await api.post<any>(`/assessments/${id}/submit`, { answers });
+      const payload = {
+        answers: Object.entries(answers).map(([qId, ans]) => ({
+          questionId: parseInt(qId),
+          answer: ans
+        }))
+      };
+      const res = await api.post<any>(`/assessments/${id}/submit`, payload);
       setResult(res.success ? res.data : res);
       setStatus("COMPLETED");
     } catch (err) {
@@ -107,37 +114,37 @@ export default function AssessmentFlowPage() {
 
   if (status === "INTRO") {
     return (
-      <div className="max-w-2xl mx-auto mt-8">
+      <div className="max-w-2xl mx-auto mt-8 pt-5 sm:pt-10 md:pt-20 lg:pt-35 pb-10 sm:pb-15">
         <Link href="/student/profile">
           <Button variant="ghost" size="sm" className="mb-4 -ml-3 text-slate-500">
             <ArrowLeft className="h-4 w-4 mr-2" /> Back to Skills
           </Button>
         </Link>
-        <Card>
-          <CardHeader className="text-center pb-8 border-b">
-            <div className="mx-auto bg-emerald-100 w-16 h-16 rounded-full flex items-center justify-center mb-4">
-              <Award className="h-8 w-8 text-emerald-600" />
+        <Card className="dark:bg-slate-900 dark:border-slate-800">
+          <CardHeader className="text-center pb-8 border-b dark:border-slate-800">
+            <div className="mx-auto bg-emerald-100 dark:bg-emerald-900/50 w-16 h-16 rounded-full flex items-center justify-center mb-4">
+              <Award className="h-8 w-8 text-emerald-600 dark:text-emerald-400" />
             </div>
-            <CardTitle className="text-2xl">{assessment.title}</CardTitle>
-            <CardDescription className="text-base mt-2">
-              Skill validation for: <span className="font-semibold text-slate-900">{assessment.skillName}</span>
+            <CardTitle className="text-2xl dark:text-white">{assessment.title}</CardTitle>
+            <CardDescription className="text-base mt-2 dark:text-slate-400">
+              Skill validation for: <span className="font-semibold text-slate-900 dark:text-white">{assessment.title || "this skill"}</span>
             </CardDescription>
           </CardHeader>
           <CardContent className="pt-6 space-y-6">
-            <p className="text-slate-600">{assessment.description}</p>
-            <div className="flex flex-col sm:flex-row sm:items-center justify-center gap-8 py-6 bg-slate-50 rounded-lg border border-slate-100">
+            <p className="text-slate-600 dark:text-slate-300">Complete this assessment to validate your proficiency and improve your profile.</p>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-center gap-8 py-6 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-100 dark:border-slate-700">
               <div className="text-center">
-                <p className="text-sm font-medium text-slate-500 flex items-center justify-center gap-1.5">
+                <p className="text-sm font-medium text-slate-500 dark:text-slate-400 flex items-center justify-center gap-1.5">
                   <Clock className="h-4 w-4" /> Duration
                 </p>
-                <p className="text-xl font-semibold text-slate-900 mt-1">{assessment.durationMinutes} mins</p>
+                <p className="text-xl font-semibold text-slate-900 dark:text-white mt-1">15 mins</p>
               </div>
-              <div className="hidden sm:block w-px h-12 bg-slate-200"></div>
+              <div className="hidden sm:block w-px h-12 bg-slate-200 dark:bg-slate-700"></div>
               <div className="text-center">
-                <p className="text-sm font-medium text-slate-500 flex items-center justify-center gap-1.5">
+                <p className="text-sm font-medium text-slate-500 dark:text-slate-400 flex items-center justify-center gap-1.5">
                   <CheckCircle2 className="h-4 w-4" /> Questions
                 </p>
-                <p className="text-xl font-semibold text-slate-900 mt-1">{assessment.questions?.length || 0}</p>
+                <p className="text-xl font-semibold text-slate-900 dark:text-white mt-1">{assessment.questions?.length || 0}</p>
               </div>
             </div>
           </CardContent>
@@ -154,37 +161,37 @@ export default function AssessmentFlowPage() {
   if (status === "COMPLETED" && result) {
     const percentage = Math.round((result.score / result.totalQuestions) * 100);
     return (
-      <div className="max-w-2xl mx-auto mt-8">
-        <Card className="text-center border-t-8 border-t-emerald-600 overflow-hidden">
-          <CardHeader className="bg-slate-50/50 pb-8 pt-8">
-            <CardTitle className="text-3xl">Assessment Complete</CardTitle>
-            <CardDescription className="text-base mt-2">Here's how you performed</CardDescription>
+      <div className="max-w-2xl mx-auto mt-8 pt-5 sm:pt-10 md:pt-20 lg:pt-35 pb-10 sm:pb-15">
+        <Card className="text-center border-t-8 border-t-emerald-600 overflow-hidden dark:bg-slate-900 dark:border-x-slate-800 dark:border-b-slate-800">
+          <CardHeader className="bg-slate-50/50 dark:bg-slate-950/50 pb-8 pt-8">
+            <CardTitle className="text-3xl dark:text-white">Assessment Complete</CardTitle>
+            <CardDescription className="text-base mt-2 dark:text-slate-400">Here's how you performed</CardDescription>
           </CardHeader>
           <CardContent className="py-12 space-y-8">
             <div>
-              <div className="inline-flex items-center justify-center w-32 h-32 rounded-full border-8 border-emerald-50 bg-emerald-100 mb-4">
-                <span className="text-4xl font-bold text-emerald-700">{percentage}%</span>
+              <div className="inline-flex items-center justify-center w-32 h-32 rounded-full border-8 border-emerald-50 dark:border-emerald-900/30 bg-emerald-100 dark:bg-emerald-900/50 mb-4">
+                <span className="text-4xl font-bold text-emerald-700 dark:text-emerald-400">{percentage}%</span>
               </div>
-              <p className="text-lg font-medium text-slate-900">
+              <p className="text-lg font-medium text-slate-900 dark:text-white">
                 You scored {result.score} out of {result.totalQuestions}
               </p>
             </div>
 
-            <div className="max-w-md mx-auto p-4 bg-slate-50 rounded-lg border border-slate-100">
-              <h4 className="font-semibold text-slate-900 mb-2 flex items-center justify-center gap-2">
+            <div className="max-w-md mx-auto p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-100 dark:border-slate-700">
+              <h4 className="font-semibold text-slate-900 dark:text-white mb-2 flex items-center justify-center gap-2">
                 <Award className="h-5 w-5 text-yellow-500" /> Skill Proficiency Updated
               </h4>
-              <p className="text-slate-600 mb-3">Your validated proficiency level is now:</p>
-              <Badge variant="secondary" className="text-lg px-4 py-1.5 bg-emerald-100 text-emerald-800 hover:bg-emerald-100">
+              <p className="text-slate-600 dark:text-slate-400 mb-3">Your validated proficiency level is now:</p>
+              <Badge variant="secondary" className="text-lg px-4 py-1.5 bg-emerald-100 dark:bg-emerald-900/50 text-emerald-800 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/70">
                 {result.newProficiency}
               </Badge>
             </div>
             
             {result.feedback && (
-              <p className="text-slate-600 italic">"{result.feedback}"</p>
+              <p className="text-slate-600 dark:text-slate-400 italic">"{result.feedback}"</p>
             )}
           </CardContent>
-          <CardFooter className="bg-slate-50 border-t justify-center py-6">
+          <CardFooter className="bg-slate-50 dark:bg-slate-950/50 border-t dark:border-slate-800 justify-center py-6">
             <Link href="/student/profile">
               <Button>Return to Skills Dashboard</Button>
             </Link>
@@ -199,52 +206,52 @@ export default function AssessmentFlowPage() {
   const isLastQuestion = currentQuestionIdx === assessment.questions.length - 1;
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
+    <div className="max-w-3xl mx-auto space-y-6 pt-5 sm:pt-10 md:pt-20 lg:pt-35 pb-10 sm:pb-15">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900">{assessment.title}</h1>
-        <div className="text-sm font-medium text-slate-500 bg-slate-100 px-3 py-1.5 rounded-full">
+        <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">{assessment.title}</h1>
+        <div className="text-sm font-medium text-slate-500 dark:text-white bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-full">
           Question {currentQuestionIdx + 1} of {assessment.questions.length}
         </div>
       </div>
 
-      <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+      <div className="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
         <div 
           className="bg-emerald-600 h-full transition-all duration-300" 
           style={{ width: `${((currentQuestionIdx) / assessment.questions.length) * 100}%` }}
         ></div>
       </div>
 
-      <Card className="min-h-100 flex flex-col">
+      <Card className="min-h-100 flex flex-col dark:bg-slate-900 dark:border-slate-800">
         <CardHeader>
-          <CardTitle className="text-xl leading-relaxed">{question.text}</CardTitle>
+          <CardTitle className="text-xl leading-relaxed dark:text-white">{question.questionText}</CardTitle>
         </CardHeader>
         <CardContent className="flex-1">
           <div className="space-y-3 mt-4">
-            {question.options.map((opt) => (
+            {question.options.map((opt, idx) => (
               <label 
-                key={opt.id} 
+                key={idx} 
                 className={`flex items-center p-4 border rounded-xl cursor-pointer transition-all ${
-                  answers[question.id] === opt.id 
-                    ? "border-emerald-600 bg-emerald-50 ring-1 ring-emerald-600 shadow-sm" 
-                    : "border-slate-200 hover:border-emerald-300 hover:bg-slate-50"
+                  answers[question.id] === opt 
+                    ? "border-emerald-600 dark:border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 ring-1 ring-emerald-600 dark:ring-emerald-500 shadow-sm" 
+                    : "border-slate-200 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-500/50 hover:bg-slate-50 dark:hover:bg-slate-800/50"
                 }`}
               >
                 <input
                   type="radio"
                   name={`question-${question.id}`}
-                  value={opt.id}
-                  checked={answers[question.id] === opt.id}
-                  onChange={() => handleSelectAnswer(question.id, opt.id)}
-                  className="w-4 h-4 text-emerald-600 border-slate-300 focus:ring-emerald-600"
+                  value={opt}
+                  checked={answers[question.id] === opt}
+                  onChange={() => handleSelectAnswer(question.id, opt)}
+                  className="w-4 h-4 text-emerald-600 border-slate-300 dark:border-slate-600 dark:bg-slate-800 focus:ring-emerald-600 focus:ring-offset-slate-900"
                 />
-                <span className={`ml-3 ${answers[question.id] === opt.id ? "font-medium text-emerald-900" : "text-slate-700"}`}>
-                  {opt.text}
+                <span className={`ml-3 ${answers[question.id] === opt ? "font-medium text-emerald-900 dark:text-emerald-400" : "text-slate-700 dark:text-slate-300"}`}>
+                  {opt}
                 </span>
               </label>
             ))}
           </div>
         </CardContent>
-        <CardFooter className="flex justify-between border-t bg-slate-50/50 pt-6">
+        <CardFooter className="flex justify-between border-t dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 pt-6">
           <Button 
             variant="outline" 
             onClick={() => setCurrentQuestionIdx(prev => Math.max(0, prev - 1))}

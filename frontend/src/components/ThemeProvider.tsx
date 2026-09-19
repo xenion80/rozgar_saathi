@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 
-type Theme = "light" | "dark";
+type Theme = "light" | "dark" | "system";
 
 type ThemeContextValue = {
   theme: Theme;
@@ -12,21 +12,56 @@ type ThemeContextValue = {
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("dark");
+  const [theme, setTheme] = useState<Theme>("system");
 
   useEffect(() => {
     const savedTheme = window.localStorage.getItem("rozgar-saathi-theme") as Theme | null;
-    setTheme(savedTheme === "dark" || savedTheme === "light" ? savedTheme : "dark");
+    if (savedTheme === "dark" || savedTheme === "light" || savedTheme === "system") {
+      setTheme(savedTheme);
+    }
   }, []);
 
   useEffect(() => {
-    document.documentElement.classList.toggle("dark", theme === "dark");
-    document.documentElement.style.colorScheme = theme;
+    const root = window.document.documentElement;
+    
+    root.classList.remove("light", "dark");
+    
+    if (theme === "system") {
+      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light";
+      root.classList.add(systemTheme);
+      root.style.colorScheme = systemTheme;
+    } else {
+      root.classList.add(theme);
+      root.style.colorScheme = theme;
+    }
+    
     window.localStorage.setItem("rozgar-saathi-theme", theme);
   }, [theme]);
 
+  // Listen for system theme changes if in system mode
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const handleChange = () => {
+      if (theme === "system") {
+        const root = window.document.documentElement;
+        root.classList.remove("light", "dark");
+        const systemTheme = mediaQuery.matches ? "dark" : "light";
+        root.classList.add(systemTheme);
+        root.style.colorScheme = systemTheme;
+      }
+    };
+    
+    mediaQuery.addEventListener("change", handleChange);
+    return () => mediaQuery.removeEventListener("change", handleChange);
+  }, [theme]);
+
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme: () => setTheme((value) => value === "dark" ? "light" : "dark") }}>
+    <ThemeContext.Provider value={{ 
+      theme, 
+      toggleTheme: () => setTheme(prev => prev === "dark" ? "light" : prev === "light" ? "system" : "dark") 
+    }}>
       {children}
     </ThemeContext.Provider>
   );

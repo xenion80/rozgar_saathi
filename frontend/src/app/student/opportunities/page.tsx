@@ -47,7 +47,7 @@ export default function OpportunitiesPage() {
   };
 
   return (
-    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mx-auto max-w-5xl">
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mx-auto max-w-5xl pt-5 sm:pt-10 md:pt-20 lg:pt-35 pb-10 sm:pb-15">
       <div className="mb-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
         <div>
           <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">All Opportunities</h1>
@@ -136,7 +136,7 @@ export default function OpportunitiesPage() {
               {/* Analyze Gap — only shown when matchScore field exists and ≥75 */}
               {opp.matchScore >= 75 && (
                 <Link
-                  href={`/student/skill-gaps/opportunity/${opp.id}`}
+                  href={`/student/skill-gaps?opp=${opp.id}`}
                   className="absolute bottom-5 right-5 z-10"
                   onClick={(e) => e.stopPropagation()}
                 >

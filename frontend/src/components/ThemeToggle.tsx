@@ -1,12 +1,11 @@
 "use client";
 
-import { Moon, Sun } from "lucide-react";
+import { Moon, Sun, Monitor } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/components/ThemeProvider";
 
 export function ThemeToggle() {
   const { theme, toggleTheme } = useTheme();
-  const isDark = theme === "dark";
 
   return (
     <Button
@@ -14,10 +13,10 @@ export function ThemeToggle() {
       size="icon"
       onClick={toggleTheme}
       className="rounded-full"
-      title={isDark ? "Switch to light mode" : "Switch to dark mode"}
-      aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+      title={`Current theme: ${theme}. Click to change.`}
+      aria-label={`Current theme: ${theme}. Click to change.`}
     >
-      {isDark ? <Sun size={18} /> : <Moon size={18} />}
+      {theme === "dark" ? <Moon size={18} /> : theme === "light" ? <Sun size={18} /> : <Monitor size={18} />}
     </Button>
   );
 }
