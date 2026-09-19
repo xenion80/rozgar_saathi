@@ -135,3 +135,72 @@ html.dark select:focus {
 * {
   box-sizing: border-box;
 }
+
+/* ── Markdown body styles for AI Coach responses ── */
+.markdown-body h1, .markdown-body h2, .markdown-body h3,
+.markdown-body h4, .markdown-body h5, .markdown-body h6 {
+  font-weight: 700;
+  margin-top: 0.85em;
+  margin-bottom: 0.4em;
+  line-height: 1.35;
+  color: inherit;
+}
+.markdown-body h1 { font-size: 1.15em; }
+.markdown-body h2 { font-size: 1.05em; }
+.markdown-body h3 { font-size: 0.97em; }
+
+.markdown-body p {
+  margin: 0.45em 0;
+  line-height: 1.65;
+}
+.markdown-body ul, .markdown-body ol {
+  margin: 0.4em 0 0.4em 1.2em;
+  padding: 0;
+}
+.markdown-body li {
+  margin: 0.25em 0;
+  line-height: 1.6;
+}
+.markdown-body strong {
+  font-weight: 700;
+  color: inherit;
+}
+.markdown-body em {
+  font-style: italic;
+}
+.markdown-body code {
+  background: rgba(99,102,241,0.12);
+  color: #4f46e5;
+  border-radius: 4px;
+  padding: 0.1em 0.35em;
+  font-size: 0.85em;
+  font-family: ui-monospace, monospace;
+}
+.markdown-body pre {
+  background: rgba(0,0,0,0.06);
+  border-radius: 8px;
+  padding: 0.75em 1em;
+  overflow-x: auto;
+  margin: 0.6em 0;
+}
+.markdown-body pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+}
+.markdown-body blockquote {
+  border-left: 3px solid #6366f1;
+  margin: 0.5em 0;
+  padding-left: 0.75em;
+  color: inherit;
+  opacity: 0.8;
+}
+.markdown-body hr {
+  border: none;
+  border-top: 1px solid rgba(0,0,0,0.1);
+  margin: 0.75em 0;
+}
+.markdown-body a {
+  color: #4f46e5;
+  text-decoration: underline;
+}

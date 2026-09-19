@@ -6,6 +6,7 @@ spring:
 
   datasource:
     url: jdbc:postgresql://ep-cool-butterfly-b3p96fxo-pooler.c-4.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+    #url: jdbc:postgresql://localhost:5432/AI-Vulnerability-Prioritizer
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
   jpa:
@@ -21,3 +22,8 @@ jwt:
 app:
   base-url: ${BASE_URL}
   frontend-url: ${FRONTEND_URL:http://localhost:3000}
+
+gemini:
+  api:
+    key: ${GEMINI_API_KEY:}
+

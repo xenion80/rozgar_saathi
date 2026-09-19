@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import ReactMarkdown from "react-markdown";
 
 /* ------------------------------------------------------------------ */
 /* Types                                                                */
@@ -109,7 +110,7 @@ export default function SkillGapOpportunityPage() {
       {
         id: "seed",
         role: "ai",
-        content: `Hi! The AI Coach for **${title}** is currently unavailable as the backend service is not yet implemented.`,
+        content: `Hi! I'm your AI Coach. Let's discuss your skills for **${title}** and how you can bridge any gaps!`,
       },
     ]);
     setInput("");
@@ -130,10 +131,27 @@ export default function SkillGapOpportunityPage() {
     setInput("");
     setChatLoading(true);
 
-    /* Simulate a quick response indicating it's not implemented */
-    await new Promise((r) => setTimeout(r, 500));
-    setMessages((prev) => prev.filter((m) => m.id !== "thinking").concat({ id: Date.now().toString(), role: "ai", content: "The AI Skill Coach service is currently unavailable." }));
-    setChatLoading(false);
+    try {
+      const history = messages
+        .filter(m => m.id !== "seed" && m.id !== "thinking")
+        .map(m => ({ role: m.role, content: m.content }));
+      
+      const res = await api.post("/student/coach/chat", {
+        message: userMsg.content,
+        history: history
+      });
+      
+      if (res.success && res.data && (res.data as any).response) {
+        setMessages((prev) => prev.filter((m) => m.id !== "thinking").concat({ id: Date.now().toString(), role: "ai", content: (res.data as any).response }));
+      } else {
+         setMessages((prev) => prev.filter((m) => m.id !== "thinking").concat({ id: Date.now().toString(), role: "ai", content: "Sorry, I couldn't process your request." }));
+      }
+    } catch (err) {
+      console.error(err);
+      setMessages((prev) => prev.filter((m) => m.id !== "thinking").concat({ id: Date.now().toString(), role: "ai", content: "Error connecting to AI Coach." }));
+    } finally {
+      setChatLoading(false);
+    }
   };
 
   /* ---- Handle active selection ---- */
@@ -308,15 +326,19 @@ export default function SkillGapOpportunityPage() {
                       {messages.map((m) => (
                         <div key={m.id} className={`flex ${m.role === "ai" ? "justify-start" : "justify-end"}`}>
                           <div className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm ${m.role === "ai" ? "bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-tl-sm" : "bg-indigo-600 text-white rounded-tr-sm"}`}>
-                            {m.loading ? (
-                              <div className="flex items-center gap-1.5 h-5">
-                                <span className="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce" style={{ animationDelay: "0ms" }}></span>
-                                <span className="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce" style={{ animationDelay: "150ms" }}></span>
-                                <span className="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce" style={{ animationDelay: "300ms" }}></span>
-                              </div>
-                            ) : (
-                              m.content
-                            )}
+                             {m.loading ? (
+                               <div className="flex items-center gap-1.5 h-5">
+                                 <span className="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce" style={{ animationDelay: "0ms" }}></span>
+                                 <span className="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce" style={{ animationDelay: "150ms" }}></span>
+                                 <span className="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce" style={{ animationDelay: "300ms" }}></span>
+                               </div>
+                             ) : m.role === "ai" ? (
+                               <div className="markdown-body prose prose-sm dark:prose-invert max-w-none">
+                                 <ReactMarkdown>{m.content}</ReactMarkdown>
+                               </div>
+                             ) : (
+                               m.content
+                             )}
                           </div>
                         </div>
                       ))}
