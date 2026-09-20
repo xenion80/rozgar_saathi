@@ -206,5 +206,5 @@ Proprietary / Internal Prototype for Smart India Hackathon 2026.
 Developed for the Smart India Hackathon 2026 (Problem Statement SIH26044).
 
 ## Contact
-- Abhi Aditya: abhiaditya0755@gmail.com
-- Karan Sardar: snsardarkaran61@gmail.com
+- [Abhi Aditya](mailto:abhiaditya0755@gmail.com)
+- [Karan Sardar](mailto:snsardarkaran61@gmail.com)
