@@ -10,4 +10,6 @@ public interface AssessmentAnswerRepository extends JpaRepository<AssessmentAnsw
     List<AssessmentAnswer> findByAssessment(Assessment assessment);
 
     boolean existsByAssessment(Assessment assessment);
+
+    void deleteByAssessment(Assessment assessment);
 }

@@ -33,7 +33,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -60,6 +59,14 @@ public class AssessmentService {
         AuthUtils.requireRole(user, Role.STUDENT);
         Assessment template = findTemplate(templateId);
         Assessment attempt = getOrCreateAttempt(user, template);
+
+        // DEMO HACK: Allow retaking the assessment
+        if (attempt.getStatus() == AssessmentStatus.COMPLETED) {
+            attempt.setStatus(AssessmentStatus.STARTED);
+            answerRepository.deleteByAssessment(attempt);
+            assessmentRepository.save(attempt);
+        }
+
         return toAssessmentResponse(attempt);
     }
 
@@ -79,7 +86,7 @@ public class AssessmentService {
 
         List<AssessmentQuestion> questions = questionRepository.findByAssessment(template);
         Map<Long, AssessmentQuestion> questionById = questions.stream()
-                .collect(Collectors.toMap(AssessmentQuestion::getId, Function.identity()));
+                .collect(Collectors.toMap(q -> q.getId(), q -> q));
 
         // Validate every submitted question belongs to this assessment.
         for (AssessmentAnswerRequest answer : request.getAnswers()) {
@@ -90,7 +97,7 @@ public class AssessmentService {
 
         Map<Long, String> submittedAnswers = request.getAnswers().stream()
                 .filter(answer -> answer.getAnswer() != null)
-                .collect(Collectors.toMap(AssessmentAnswerRequest::getQuestionId, AssessmentAnswerRequest::getAnswer));
+                .collect(Collectors.toMap(answer -> answer.getQuestionId(), answer -> answer.getAnswer()));
 
         // Score each question.
         List<QuestionResultResponse> questionResults = new ArrayList<>();
