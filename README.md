@@ -189,7 +189,7 @@ Features deliberately left for future work:
 ## License
 Proprietary / Internal Prototype for Smart India Hackathon 2026.
 
-## Authors / Contributors
+## Contributors
 - Abhi Aditya
 - Karan Sardar
 - Aditya Kumar
