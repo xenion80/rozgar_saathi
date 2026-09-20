@@ -23,17 +23,21 @@ export default function OpportunityDetailPage({ params }: { params: Promise<{ id
   const [applying, setApplying] = useState(false);
   const [error, setError] = useState("");
   const [applied, setApplied] = useState(false); // Can also fetch from /applications/me to be sure
+  const [resumes, setResumes] = useState<any[]>([]);
+  const [selectedResumeId, setSelectedResumeId] = useState<string>("");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [oppRes, matchRes, appsRes] = await Promise.all([
+        const [oppRes, matchRes, appsRes, resumesRes] = await Promise.all([
           api.get(`/opportunities/${id}`),
           api.get(`/opportunities/${id}/match`),
           api.get("/applications/me"), // To check if already applied
+          api.get("/students/me/resumes")
         ]);
         if (oppRes.success) setOpp(oppRes.data);
         if (matchRes.success) setMatchData(matchRes.data);
+        if (resumesRes.success) setResumes(resumesRes.data);
         
         if (appsRes.success) {
           const hasApplied = appsRes.data.some((app: any) => 
@@ -56,7 +60,12 @@ export default function OpportunityDetailPage({ params }: { params: Promise<{ id
     setError("");
 
     try {
-      await api.post(`/opportunities/${id}/apply`, { coverLetter });
+      const payload: any = { coverLetter };
+      if (selectedResumeId) {
+        payload.resumeId = parseInt(selectedResumeId);
+      }
+      
+      await api.post(`/opportunities/${id}/apply`, payload);
       setIsApplyModalOpen(false);
       setApplied(true);
     } catch (err: any) {
@@ -203,6 +212,25 @@ export default function OpportunityDetailPage({ params }: { params: Promise<{ id
                   className="w-full rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white p-3 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
                   placeholder="I am very interested in this role because..."
                 />
+                
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300">
+                    Attach Resume (Optional)
+                  </label>
+                  <select
+                    value={selectedResumeId}
+                    onChange={(e) => setSelectedResumeId(e.target.value)}
+                    className="w-full rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white p-3 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                  >
+                    <option value="">No resume attached</option>
+                    {resumes.map(r => (
+                      <option key={r.id} value={r.id}>{r.fileName}</option>
+                    ))}
+                  </select>
+                  {resumes.length === 0 && (
+                    <p className="mt-2 text-xs text-slate-500">You haven't uploaded any resumes yet. Go to your <Link href="/student/profile" className="text-indigo-600 hover:underline">Profile</Link> to upload one.</p>
+                  )}
+                </div>
                 
                 {error && <div className="text-sm text-red-500 font-medium">{error}</div>}
 

@@ -91,8 +91,9 @@ export default function StudentProfilePage() {
   const [skillSaving, setSkillSaving] = useState(false);
 
   // Resume state
+  const [resumes, setResumes] = useState<any[]>([]);
+  const [resumesLoading, setResumesLoading] = useState(false);
   const [resumeUploading, setResumeUploading] = useState(false);
-  const [resumeSuccess, setResumeSuccess] = useState(false);
 
   useEffect(() => {
     if (user?.name && !userName) {
@@ -135,7 +136,22 @@ export default function StudentProfilePage() {
   useEffect(() => {
     if (activeTab === "skills") fetchMySkills();
     if (activeTab === "education") fetchEducation();
+    if (activeTab === "resume") fetchResumes();
   }, [activeTab]);
+
+  const fetchResumes = async () => {
+    setResumesLoading(true);
+    try {
+      const res = await api.get("/students/me/resumes");
+      if (res.success && res.data) {
+        setResumes(res.data);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setResumesLoading(false);
+    }
+  };
 
   const fetchEducation = async () => {
     setEducationLoading(true);
@@ -286,14 +302,36 @@ export default function StudentProfilePage() {
     }
   };
 
-  const handleResumeUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleResumeUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
       setResumeUploading(true);
-      setResumeSuccess(false);
-      setTimeout(() => {
+      
+      const formData = new FormData();
+      formData.append("file", file);
+      
+      try {
+        const res = await api.post("/students/me/resumes", formData);
+        if (res.success) {
+          setMessage({ text: "Resume uploaded successfully!", type: "success" });
+          fetchResumes();
+        }
+      } catch (err: any) {
+        setMessage({ text: err.message || "Failed to upload resume", type: "error" });
+      } finally {
         setResumeUploading(false);
-        setResumeSuccess(true);
-      }, 2000);
+      }
+    }
+  };
+
+  const handleDeleteResume = async (id: number) => {
+    if (!window.confirm("Delete this resume?")) return;
+    try {
+      await api.delete(`/students/me/resumes/${id}`);
+      setResumes(prev => prev.filter(r => r.id !== id));
+      setMessage({ text: "Resume deleted successfully.", type: "success" });
+    } catch (err: any) {
+      setMessage({ text: err.message || "Failed to delete resume", type: "error" });
     }
   };
 
@@ -817,38 +855,39 @@ export default function StudentProfilePage() {
                       <div className="h-10 w-10 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
                       <p className="text-sm font-medium text-slate-700 dark:text-slate-300">Uploading your resume...</p>
                     </div>
-                  ) : resumeSuccess ? (
-                    <div className="flex flex-col items-center gap-3 text-emerald-600 dark:text-emerald-500">
-                      <CheckCircle2 size={48} className="mb-2" />
-                      <p className="text-sm font-medium">Resume uploaded successfully!</p>
-                      <p className="text-xs text-slate-500 dark:text-slate-400">Click anywhere to replace.</p>
-                    </div>
                   ) : (
                     <div className="flex flex-col items-center gap-3">
                       <div className="h-16 w-16 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-full flex items-center justify-center mb-2">
                         <UploadCloud size={32} />
                       </div>
                       <p className="text-base font-semibold text-slate-900 dark:text-white">Click or drag file to upload</p>
-                      <p className="text-xs text-slate-500 dark:text-slate-400">Supported formats: PDF, DOCX (Max 5MB)</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400">Supported formats: PDF (Max 5MB)</p>
                       <Button variant="outline" className="mt-4 pointer-events-none">Select File</Button>
                     </div>
                   )}
                 </div>
 
-                {resumeSuccess && (
-                  <div className="mt-6 p-4 border border-slate-200 dark:border-slate-700 rounded-lg flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="bg-red-100 text-red-600 p-2 rounded">
-                        <FileText size={20} />
+                {resumesLoading ? (
+                  <div className="mt-6 flex justify-center"><div className="animate-spin h-6 w-6 border-2 border-indigo-600 rounded-full border-t-transparent"></div></div>
+                ) : resumes.length > 0 && (
+                  <div className="mt-6 space-y-3">
+                    <h4 className="font-semibold text-slate-900 dark:text-white mb-3">Your Uploaded Resumes</h4>
+                    {resumes.map(resume => (
+                      <div key={resume.id} className="p-4 border border-slate-200 dark:border-slate-700 rounded-lg flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="bg-red-100 text-red-600 p-2 rounded">
+                            <FileText size={20} />
+                          </div>
+                          <div>
+                            <a href={resume.fileUrl} target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-indigo-600 hover:underline dark:text-indigo-400">{resume.fileName}</a>
+                            <p className="text-xs text-slate-500 dark:text-slate-400">Uploaded {new Date(resume.createdAt).toLocaleDateString()}</p>
+                          </div>
+                        </div>
+                        <Button variant="ghost" size="icon" className="text-slate-400 hover:text-red-500 z-20" onClick={() => handleDeleteResume(resume.id)}>
+                          <Trash2 size={16} />
+                        </Button>
                       </div>
-                      <div>
-                        <p className="text-sm font-medium text-slate-900 dark:text-white">{user?.name ? `${user.name.split(" ").join("_")}_Resume.pdf` : "Resume.pdf"}</p>
-                        <p className="text-xs text-slate-500 dark:text-slate-400">Updated just now</p>
-                      </div>
-                    </div>
-                    <Button variant="ghost" size="icon" className="text-slate-400 hover:text-red-500 z-20" onClick={() => setResumeSuccess(false)}>
-                      <Trash2 size={16} />
-                    </Button>
+                    ))}
                   </div>
                 )}
               </div>

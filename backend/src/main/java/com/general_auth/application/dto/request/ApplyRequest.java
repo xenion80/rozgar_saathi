@@ -9,4 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ApplyRequest {
     private String coverLetter;
+    private Long resumeId;
 }

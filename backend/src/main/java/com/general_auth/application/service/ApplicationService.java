@@ -15,6 +15,8 @@ import com.general_auth.opportunity.entity.Opportunity;
 import com.general_auth.opportunity.entity.OpportunityStatus;
 import com.general_auth.opportunity.service.OpportunityMatchingService;
 import com.general_auth.opportunity.service.OpportunityService;
+import com.general_auth.student.entity.Resume;
+import com.general_auth.student.repository.ResumeRepository;
 import com.general_auth.student.entity.StudentProfile;
 import com.general_auth.student.service.StudentService;
 import com.general_auth.user.entity.Role;
@@ -34,6 +36,7 @@ public class ApplicationService {
     private final OpportunityService opportunityService;
     private final OpportunityMatchingService matchingService;
     private final StudentService studentService;
+    private final ResumeRepository resumeRepository;
 
     @Transactional
     public ApplicationResponse apply(User user, Long opportunityId, ApplyRequest request) {
@@ -57,6 +60,13 @@ public class ApplicationService {
         application.setOpportunity(opportunity);
         application.setStatus(ApplicationStatus.APPLIED);
         application.setCoverLetter(request != null ? request.getCoverLetter() : null);
+
+        if (request != null && request.getResumeId() != null) {
+            Resume resume = resumeRepository.findByIdAndStudentProfile(request.getResumeId(), profile)
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid resume selected"));
+            application.setResume(resume);
+        }
+
         return toResponse(applicationRepository.save(application), profile);
     }
 

@@ -37,3 +37,8 @@ build/
 .freebuff/
 
 node_modules/
+
+# Secrets and credentials
+.env.local
+.env
+google-drive-credentials.json

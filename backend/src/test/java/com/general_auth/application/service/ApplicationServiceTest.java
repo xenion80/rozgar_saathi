@@ -12,6 +12,7 @@ import com.general_auth.opportunity.entity.OpportunityStatus;
 import com.general_auth.opportunity.service.OpportunityMatchingService;
 import com.general_auth.opportunity.service.OpportunityService;
 import com.general_auth.student.entity.StudentProfile;
+import com.general_auth.student.repository.ResumeRepository;
 import com.general_auth.student.service.StudentService;
 import com.general_auth.user.entity.Role;
 import com.general_auth.user.entity.User;
@@ -33,9 +34,10 @@ class ApplicationServiceTest {
     private final OpportunityService opportunityService = mock(OpportunityService.class);
     private final OpportunityMatchingService matchingService = mock(OpportunityMatchingService.class);
     private final StudentService studentService = mock(StudentService.class);
+    private final ResumeRepository resumeRepository = mock(ResumeRepository.class);
 
     private ApplicationService service() {
-        return new ApplicationService(applicationRepository, opportunityService, matchingService, studentService);
+        return new ApplicationService(applicationRepository, opportunityService, matchingService, studentService, resumeRepository);
     }
 
     @Test

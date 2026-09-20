@@ -2,6 +2,7 @@ package com.general_auth.application.entity;
 
 import com.general_auth.opportunity.entity.Opportunity;
 import com.general_auth.student.entity.StudentProfile;
+import com.general_auth.student.entity.Resume;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -39,6 +40,10 @@ public class Application {
 
     @Column(columnDefinition = "TEXT")
     private String coverLetter;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "resume_id")
+    private Resume resume;
 
     @CreationTimestamp
     @Column(updatable = false)
