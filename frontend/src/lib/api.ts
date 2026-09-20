@@ -84,20 +84,43 @@ axiosApi.interceptors.request.use((config) => {
   return config;
 });
 
+const handleError = (error: any) => {
+  if (!error.response) {
+    // Network error, server down, or CORS
+    return Promise.reject(new Error("Unable to connect to the server. Please check your internet connection."));
+  }
+  
+  if (error.response.status === 401) {
+    useAuthStore.getState().logout();
+    return Promise.reject(new Error("Username or password incorrect, or session expired."));
+  }
+  
+  if (error.response.status === 413) {
+    return Promise.reject(new Error("File is too large. Please upload a file smaller than 10 MB."));
+  }
+  
+  if (error.response.status >= 500) {
+    return Promise.reject(new Error("The server encountered an error. Please try again later."));
+  }
+
+  // Try to extract backend error message
+  const backendError = error.response.data?.error || error.response.data?.message;
+  if (backendError) {
+    return Promise.reject(new Error(backendError));
+  }
+  
+  // Generic fallback
+  return Promise.reject(new Error("An unexpected error occurred. Please try again."));
+};
+
 axiosApi.interceptors.response.use(
     (response) => response.data,
-    (error) => {
-      if (error.response?.status === 401) {
-        useAuthStore.getState().logout();
-      }
-
-      return Promise.reject(error);
-    }
+    handleError
 );
 
 axiosAuth.interceptors.response.use(
     (response) => response.data,
-    (error) => Promise.reject(error)
+    handleError
 );
 
 axiosRoot.interceptors.request.use((config) => {
@@ -112,13 +135,7 @@ axiosRoot.interceptors.request.use((config) => {
 
 axiosRoot.interceptors.response.use(
     (response) => response.data,
-    (error) => {
-      if (error.response?.status === 401) {
-        useAuthStore.getState().logout();
-      }
-
-      return Promise.reject(error);
-    }
+    handleError
 );
 
 export const api = axiosApi as unknown as ApiClient;
