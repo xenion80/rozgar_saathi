@@ -211,6 +211,21 @@ export default function CandidatesReviewPage({ params }: { params: Promise<{ id:
                   </div>
                 )}
 
+                {selectedCandidate.resumeUrl && (
+                  <div>
+                    <h4 className="font-semibold text-slate-900 dark:text-white mb-2">Resume</h4>
+                    <a
+                      href={selectedCandidate.resumeUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2 dark:bg-emerald-600 dark:hover:bg-emerald-700 dark:focus:ring-emerald-600 dark:focus:ring-offset-slate-900 transition-colors"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                      View Resume
+                    </a>
+                  </div>
+                )}
+
                 <div>
                   <h4 className="font-semibold text-slate-900 dark:text-white mb-3">Skill Matching Analysis</h4>
                   <div className="grid grid-cols-2 gap-4">
