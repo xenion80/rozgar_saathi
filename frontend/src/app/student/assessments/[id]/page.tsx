@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, CheckCircle2, Clock, Award } from "lucide-react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 
 interface Question {
   id: number;
@@ -234,28 +235,37 @@ export default function AssessmentFlowPage() {
         </CardHeader>
         <CardContent className="flex-1">
           <div className="space-y-3 mt-4">
-            {question.options.map((opt, idx) => (
-              <label 
-                key={idx} 
-                className={`flex items-center p-4 border rounded-xl cursor-pointer transition-all ${
-                  answers[question.id] === opt 
-                    ? "border-emerald-600 dark:border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 ring-1 ring-emerald-600 dark:ring-emerald-500 shadow-sm" 
-                    : "border-slate-200 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-500/50 hover:bg-slate-50 dark:hover:bg-slate-800/50"
-                }`}
-              >
-                <input
-                  type="radio"
-                  name={`question-${question.id}`}
-                  value={opt}
-                  checked={answers[question.id] === opt}
-                  onChange={() => handleSelectAnswer(question.id, opt)}
-                  className="w-4 h-4 text-emerald-600 border-slate-300 dark:border-slate-600 dark:bg-slate-800 focus:ring-emerald-600 focus:ring-offset-slate-900"
-                />
-                <span className={`ml-3 ${answers[question.id] === opt ? "font-medium text-emerald-900 dark:text-emerald-400" : "text-slate-700 dark:text-slate-300"}`}>
-                  {opt}
-                </span>
-              </label>
-            ))}
+            {question.questionType === "SHORT_ANSWER" ? (
+              <Input
+                placeholder="Type your answer here..."
+                value={answers[question.id] || ""}
+                onChange={(e) => handleSelectAnswer(question.id, e.target.value)}
+                className="w-full mt-2"
+              />
+            ) : (
+              question.options && question.options.map((opt, idx) => (
+                <label 
+                  key={idx} 
+                  className={`flex items-center p-4 border rounded-xl cursor-pointer transition-all ${
+                    answers[question.id] === opt 
+                      ? "border-emerald-600 dark:border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 ring-1 ring-emerald-600 dark:ring-emerald-500 shadow-sm" 
+                      : "border-slate-200 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-500/50 hover:bg-slate-50 dark:hover:bg-slate-800/50"
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name={`question-${question.id}`}
+                    value={opt}
+                    checked={answers[question.id] === opt}
+                    onChange={() => handleSelectAnswer(question.id, opt)}
+                    className="w-4 h-4 text-emerald-600 border-slate-300 dark:border-slate-600 dark:bg-slate-800 focus:ring-emerald-600 focus:ring-offset-slate-900"
+                  />
+                  <span className={`ml-3 ${answers[question.id] === opt ? "font-medium text-emerald-900 dark:text-emerald-400" : "text-slate-700 dark:text-slate-300"}`}>
+                    {opt}
+                  </span>
+                </label>
+              ))
+            )}
           </div>
         </CardContent>
         <CardFooter className="flex justify-between border-t dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 pt-6">
