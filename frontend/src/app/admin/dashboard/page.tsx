@@ -58,16 +58,16 @@ export default function AdminDashboard() {
   const admins = data.filter(u => u.role === "ADMIN").length;
 
   return (
-    <div className="space-y-6 pt-5 sm:pt-10 md:pt-20 lg:pt-35 pb-5 sm:pb-10 md:pb-15 lg:pb-20 ">
+    <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight text-slate-900">Dashboard</h1>
+        <h1 className="text-3xl font-bold tracking-tight text-slate-900dark:text-white">Dashboard</h1>
         <p className="text-slate-500 mt-2">Overview of the Rozgar Saathi platform.</p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Total Users</CardTitle>
+            <CardTitle className="text-sm font-medium dark:text-white">Total Users</CardTitle>
             <Users className="h-4 w-4 text-slate-500" />
           </CardHeader>
           <CardContent>
@@ -76,7 +76,7 @@ export default function AdminDashboard() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Students</CardTitle>
+            <CardTitle className="text-sm font-medium dark:text-white">Students</CardTitle>
             <GraduationCap className="h-4 w-4 text-emerald-600" />
           </CardHeader>
           <CardContent>

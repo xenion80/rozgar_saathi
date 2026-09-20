@@ -16,8 +16,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   ];
 
   return (
-    <div className="flex min-h-[calc(100vh-4rem)] pt-5 sm:pt-10 md:pt-20 lg:pt-35 pb-5 sm:pb-10 md:pb-15 lg:pb-20 ">
-      <aside className="w-64 border-r bg-white p-4 hidden md:block">
+    <div className="flex min-h-[calc(100vh-4rem)]">
+      <aside className="w-64 border-r bg-white dark:bg-slate-900 dark:border-slate-800 p-4 hidden md:block pt-5 sm:pt-10 md:pt-20 lg:pt-35 pb-5 sm:pb-10 md:pb-15 lg:pb-20 sticky top-0 h-screen overflow-y-auto">
         <nav className="space-y-1">
           {navItems.map((item) => {
             const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
@@ -29,7 +29,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
                   isActive
                     ? "bg-emerald-50 text-emerald-700"
-                    : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                    : "text-slate-600 dark:text-white hover:bg-slate-50 hover:text-slate-900"
                 )}
               >
                 <item.icon className="h-4 w-4" />
@@ -39,7 +39,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           })}
         </nav>
       </aside>
-      <main className="flex-1 bg-slate-50 p-6 md:p-8">
+      <main className="flex-1 bg-slate-50 p-6 md:p-8 pt-5 sm:pt-10 md:pt-20 lg:pt-35 pb-5 sm:pb-10 md:pb-15 lg:pb-20 ">
         {children}
       </main>
     </div>
