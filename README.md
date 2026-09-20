@@ -13,13 +13,17 @@
 - **Role-based Access:** Robust JWT-based authentication for Students, Recruiters, and Admins.
 
 ## Demo
+**Live Deployment:**
+- **Frontend App:** `https://rozgar-saathi-f.onrender.com `
+- **Backend Swagger URL:** `https://rozgar-saathi.onrender.com`
+  
 The platform includes seed data for demonstration purposes, automatically created on a fresh database start. 
 Log in with one of the seeded demo accounts (password: `Demo@123`):
 - **Student 1:** `student@demo.com` (Aarav Mehta - target Backend Developer)
 - **Student 2:** `student2@demo.com` (Ananya Patel - target Data Analyst)
 - **Recruiter:** `recruiter@demo.com` (Riya Sharma - owns 8 opportunities)
 
-*Note: The frontend runs at `http://localhost:3000` and the backend Swagger UI is available at `http://localhost:8080/swagger-ui.html`.*
+*Note: For local deployment, the frontend runs at `http://localhost:3000` and the backend Swagger UI is available at `http://localhost:8080/swagger-ui.html`.*
 
 ## Technologies Used
 **Backend:**
@@ -66,9 +70,7 @@ The backend requires several environment variables to run properly. Set these in
 export DB_USERNAME=postgres
 export DB_PASSWORD=yourpassword
 export JWT_SECRET="<base64 key, at least 32 bytes>"   # e.g., openssl rand -base64 48
-export MAIL_USERNAME=you@gmail.com                    # needed at startup and for email flows
-export MAIL_PASSWORD=yourapppassword
-export BASE_URL=http://localhost:8080
+export BASE_URL=http://localhost:8080    #changed after deployment : https://rozgar-saathi.onrender.com
 export CLOUDINARY_URL=cloudinary://API_KEY:API_SECRET@CLOUD_NAME
 export GEMINI_API_KEY=your_gemini_api_key
 ```
@@ -83,6 +85,7 @@ cd backend
 ./mvnw spring-boot:run
 ```
 The backend API will run on `http://localhost:8080`.
+After deployment  backend API run on `https://rozgar-saathi.onrender.com`.
 
 **Start Frontend:**
 ```bash
@@ -90,6 +93,8 @@ cd frontend
 npm run dev
 ```
 The frontend will be available at `http://localhost:3000`.
+After deployment frontend API run on `https://rozgar-saathi-f.onrender.com`.
+
 
 ## Project Structure
 Both apps live in this single monorepo but are built and run independently:
