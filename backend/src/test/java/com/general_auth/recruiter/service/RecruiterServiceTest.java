@@ -62,7 +62,7 @@ class RecruiterServiceTest {
         assertEquals(90, candidates.get(0).getMatchScore());
         assertEquals("Low Skill Student", candidates.get(1).getStudentName());
         assertEquals(40, candidates.get(1).getMatchScore());
-        assertEquals(ApplicationStatus.APPLIED, candidates.get(0).getApplicationStatus());
+        assertEquals(ApplicationStatus.APPLIED, candidates.get(0).getStatus());
     }
 
     private StudentProfile student(Long id, String name) {
