@@ -15,8 +15,10 @@ public class CandidateResponse {
     private Long studentId;
     private String studentName;
     private String studentEmail;
-    private ApplicationStatus applicationStatus;
+    private ApplicationStatus status;
     private Integer matchScore;
     private List<String> matchedSkills;
     private List<String> missingSkills;
+    private String coverLetter;
+    private String resumeUrl;
 }

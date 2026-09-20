@@ -44,7 +44,9 @@ public class RecruiterService {
                             application.getStatus(),
                             match.getMatchScore(),
                             match.getMatchedSkills(),
-                            match.getMissingSkills()
+                            match.getMissingSkills(),
+                            application.getCoverLetter(),
+                            application.getResume() != null ? application.getResume().getFileUrl() : null
                     );
                 })
                 .sorted(Comparator.comparingInt(CandidateResponse::getMatchScore).reversed())
