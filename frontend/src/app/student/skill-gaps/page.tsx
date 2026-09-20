@@ -325,7 +325,7 @@ export default function SkillGapOpportunityPage() {
                     <div className="flex-1 overflow-y-auto p-4 space-y-4">
                       {messages.map((m) => (
                         <div key={m.id} className={`flex ${m.role === "ai" ? "justify-start" : "justify-end"}`}>
-                          <div className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm ${m.role === "ai" ? "bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-tl-sm" : "bg-indigo-600 text-white rounded-tr-sm"}`}>
+                          <div className={`group relative max-w-[85%] rounded-2xl px-4 py-3 text-sm ${m.role === "ai" ? "bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-tl-sm" : "bg-indigo-600 text-white rounded-tr-sm"}`}>
                              {m.loading ? (
                                <div className="flex items-center gap-1.5 h-5">
                                  <span className="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce" style={{ animationDelay: "0ms" }}></span>
@@ -333,8 +333,30 @@ export default function SkillGapOpportunityPage() {
                                  <span className="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce" style={{ animationDelay: "300ms" }}></span>
                                </div>
                              ) : m.role === "ai" ? (
-                               <div className="markdown-body prose prose-sm dark:prose-invert max-w-none">
-                                 <ReactMarkdown>{m.content}</ReactMarkdown>
+                               <div className="relative">
+                                 <div id={`msg-${m.id}`} className="markdown-body prose prose-sm dark:prose-invert max-w-none pb-2">
+                                   <ReactMarkdown>{m.content}</ReactMarkdown>
+                                 </div>
+                                 <button
+                                   onClick={async () => {
+                                     const element = document.getElementById(`msg-${m.id}`);
+                                     if (!element) return;
+                                     
+                                     const html2pdf = (await import('html2pdf.js')).default;
+                                     const opt = {
+                                       margin: 10,
+                                       filename: 'ai-coach-response.pdf',
+                                       image: { type: 'jpeg' as const, quality: 0.98 },
+                                       html2canvas: { scale: 2 },
+                                       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' as const }
+                                     };
+                                     html2pdf().set(opt).from(element).save();
+                                   }}
+                                   title="Download as PDF"
+                                   className="absolute -right-2 -bottom-2 opacity-0 group-hover:opacity-100 transition-opacity flex h-6 w-6 items-center justify-center rounded-md bg-white dark:bg-slate-700 text-slate-500 shadow-sm hover:text-indigo-600 dark:hover:text-indigo-400"
+                                 >
+                                   <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                                 </button>
                                </div>
                              ) : (
                                m.content

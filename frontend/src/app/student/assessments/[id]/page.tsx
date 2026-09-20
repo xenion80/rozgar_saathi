@@ -27,11 +27,11 @@ interface Assessment {
 }
 
 interface AssessmentResult {
-  score: number;
+  assessmentId: number;
+  status: string;
   totalQuestions: number;
-  passed: boolean;
-  newProficiency: string;
-  feedback: string;
+  correctAnswers: number;
+  skillScores?: { skill: string; proficiency: number }[];
 }
 
 export default function AssessmentFlowPage() {
@@ -66,11 +66,15 @@ export default function AssessmentFlowPage() {
   const handleStart = async () => {
     try {
       setLoading(true);
-      await api.post(`/assessments/${id}/start`);
+      const res = await api.post<any>(`/assessments/${id}/start`);
+      const data = res.success ? res.data : res;
+      if (data.status === "COMPLETED") {
+        setError("You have already completed this assessment.");
+        return;
+      }
       setStatus("IN_PROGRESS");
-    } catch (err) {
-      console.error(err);
-      alert("Failed to start assessment.");
+    } catch (err: any) {
+      alert(err?.message || "Failed to start assessment.");
     } finally {
       setLoading(false);
     }
@@ -101,9 +105,8 @@ export default function AssessmentFlowPage() {
       const res = await api.post<any>(`/assessments/${id}/submit`, payload);
       setResult(res.success ? res.data : res);
       setStatus("COMPLETED");
-    } catch (err) {
-      console.error(err);
-      alert("Failed to submit assessment.");
+    } catch (err: any) {
+      alert(err?.message || "Failed to submit assessment.");
     } finally {
       setSubmitting(false);
     }
@@ -159,7 +162,11 @@ export default function AssessmentFlowPage() {
   }
 
   if (status === "COMPLETED" && result) {
-    const percentage = Math.round((result.score / result.totalQuestions) * 100);
+    const percentage = Math.round((result.correctAnswers / result.totalQuestions) * 100) || 0;
+    const newProficiency = result.skillScores && result.skillScores.length > 0 
+      ? `Level ${result.skillScores[0].proficiency}` 
+      : (percentage >= 70 ? "Intermediate" : "Beginner");
+
     return (
       <div className="max-w-2xl mx-auto mt-8 pt-5 sm:pt-10 md:pt-20 lg:pt-35 pb-10 sm:pb-15">
         <Card className="text-center border-t-8 border-t-emerald-600 overflow-hidden dark:bg-slate-900 dark:border-x-slate-800 dark:border-b-slate-800">
@@ -173,7 +180,7 @@ export default function AssessmentFlowPage() {
                 <span className="text-4xl font-bold text-emerald-700 dark:text-emerald-400">{percentage}%</span>
               </div>
               <p className="text-lg font-medium text-slate-900 dark:text-white">
-                You scored {result.score} out of {result.totalQuestions}
+                You scored {result.correctAnswers} out of {result.totalQuestions}
               </p>
             </div>
 
@@ -183,12 +190,12 @@ export default function AssessmentFlowPage() {
               </h4>
               <p className="text-slate-600 dark:text-slate-400 mb-3">Your validated proficiency level is now:</p>
               <Badge variant="secondary" className="text-lg px-4 py-1.5 bg-emerald-100 dark:bg-emerald-900/50 text-emerald-800 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/70">
-                {result.newProficiency}
+                {newProficiency}
               </Badge>
             </div>
             
-            {result.feedback && (
-              <p className="text-slate-600 dark:text-slate-400 italic">"{result.feedback}"</p>
+            {result.status && (
+              <p className="text-slate-600 dark:text-slate-400 italic">Status: {result.status}</p>
             )}
           </CardContent>
           <CardFooter className="bg-slate-50 dark:bg-slate-950/50 border-t dark:border-slate-800 justify-center py-6">
