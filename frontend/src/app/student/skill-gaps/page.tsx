@@ -312,17 +312,40 @@ export default function SkillGapOpportunityPage() {
   
                   {/* AI Chat */}
                   <div className="flex flex-1 flex-col overflow-hidden rounded-3xl glass-panel min-h-100">
-                    <div className="border-b border-slate-100 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 p-4">
-                      <h3 className="flex items-center gap-2 text-sm font-bold text-slate-900 dark:text-white">
-                        <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400">
-                          <Sparkles size={14} />
-                        </span>
-                        AI Skill Coach
-                      </h3>
-                      <p className="mt-1 text-xs text-slate-500 dark:text-slate-400 pl-9">Ask for resources or advice to learn {active.missingSkills?.[0] ?? "these skills"}</p>
+                    <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 p-4">
+                      <div>
+                        <h3 className="flex items-center gap-2 text-sm font-bold text-slate-900 dark:text-white">
+                          <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400">
+                            <Sparkles size={14} />
+                          </span>
+                          AI Skill Coach
+                        </h3>
+                        <p className="mt-1 text-xs text-slate-500 dark:text-slate-400 pl-9">Ask for resources or advice to learn {active.missingSkills?.[0] ?? "these skills"}</p>
+                      </div>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="text-xs flex items-center gap-2"
+                        onClick={async () => {
+                          const element = document.getElementById('chat-container');
+                          if (!element) return;
+                          const html2pdf = (await import('html2pdf.js')).default;
+                          const opt = {
+                            margin: 10,
+                            filename: 'full-ai-coach-chat.pdf',
+                            image: { type: 'jpeg' as const, quality: 0.98 },
+                            html2canvas: { scale: 2 },
+                            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' as const }
+                          };
+                          html2pdf().set(opt).from(element).save();
+                        }}
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                        Save Chat as PDF
+                      </Button>
                     </div>
                     
-                    <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                    <div id="chat-container" className="flex-1 overflow-y-auto p-4 space-y-4">
                       {messages.map((m) => (
                         <div key={m.id} className={`flex ${m.role === "ai" ? "justify-start" : "justify-end"}`}>
                           <div className={`group relative max-w-[85%] rounded-2xl px-4 py-3 text-sm ${m.role === "ai" ? "bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-tl-sm" : "bg-indigo-600 text-white rounded-tr-sm"}`}>
@@ -353,7 +376,7 @@ export default function SkillGapOpportunityPage() {
                                      html2pdf().set(opt).from(element).save();
                                    }}
                                    title="Download as PDF"
-                                   className="absolute -right-2 -bottom-2 opacity-0 group-hover:opacity-100 transition-opacity flex h-6 w-6 items-center justify-center rounded-md bg-white dark:bg-slate-700 text-slate-500 shadow-sm hover:text-indigo-600 dark:hover:text-indigo-400"
+                                   className="absolute -right-2 -bottom-2 flex h-6 w-6 items-center justify-center rounded-md bg-white dark:bg-slate-700 text-slate-500 shadow-sm hover:text-indigo-600 dark:hover:text-indigo-400"
                                  >
                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
                                  </button>
