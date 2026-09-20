@@ -127,7 +127,6 @@ Both apps live in this single monorepo but are built and run independently:
 │   │   └── common/      # exceptions, response wrapper, security helper, seed data
 │   ├── src/main/resources/application.yaml
 │   └── pom.xml
-├── .vscode/             # VS Code workspace settings
 ├── package.json         # Root workspace package file
 ├── package-lock.json    # Root workspace lock file
 ├── .gitignore           # Git ignore rules
@@ -173,9 +172,6 @@ A: The frontend target-role dropdown uses the hyphenated form, but the backend o
 **Q: I'm suddenly getting 403 Forbidden errors.**
 A: The access token lives for ~25 minutes and there is currently no silent token refresh in the frontend. If it expires, you may need to log out manually and log back in.
 
-**Q: I registered a new account but can't log in.**
-A: Registered users are created disabled and cannot log in until they click the verification link, which requires working Gmail SMTP. Use the seeded demo accounts for demonstrations.
-
 **Q: I don't see a link to recommended opportunities in the navbar.**
 A: `/student/recommended` has no dedicated navbar link; reach it from the Opportunities page.
 
@@ -196,6 +192,10 @@ Proprietary / Internal Prototype for Smart India Hackathon 2026.
 ## Authors / Contributors
 - Abhi Aditya
 - Karan Sardar
+- Aditya Kumar
+- Senjuti Paul
+- Somya Keshri
+- Rajeev Kumar
 
 ## Acknowledgements
 Developed for the Smart India Hackathon 2026 (Problem Statement SIH26044).
