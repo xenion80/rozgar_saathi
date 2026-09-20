@@ -1,6 +1,5 @@
 package com.general_auth.student.service;
 
-import com.general_auth.common.exception.ResourceNotFoundException;
 import com.general_auth.student.dto.request.StudentProfileRequest;
 import com.general_auth.student.dto.response.StudentProfileResponse;
 import com.general_auth.student.entity.StudentProfile;
@@ -16,14 +15,7 @@ public class StudentService {
 
     private final StudentProfileRepository studentProfileRepository;
 
-    /** Returns the profile of the current user, throwing if the user is not a student. */
-    @Transactional(readOnly = true)
-    public StudentProfile getProfile(User user) {
-        return studentProfileRepository.findByUser(user)
-                .orElseThrow(() -> new ResourceNotFoundException("Student profile not found. Create it with PUT /api/students/me"));
-    }
-
-    /** Returns the existing profile or creates an empty one on the fly (used by skills/assessment/application flows). */
+    /** Returns the profile of the current user, creating one if it doesn't exist yet. */
     @Transactional
     public StudentProfile getOrCreateProfile(User user) {
         return studentProfileRepository.findByUser(user)
@@ -36,17 +28,8 @@ public class StudentService {
 
     @Transactional
     public StudentProfileResponse updateProfile(User user, StudentProfileRequest request) {
-        StudentProfile profile = studentProfileRepository.findByUser(user)
-                .orElseGet(() -> {
-                    StudentProfile p = new StudentProfile();
-                    p.setUser(user);
-                    return p;
-                });
+        StudentProfile profile = getOrCreateProfile(user);
 
-        if (request.getCollegeName() != null) profile.setCollegeName(request.getCollegeName());
-        if (request.getDegree() != null) profile.setDegree(request.getDegree());
-        if (request.getBranch() != null) profile.setBranch(request.getBranch());
-        if (request.getGraduationYear() != null) profile.setGraduationYear(request.getGraduationYear());
         if (request.getBio() != null) profile.setBio(request.getBio());
         if (request.getTargetRole() != null) profile.setTargetRole(request.getTargetRole());
 
@@ -60,10 +43,6 @@ public class StudentService {
                 user.getId(),
                 user.getName(),
                 user.getEmail(),
-                profile.getCollegeName(),
-                profile.getDegree(),
-                profile.getBranch(),
-                profile.getGraduationYear(),
                 profile.getBio(),
                 profile.getTargetRole(),
                 profile.getCreatedAt(),

@@ -14,10 +14,6 @@ public class StudentProfileResponse {
     private Long userId;
     private String name;
     private String email;
-    private String collegeName;
-    private String degree;
-    private String branch;
-    private Integer graduationYear;
     private String bio;
     private String targetRole;
     private LocalDateTime createdAt;

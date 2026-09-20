@@ -46,4 +46,12 @@ public class SkillController {
         User user = (User) authentication.getPrincipal();
         return ResponseEntity.ok(ApiResponse.success("Skill updated", skillService.updateStudentSkill(user, skillId, request)));
     }
+
+    @DeleteMapping("/api/students/me/skills/{skillId}")
+    public ResponseEntity<ApiResponse<Void>> deleteSkill(Authentication authentication,
+                                                         @PathVariable Long skillId) {
+        User user = (User) authentication.getPrincipal();
+        skillService.deleteStudentSkill(user, skillId);
+        return ResponseEntity.ok(ApiResponse.success("Skill removed", null));
+    }
 }

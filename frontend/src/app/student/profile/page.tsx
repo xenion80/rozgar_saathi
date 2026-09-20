@@ -25,13 +25,37 @@ interface StudentSkill {
 
 interface Profile {
   id: number;
-  collegeName: string | null;
-  degree: string | null;
-  branch: string | null;
-  graduationYear: number | null;
   bio: string | null;
   targetRole: string | null;
 }
+
+interface Education {
+  collegeName: string;
+  degree: string;
+  branch: string;
+  graduationYear: string;
+  cgpa: string;
+  twelfthSchoolName: string;
+  twelfthBoard: string;
+  twelfthMarks: string;
+  tenthSchoolName: string;
+  tenthBoard: string;
+  tenthMarks: string;
+}
+
+const EMPTY_EDUCATION: Education = {
+  collegeName: "",
+  degree: "",
+  branch: "",
+  graduationYear: "",
+  cgpa: "",
+  twelfthSchoolName: "",
+  twelfthBoard: "",
+  twelfthMarks: "",
+  tenthSchoolName: "",
+  tenthBoard: "",
+  tenthMarks: "",
+};
 
 const TARGET_ROLES = [
   "Backend Developer",
@@ -50,9 +74,11 @@ export default function StudentProfilePage() {
   
   const [activeTab, setActiveTab] = useState("about");
   
-  // Extra state for education
-  const [tenthDetails, setTenthDetails] = useState({ school: "", marks: "" });
-  const [twelfthDetails, setTwelfthDetails] = useState({ school: "", marks: "" });
+  // Education state — API-driven
+  const [education, setEducation] = useState<Education>(EMPTY_EDUCATION);
+  const [educationLoading, setEducationLoading] = useState(false);
+  const [educationSaving, setEducationSaving] = useState(false);
+  const [educationMessage, setEducationMessage] = useState({ text: "", type: "" });
 
   // Skills state (API-driven, same as /student/skills page)
   const [mySkills, setMySkills] = useState<StudentSkill[]>([]);
@@ -107,10 +133,71 @@ export default function StudentProfilePage() {
   };
 
   useEffect(() => {
-    if (activeTab === "skills") {
-      fetchMySkills();
-    }
+    if (activeTab === "skills") fetchMySkills();
+    if (activeTab === "education") fetchEducation();
   }, [activeTab]);
+
+  const fetchEducation = async () => {
+    setEducationLoading(true);
+    try {
+      const res = await api.get("/students/me/education");
+      if (res.success && res.data) {
+        const d = res.data;
+        setEducation({
+          collegeName: d.collegeName ?? "",
+          degree: d.degree ?? "",
+          branch: d.branch ?? "",
+          graduationYear: d.graduationYear ? String(d.graduationYear) : "",
+          cgpa: d.cgpa != null ? String(d.cgpa) : "",
+          twelfthSchoolName: d.twelfthSchoolName ?? "",
+          twelfthBoard: d.twelfthBoard ?? "",
+          twelfthMarks: d.twelfthMarks ?? "",
+          tenthSchoolName: d.tenthSchoolName ?? "",
+          tenthBoard: d.tenthBoard ?? "",
+          tenthMarks: d.tenthMarks ?? "",
+        });
+      }
+    } catch {
+      // silent — empty form is fine for first-time users
+    } finally {
+      setEducationLoading(false);
+    }
+  };
+
+  const handleEducationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setEducation((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleEducationSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setEducationSaving(true);
+    setEducationMessage({ text: "", type: "" });
+    try {
+      const payload = {
+        collegeName: education.collegeName || null,
+        degree: education.degree || null,
+        branch: education.branch || null,
+        graduationYear: education.graduationYear ? parseInt(education.graduationYear) : null,
+        cgpa: education.cgpa ? parseFloat(education.cgpa) : null,
+        twelfthSchoolName: education.twelfthSchoolName || null,
+        twelfthBoard: education.twelfthBoard || null,
+        twelfthMarks: education.twelfthMarks || null,
+        tenthSchoolName: education.tenthSchoolName || null,
+        tenthBoard: education.tenthBoard || null,
+        tenthMarks: education.tenthMarks || null,
+      };
+      const res = await api.put("/students/me/education", payload);
+      if (res.success) {
+        setEducationMessage({ text: "Education saved successfully!", type: "success" });
+        setTimeout(() => setEducationMessage({ text: "", type: "" }), 5000);
+      }
+    } catch (err: any) {
+      setEducationMessage({ text: err?.message || "Failed to save education.", type: "error" });
+    } finally {
+      setEducationSaving(false);
+    }
+  };
 
   useEffect(() => {
     if (message.text) {
@@ -123,7 +210,7 @@ export default function StudentProfilePage() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setProfile((prev) => ({ ...prev, [name]: name === "graduationYear" ? parseInt(value) || "" : value }));
+    setProfile((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSave = async (e: React.FormEvent) => {
@@ -133,12 +220,17 @@ export default function StudentProfilePage() {
 
     try {
       if (userName && userName !== user?.name) {
-        const userRes = await api.patch("/users/me", { name: userName, email: user?.email });
+        const userRes = await api.patch("/users/me", { name: userName });
         if (userRes.success && user && accessToken) {
           setAuth({ ...user, name: userName }, accessToken);
         }
       }
-      const res = await api.put("/students/me", profile);
+      // Only send fields the backend StudentProfileRequest expects
+      const profilePayload = {
+        bio: profile.bio ?? null,
+        targetRole: profile.targetRole ?? null,
+      };
+      const res = await api.put("/students/me", profilePayload);
       if (res.success) {
         setProfile(res.data);
         setMessage({ text: "Profile updated successfully!", type: "success" });
@@ -182,6 +274,15 @@ export default function StudentProfilePage() {
       );
     } catch (err) {
       console.error("Failed to update proficiency", err);
+    }
+  };
+
+  const handleDeleteSkill = async (skillId: number) => {
+    try {
+      await api.delete(`/students/me/skills/${skillId}`);
+      setMySkills((prev) => prev.filter((s) => s.skill.id !== skillId));
+    } catch (err) {
+      console.error("Failed to delete skill", err);
     }
   };
 
@@ -380,7 +481,16 @@ export default function StudentProfilePage() {
                                 {item.skill.category}
                               </span>
                             </div>
-                            <span className="text-xs text-slate-400" title="Source">{item.source}</span>
+                            <div className="flex flex-col items-end gap-2">
+                              <button 
+                                onClick={() => handleDeleteSkill(item.skill.id)}
+                                className="text-slate-400 hover:text-red-500 transition-colors"
+                                title="Remove skill"
+                              >
+                                <X size={16} />
+                              </button>
+                              <span className="text-xs text-slate-400" title="Source">{item.source}</span>
+                            </div>
                           </div>
                           <p className="mt-3 text-xs text-slate-500 dark:text-slate-400 line-clamp-2" title={item.skill.description}>
                             {item.skill.description}
@@ -502,67 +612,184 @@ export default function StudentProfilePage() {
 
             {/* EDUCATION TAB */}
             {activeTab === "education" && (
-              <form onSubmit={handleSave} className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300">
-                <div>
-                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-6">Education History</h3>
-                </div>
-
-                {/* Graduation */}
-                <div className="space-y-4">
-                  <h4 className="text-base font-semibold text-indigo-600 dark:text-indigo-400 border-b border-indigo-100 dark:border-indigo-900/50 pb-2">Graduation / College</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="md:col-span-2">
-                      <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">College / University</label>
-                      <Input name="collegeName" value={profile.collegeName || ""} onChange={handleChange} placeholder="e.g. Indian Institute of Technology" className="bg-slate-50 dark:bg-slate-800" />
-                    </div>
-                    <div>
-                      <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Degree</label>
-                      <Input name="degree" value={profile.degree || ""} onChange={handleChange} placeholder="e.g. B.Tech" className="bg-slate-50 dark:bg-slate-800" />
-                    </div>
-                    <div>
-                      <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Branch</label>
-                      <Input name="branch" value={profile.branch || ""} onChange={handleChange} placeholder="e.g. Computer Science" className="bg-slate-50 dark:bg-slate-800" />
-                    </div>
-                    <div>
-                      <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Graduation Year</label>
-                      <Input type="number" name="graduationYear" value={profile.graduationYear || ""} onChange={handleChange} placeholder="e.g. 2024" className="bg-slate-50 dark:bg-slate-800" />
-                    </div>
+              <form onSubmit={handleEducationSave} className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-xl font-bold text-slate-900 dark:text-white">Education History</h3>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">All education details are saved to your profile.</p>
                   </div>
                 </div>
 
-                {/* 12th Standard */}
-                <div className="space-y-4">
-                  <h4 className="text-base font-semibold text-slate-700 dark:text-slate-300 border-b border-slate-100 dark:border-slate-800 pb-2">12th Standard (Higher Secondary)</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="md:col-span-1">
-                      <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">School / Board</label>
-                      <Input value={twelfthDetails.school} onChange={(e) => setTwelfthDetails({...twelfthDetails, school: e.target.value})} placeholder="School Name or CBSE/State Board" className="bg-slate-50 dark:bg-slate-800" />
-                    </div>
-                    <div>
-                      <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Percentage / CGPA</label>
-                      <Input value={twelfthDetails.marks} onChange={(e) => setTwelfthDetails({...twelfthDetails, marks: e.target.value})} placeholder="e.g. 92% or 9.5 CGPA" className="bg-slate-50 dark:bg-slate-800" />
-                    </div>
-                  </div>
-                </div>
+                {/* Education message banner */}
+                <AnimatePresence>
+                  {educationMessage.text && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      className={`flex items-center justify-between rounded-md p-3 text-sm font-medium ${
+                        educationMessage.type === "error" ? "bg-red-50 text-red-700" : "bg-emerald-50 text-emerald-700"
+                      }`}
+                    >
+                      <span>{educationMessage.text}</span>
+                      <button type="button" onClick={() => setEducationMessage({ text: "", type: "" })} className="rounded-full p-1 hover:bg-black/5">
+                        <X className="h-4 w-4" />
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
 
-                {/* 10th Standard */}
-                <div className="space-y-4">
-                  <h4 className="text-base font-semibold text-slate-700 dark:text-slate-300 border-b border-slate-100 dark:border-slate-800 pb-2">10th Standard (Secondary)</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="md:col-span-1">
-                      <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">School / Board</label>
-                      <Input value={tenthDetails.school} onChange={(e) => setTenthDetails({...tenthDetails, school: e.target.value})} placeholder="School Name or CBSE/State Board" className="bg-slate-50 dark:bg-slate-800" />
-                    </div>
-                    <div>
-                      <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Percentage / CGPA</label>
-                      <Input value={tenthDetails.marks} onChange={(e) => setTenthDetails({...tenthDetails, marks: e.target.value})} placeholder="e.g. 95% or 10 CGPA" className="bg-slate-50 dark:bg-slate-800" />
-                    </div>
+                {educationLoading ? (
+                  <div className="space-y-4">
+                    {[1,2,3].map(i => <Skeleton key={i} className="h-10 w-full rounded-md" />)}
                   </div>
-                </div>
+                ) : (
+                  <>
+                    {/* ── Graduation / College ─────────────────────────────────── */}
+                    <div className="rounded-xl border border-indigo-100 dark:border-indigo-900/40 bg-indigo-50/40 dark:bg-indigo-900/10 p-5 space-y-4">
+                      <h4 className="text-base font-semibold text-indigo-700 dark:text-indigo-400 flex items-center gap-2">
+                        <GraduationCap size={18} /> Graduation / College
+                      </h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="md:col-span-2">
+                          <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">College / University</label>
+                          <Input
+                            name="collegeName"
+                            value={education.collegeName}
+                            onChange={handleEducationChange}
+                            placeholder="e.g. Indian Institute of Technology"
+                            className="bg-white dark:bg-slate-800"
+                          />
+                        </div>
+                        <div>
+                          <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Degree</label>
+                          <Input
+                            name="degree"
+                            value={education.degree}
+                            onChange={handleEducationChange}
+                            placeholder="e.g. B.Tech"
+                            className="bg-white dark:bg-slate-800"
+                          />
+                        </div>
+                        <div>
+                          <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Branch / Specialisation</label>
+                          <Input
+                            name="branch"
+                            value={education.branch}
+                            onChange={handleEducationChange}
+                            placeholder="e.g. Computer Science"
+                            className="bg-white dark:bg-slate-800"
+                          />
+                        </div>
+                        <div>
+                          <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Graduation Year</label>
+                          <Input
+                            type="number"
+                            name="graduationYear"
+                            value={education.graduationYear}
+                            onChange={handleEducationChange}
+                            placeholder="e.g. 2025"
+                            min={2000}
+                            max={2040}
+                            className="bg-white dark:bg-slate-800"
+                          />
+                        </div>
+                        <div>
+                          <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">CGPA <span className="text-slate-400 font-normal">(out of 10)</span></label>
+                          <Input
+                            type="number"
+                            name="cgpa"
+                            value={education.cgpa}
+                            onChange={handleEducationChange}
+                            placeholder="e.g. 8.5"
+                            min={0}
+                            max={10}
+                            step={0.01}
+                            className="bg-white dark:bg-slate-800"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* ── Class 12 ─────────────────────────────────────────────── */}
+                    <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/60 dark:bg-slate-800/30 p-5 space-y-4">
+                      <h4 className="text-base font-semibold text-slate-700 dark:text-slate-300">12th Standard — Higher Secondary</h4>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                          <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">School Name</label>
+                          <Input
+                            name="twelfthSchoolName"
+                            value={education.twelfthSchoolName}
+                            onChange={handleEducationChange}
+                            placeholder="e.g. Delhi Public School"
+                            className="bg-white dark:bg-slate-800"
+                          />
+                        </div>
+                        <div>
+                          <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Board</label>
+                          <Input
+                            name="twelfthBoard"
+                            value={education.twelfthBoard}
+                            onChange={handleEducationChange}
+                            placeholder="e.g. CBSE / ICSE / State"
+                            className="bg-white dark:bg-slate-800"
+                          />
+                        </div>
+                        <div>
+                          <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Marks / Percentage</label>
+                          <Input
+                            name="twelfthMarks"
+                            value={education.twelfthMarks}
+                            onChange={handleEducationChange}
+                            placeholder="e.g. 92%"
+                            className="bg-white dark:bg-slate-800"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* ── Class 10 ─────────────────────────────────────────────── */}
+                    <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/60 dark:bg-slate-800/30 p-5 space-y-4">
+                      <h4 className="text-base font-semibold text-slate-700 dark:text-slate-300">10th Standard — Secondary</h4>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                          <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">School Name</label>
+                          <Input
+                            name="tenthSchoolName"
+                            value={education.tenthSchoolName}
+                            onChange={handleEducationChange}
+                            placeholder="e.g. Kendriya Vidyalaya"
+                            className="bg-white dark:bg-slate-800"
+                          />
+                        </div>
+                        <div>
+                          <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Board</label>
+                          <Input
+                            name="tenthBoard"
+                            value={education.tenthBoard}
+                            onChange={handleEducationChange}
+                            placeholder="e.g. CBSE / ICSE / State"
+                            className="bg-white dark:bg-slate-800"
+                          />
+                        </div>
+                        <div>
+                          <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Marks / Percentage</label>
+                          <Input
+                            name="tenthMarks"
+                            value={education.tenthMarks}
+                            onChange={handleEducationChange}
+                            placeholder="e.g. 95%"
+                            className="bg-white dark:bg-slate-800"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                )}
 
                 <div className="flex justify-end pt-4 border-t border-slate-100 dark:border-slate-800">
-                  <Button type="submit" disabled={saving} className="bg-indigo-600 hover:bg-indigo-700 text-white">
-                    {saving ? "Saving..." : "Save Education"}
+                  <Button type="submit" disabled={educationSaving || educationLoading} className="bg-indigo-600 hover:bg-indigo-700 text-white">
+                    {educationSaving ? "Saving..." : "Save Education"}
                   </Button>
                 </div>
               </form>
