@@ -65,7 +65,7 @@ public class UserService implements UserDetailsService {
 
         User user=(User) authentication.getPrincipal();
         user.setName(request.getName());
-        user.setEmail(request.getEmail());
+        //user.setEmail(request.getEmail());
         userRepository.save(user);
         return modelMapper.map(user,UserResponse.class);
     }

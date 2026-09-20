@@ -5,6 +5,7 @@ import com.general_auth.user.dto.request.ModifyUserDetailRequest;
 import com.general_auth.user.dto.response.UserResponse;
 import com.general_auth.user.entity.User;
 import com.general_auth.user.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,7 @@ public class UserController {
     }
 
     @PatchMapping("/me")
-    public ResponseEntity<ApiResponse<UserResponse>> modifyMe(Authentication authentication,@RequestBody ModifyUserDetailRequest request){
+    public ResponseEntity<ApiResponse<UserResponse>> modifyMe(Authentication authentication,@Valid @RequestBody ModifyUserDetailRequest request){
         UserResponse response=userService.modify(authentication,request);
         return ResponseEntity.ok(
                 ApiResponse.success("User details modified ",response)
